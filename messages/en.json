@@ -34,8 +34,8 @@
     },
     "header": {
       "logoAria": "Site Logo",
-      "notification": "Notification",
-      "toggleTheme": "Toggle theme"
+      "toggleTheme": "Toggle theme",
+      "language": "Language"
     },
     "search": {
       "placeholder": "Search...",
@@ -43,7 +43,6 @@
     },
     "profile": {
       "account": "Account",
-      "notifications": "Notifications",
       "signOut": "Log Out"
     }
   },
