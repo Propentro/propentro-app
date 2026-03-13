@@ -7,7 +7,6 @@ import type { ComponentProps } from 'react';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,7 +16,6 @@ import {
 } from '@/components/ui/sidebar';
 
 import { SidebarNav } from './sidebar-nav';
-import { UserMenu } from './user-menu';
 import { WorkspaceSwitcher } from './workspace-switcher';
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
@@ -48,9 +46,6 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <UserMenu />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
