@@ -6,7 +6,10 @@ import { Toaster } from 'sonner';
 import NextProgress from '@/components/next-progress';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
-import { JotaiProvider, ThemeProvider } from '@/components/providers/theme-provider';
+import {
+  JotaiProvider,
+  ThemeProvider,
+} from '@/components/providers/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { routing } from '@/i18n/routing';
 

@@ -20,8 +20,9 @@ export default async function SelectWorkspacePage({ params }: Props) {
   const t = await getTranslations('workspace');
 
   const client = await clerkClient();
-  const memberships =
-    await client.users.getOrganizationMembershipList({ userId });
+  const memberships = await client.users.getOrganizationMembershipList({
+    userId,
+  });
 
   const orgs = memberships.data.map((m) => ({
     id: m.organization.id,

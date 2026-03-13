@@ -23,8 +23,7 @@
 export const orgKeys = {
   root: ['org'] as const,
 
-  all: (orgId: string | null | undefined) =>
-    ['org', orgId] as const,
+  all: (orgId: string | null | undefined) => ['org', orgId] as const,
 
   scope: (orgId: string | null | undefined, ...segments: readonly string[]) =>
     ['org', orgId, ...segments] as const,

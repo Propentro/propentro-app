@@ -38,10 +38,9 @@ function buildCountryOption(code: TCountryCode): SelectOption {
   return { label: `${getFlagEmoji(code)}  ${c.name}`, value: code };
 }
 
-const priorityCountryOptions: SelectOption[] =
-  PRIORITY_COUNTRY_CODES.filter((code) => code in countries).map(
-    buildCountryOption
-  );
+const priorityCountryOptions: SelectOption[] = PRIORITY_COUNTRY_CODES.filter(
+  (code) => code in countries
+).map(buildCountryOption);
 
 const restCountryOptions: SelectOption[] = (
   Object.keys(countries) as TCountryCode[]

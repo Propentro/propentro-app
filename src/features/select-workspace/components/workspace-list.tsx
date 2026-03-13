@@ -34,7 +34,7 @@ export function WorkspaceList({
       {orgs.map((org) => (
         <Card
           key={org.id}
-          className="cursor-pointer transition-colors hover:bg-accent"
+          className="hover:bg-accent cursor-pointer transition-colors"
           onClick={() => handleSelect(org)}
         >
           <CardContent className="flex items-center gap-3 p-4">

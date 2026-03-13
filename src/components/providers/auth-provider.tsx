@@ -18,7 +18,11 @@ const getServerSnapshot = () => false;
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
-  const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const mounted = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
 
   return (
     <ClerkProvider

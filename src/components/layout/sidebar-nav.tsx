@@ -19,7 +19,9 @@ export function SidebarNav({ item }: { item: NavItem }) {
   const pathname = usePathname();
   const params = useParams();
   const orgSlug = params.orgSlug as string;
-  const hasPermission = useHasPermission(item.permission ?? ('org:settings:read' as Permission));
+  const hasPermission = useHasPermission(
+    item.permission ?? ('org:settings:read' as Permission)
+  );
 
   if (item.permission && !hasPermission) {
     return null;
@@ -33,7 +35,11 @@ export function SidebarNav({ item }: { item: NavItem }) {
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton render={<Link href={fullHref} />} isActive={isActive}>
+      <SidebarMenuButton
+        render={<Link href={fullHref} />}
+        isActive={isActive}
+        tooltip={item.title}
+      >
         <item.icon />
         <span>{item.title}</span>
       </SidebarMenuButton>
