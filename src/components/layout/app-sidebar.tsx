@@ -1,13 +1,8 @@
 'use client';
 
-import {
-  Building2,
-  LayoutDashboard,
-  Settings,
-  Shield,
-  Users,
-} from 'lucide-react';
+import { LayoutDashboard } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import type { ComponentProps } from 'react';
 
 import {
   Sidebar,
@@ -18,14 +13,14 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarRail,
 } from '@/components/ui/sidebar';
-import { paths } from '@/config/routes';
 
 import { SidebarNav } from './sidebar-nav';
 import { UserMenu } from './user-menu';
 import { WorkspaceSwitcher } from './workspace-switcher';
 
-export function AppSidebar() {
+export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   const t = useTranslations('layout.sidebar');
 
   const overviewItems = [
@@ -36,29 +31,8 @@ export function AppSidebar() {
     },
   ];
 
-  const settingsItems = [
-    {
-      title: t('menu.organization'),
-      href: paths.settings.organization,
-      icon: Building2,
-      permission: 'org:settings:read' as const,
-    },
-    {
-      title: t('menu.members'),
-      href: paths.settings.members,
-      icon: Users,
-      permission: 'org:members:read' as const,
-    },
-    {
-      title: t('menu.roles'),
-      href: paths.settings.roles,
-      icon: Shield,
-      permission: 'org:roles:read' as const,
-    },
-  ];
-
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <WorkspaceSwitcher />
       </SidebarHeader>
@@ -73,23 +47,11 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            <Settings className="mr-2 size-4" />
-            {t('labels.settings')}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {settingsItems.map((item) => (
-                <SidebarNav key={item.href} item={item} />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <UserMenu />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

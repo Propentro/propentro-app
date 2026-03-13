@@ -71,7 +71,11 @@ export function useUpdateMemberRoles() {
   const { clerkOrgId } = useSession();
   const queryClient = useQueryClient();
 
-  return useMutation<void, ApiError, { userId: string } & UpdateMemberRolesInput>({
+  return useMutation<
+    void,
+    ApiError,
+    { userId: string } & UpdateMemberRolesInput
+  >({
     mutationFn: ({ userId, roleIds }) =>
       apiClient.patch<void>(`/organizations/members/${userId}`, { roleIds }),
     onSuccess: () => {

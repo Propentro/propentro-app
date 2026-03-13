@@ -22,17 +22,14 @@
       "logoAria": "Site Logo",
       "openSidebar": "Open Sidebar Menu",
       "labels": {
-        "overview": "Overview",
-        "settings": "Settings"
+        "overview": "Overview"
       },
+      "workspaces": "Workspaces",
       "menu": {
         "dashboard": "Dashboard",
         "properties": "Properties",
         "tenants": "Tenants",
-        "finance": "Finance",
-        "organization": "Organisation",
-        "members": "Members",
-        "roles": "Roles & Permissions"
+        "finance": "Finance"
       }
     },
     "header": {
@@ -45,9 +42,9 @@
       "ariaLabel": "Search"
     },
     "profile": {
-      "accountSettings": "Account Settings",
-      "signOut": "Sign Out",
-      "fallbackName": "User"
+      "account": "Account",
+      "notifications": "Notifications",
+      "signOut": "Log Out"
     }
   },
 

@@ -25,7 +25,10 @@ function buildUrl(path: string, params?: QueryParams): string {
   return query ? `${path}?${query}` : path;
 }
 
-async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+async function apiFetch<T>(
+  path: string,
+  options: FetchOptions = {}
+): Promise<T> {
   const { method = 'GET', body, params } = options;
   const hasBody = body !== undefined;
 
@@ -55,11 +58,14 @@ async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T>
 export const apiClient = {
   get: <T>(path: string, params?: QueryParams) => apiFetch<T>(path, { params }),
 
-  post: <T>(path: string, body: unknown) => apiFetch<T>(path, { method: 'POST', body }),
+  post: <T>(path: string, body: unknown) =>
+    apiFetch<T>(path, { method: 'POST', body }),
 
-  put: <T>(path: string, body: unknown) => apiFetch<T>(path, { method: 'PUT', body }),
+  put: <T>(path: string, body: unknown) =>
+    apiFetch<T>(path, { method: 'PUT', body }),
 
-  patch: <T>(path: string, body: unknown) => apiFetch<T>(path, { method: 'PATCH', body }),
+  patch: <T>(path: string, body: unknown) =>
+    apiFetch<T>(path, { method: 'PATCH', body }),
 
   delete: <T>(path: string) => apiFetch<T>(path, { method: 'DELETE' }),
 };

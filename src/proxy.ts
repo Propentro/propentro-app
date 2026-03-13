@@ -26,10 +26,7 @@ export default clerkMiddleware(
   },
   {
     organizationSyncOptions: {
-      organizationPatterns: [
-        '/:locale/:slug',
-        '/:locale/:slug/(.*)',
-      ],
+      organizationPatterns: ['/:locale/:slug', '/:locale/:slug/(.*)'],
     },
   }
 );

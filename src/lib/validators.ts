@@ -111,7 +111,9 @@ export function requiredPhone(label?: string) {
   return z
     .string()
     .min(1, `${fieldName} is required`)
-    .refine(isValidPhoneNumber, { message: 'Please enter a valid phone number' });
+    .refine(isValidPhoneNumber, {
+      message: 'Please enter a valid phone number',
+    });
 }
 
 /** Output: string | null */

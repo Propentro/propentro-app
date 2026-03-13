@@ -9,9 +9,7 @@ import { nullableString, requiredString } from '@/lib/validators';
 export const createRoleSchema = z.object({
   name: requiredString('Role name'),
   description: nullableString(),
-  permissionCodes: z
-    .array(z.string())
-    .min(1, 'Select at least one permission'),
+  permissionCodes: z.array(z.string()).min(1, 'Select at least one permission'),
 });
 
 /** Form state type — what RHF sees (all string inputs before transform). */
@@ -33,9 +31,7 @@ export const createRoleDefaults: CreateRoleInput = {
 export const updateRoleSchema = z.object({
   name: requiredString('Role name'),
   description: nullableString(),
-  permissionCodes: z
-    .array(z.string())
-    .min(1, 'Select at least one permission'),
+  permissionCodes: z.array(z.string()).min(1, 'Select at least one permission'),
 });
 
 /** Form state type — what RHF sees (all string inputs before transform). */
