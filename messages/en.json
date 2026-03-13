@@ -1,0 +1,193 @@
+{
+  "common": {
+    "clear": "Clear",
+    "noResultFound": "No Result Found",
+    "table": {
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}",
+      "searchPlaceholder": "Search...",
+      "clearFilters": "Clear"
+    }
+  },
+
+  "workspace": {
+    "selectWorkspace": "Select Workspace",
+    "selectDescription": "Choose a workspace to continue",
+    "noWorkspaces": "No Workspaces",
+    "noWorkspacesDescription": "You are not a member of any workspace. Please contact your administrator."
+  },
+
+  "layout": {
+    "sidebar": {
+      "logoAria": "Site Logo",
+      "openSidebar": "Open Sidebar Menu",
+      "labels": {
+        "overview": "Overview",
+        "settings": "Settings"
+      },
+      "menu": {
+        "dashboard": "Dashboard",
+        "properties": "Properties",
+        "tenants": "Tenants",
+        "finance": "Finance",
+        "organization": "Organisation",
+        "members": "Members",
+        "roles": "Roles & Permissions"
+      }
+    },
+    "header": {
+      "logoAria": "Site Logo",
+      "notification": "Notification",
+      "toggleTheme": "Toggle theme"
+    },
+    "search": {
+      "placeholder": "Search...",
+      "ariaLabel": "Search"
+    },
+    "profile": {
+      "accountSettings": "Account Settings",
+      "signOut": "Sign Out",
+      "fallbackName": "User"
+    }
+  },
+
+  "language": {
+    "en": "English"
+  },
+
+  "pages": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "settingsOrganization": "Organisation",
+    "settingsMembers": "Members",
+    "settingsRoles": "Roles & Permissions"
+  },
+
+  "settings": {
+    "organization": {
+      "sectionProfile": "Organisation Profile",
+      "sectionContact": "Primary Contact",
+      "sectionAddress": "Address",
+      "sectionLegal": "Legal & Tax",
+      "sectionRegional": "Regional Settings",
+      "name": "Organisation Name",
+      "namePlaceholder": "Enter organisation name",
+      "contactName": "Contact Name",
+      "contactNamePlaceholder": "Full name",
+      "contactEmail": "Email",
+      "contactEmailPlaceholder": "contact@example.com",
+      "contactPhone": "Phone",
+      "contactPhonePlaceholder": "+1 234 567 890",
+      "addressLine1": "Address Line 1",
+      "addressLine1Placeholder": "Street address",
+      "addressLine2": "Address Line 2",
+      "addressLine2Placeholder": "Apartment, suite, etc.",
+      "city": "City",
+      "cityPlaceholder": "Enter city",
+      "region": "State / Region",
+      "regionPlaceholder": "Enter state or region",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "Enter postal code",
+      "countryCode": "Country",
+      "countryCodePlaceholder": "Select country",
+      "legalName": "Legal Name",
+      "legalNamePlaceholder": "Registered legal name",
+      "taxNumber": "Tax / VAT Number",
+      "taxNumberPlaceholder": "Enter tax number",
+      "taxCountry": "Tax Country",
+      "taxCountryPlaceholder": "Select country",
+      "currencyCode": "Currency",
+      "currencyCodePlaceholder": "Select currency",
+      "timezone": "Timezone",
+      "timezonePlaceholder": "Select timezone",
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "readOnlyNotice": "You do not have permission to edit these settings. Contact your administrator to request access.",
+      "saveSuccess": "Organisation settings saved.",
+      "saveError": "Failed to save settings. Please try again.",
+      "loadError": "Failed to load settings. Please refresh the page."
+    }
+  },
+
+  "members": {
+    "tableTitle": "All Members",
+    "filterStatus": "Filter by status",
+    "filterRole": "Filter by role",
+    "searchPlaceholder": "Search members...",
+    "addMember": "Invite Member",
+    "clear": "Clear",
+    "columnName": "Name",
+    "columnRole": "Role",
+    "columnJoined": "Joined",
+    "columnStatus": "Status",
+    "statusActive": "Active",
+    "statusDeactivated": "Deactivated",
+    "loadError": "Failed to load members. Please refresh the page.",
+    "inviteTitle": "Invite a Member",
+    "labelEmail": "Email",
+    "placeholderEmail": "Enter email address",
+    "labelRole": "Role",
+    "sendInvitation": "Invite Member",
+    "cancel": "Cancel",
+    "deactivateAriaLabel": "Deactivate member",
+    "deactivateTitle": "Deactivate Member",
+    "deactivateDescription": "This member will lose access to the organisation. You can reactivate them at any time.",
+    "confirm": "Confirm",
+    "reactivateAriaLabel": "Reactivate member",
+    "editRolesAriaLabel": "Edit member roles",
+    "editRolesTitle": "Edit Member Roles",
+    "saveRoles": "Save Roles",
+    "inviteSuccess": "Invitation sent. The member will appear in the list once they accept.",
+    "inviteError": "Failed to send invitation. Please try again.",
+    "deactivateSuccess": "Member deactivated.",
+    "deactivateError": "Failed to deactivate member.",
+    "reactivateSuccess": "Member reactivated.",
+    "reactivateError": "Failed to reactivate member.",
+    "rolesUpdateSuccess": "Member roles updated.",
+    "rolesUpdateError": "Failed to update member roles."
+  },
+
+  "roles": {
+    "addRole": "Add New Role",
+    "loadError": "Failed to load roles. Please refresh the page.",
+    "noRoles": "No roles found.",
+    "systemRole": "System",
+    "editRole": "Edit Role",
+    "deleteRole": "Delete Role",
+    "deleteTitle": "Delete Role",
+    "deleteDescription": "This role will be permanently deleted. Members assigned to this role will lose the associated permissions.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "memberCount": "{count, plural, one {# member} other {# members}}",
+    "permissionCount": "{count, plural, one {# permission} other {# permissions}}",
+    "createTitle": "Add a New Role",
+    "editTitle": "Edit Role",
+    "labelName": "Role Name",
+    "placeholderName": "Enter role name",
+    "labelDescription": "Description",
+    "placeholderDescription": "Describe what this role is for",
+    "labelPermissions": "Permissions",
+    "createButton": "Create Role",
+    "saveButton": "Save Changes",
+    "createSuccess": "Role created successfully.",
+    "createError": "Failed to create role. Please try again.",
+    "updateSuccess": "Role updated successfully.",
+    "updateError": "Failed to update role. Please try again.",
+    "deleteSuccess": "Role deleted successfully.",
+    "deleteError": "Failed to delete role. Please try again."
+  },
+
+  "errorPages": {
+    "notFound": {
+      "title": "Sorry, page not found",
+      "description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+      "backHome": "Back to home"
+    },
+    "accessDenied": {
+      "title": "Access Denied",
+      "description": "You do not have permission to access this page. Please contact your administrator to request access.",
+      "backHome": "Back to home"
+    }
+  }
+}
