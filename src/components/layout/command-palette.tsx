@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, LayoutDashboard, Shield, Users } from 'lucide-react';
+import { Building2, LayoutDashboard, Settings2, Shield, UserCircle, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 
@@ -74,6 +74,16 @@ export function CommandPalette() {
             <CommandItem onSelect={() => navigate(paths.settings.roles)}>
               <Shield />
               {tNav('roles')}
+            </CommandItem>
+          </CommandGroup>
+          <CommandGroup heading={t('account')}>
+            <CommandItem onSelect={() => navigate(paths.account.profile)}>
+              <UserCircle />
+              {tPages('accountProfile')}
+            </CommandItem>
+            <CommandItem onSelect={() => navigate(paths.account.preferences)}>
+              <Settings2 />
+              {tPages('accountPreferences')}
             </CommandItem>
           </CommandGroup>
         </CommandList>
