@@ -12,7 +12,7 @@ export function OrgSettingsSkeleton() {
             <Skeleton className="h-3 w-64" />
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Skeleton className="h-9 w-full" />
               <Skeleton className="h-9 w-full" />
             </div>

@@ -22,8 +22,8 @@ import {
   useUpdateOrgSettings,
 } from '@/features/settings/organization/hooks/use-org-settings';
 import {
-  orgSettingsDefaults,
   type OrgSettingsInput,
+  type OrgSettingsOutput,
   orgSettingsSchema,
 } from '@/features/settings/organization/validators/org-settings.schema';
 import { useUnsavedChanges } from '@/hooks/use-unsaved-changes';
@@ -303,18 +303,22 @@ function OrgSettingsFormFields({
 
 export function OrgSettingsForm({ canEdit }: OrgSettingsFormProps) {
   const t = useTranslations('settings.organization');
-  const { data, isLoading } = useOrgSettings();
+  const { data, isLoading, isError } = useOrgSettings();
   const { mutate, isPending } = useUpdateOrgSettings();
 
   if (isLoading) {
     return <OrgSettingsSkeleton />;
   }
 
-  const resetValues = data ? toOrgSettingsInput(data) : orgSettingsDefaults;
+  if (isError || !data) {
+    return <p className="text-destructive text-sm">{t('loadError')}</p>;
+  }
+
+  const resetValues = toOrgSettingsInput(data);
 
   function handleSubmit(values: OrgSettingsInput) {
-    const parsed = orgSettingsSchema.parse(values);
-    mutate(parsed, {
+    // zodResolver already ran transforms; cast to the output type
+    mutate(values as unknown as OrgSettingsOutput, {
       onSuccess: () => {
         toast.success(t('saveSuccess'));
       },
