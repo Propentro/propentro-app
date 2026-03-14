@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import { AppHeader } from './app-header';
 import { AppSidebar } from './app-sidebar';
+import { CommandPalette } from './command-palette';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <AppHeader />
         <main className="flex-1 p-6">{children}</main>
       </SidebarInset>
+      <CommandPalette />
     </SidebarProvider>
   );
 }

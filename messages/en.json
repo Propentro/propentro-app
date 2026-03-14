@@ -54,8 +54,11 @@
       "language": "Language"
     },
     "search": {
-      "placeholder": "Search...",
-      "ariaLabel": "Search"
+      "placeholder": "Type a command or search...",
+      "ariaLabel": "Search",
+      "noResults": "No results found.",
+      "navigation": "Navigation",
+      "settings": "Settings"
     },
     "profile": {
       "account": "Account",
@@ -191,8 +194,18 @@
   },
 
   "errorPages": {
+    "unexpected": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Please try again.",
+      "tryAgain": "Try again"
+    },
+    "settingsError": {
+      "title": "Settings Error",
+      "description": "Failed to load this settings page. Please try again.",
+      "tryAgain": "Try again"
+    },
     "notFound": {
-      "title": "Sorry, page not found",
+      "title": "Page not found",
       "description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
       "backHome": "Back to home"
     },

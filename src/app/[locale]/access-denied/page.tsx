@@ -1,10 +1,10 @@
 import { Home } from 'lucide-react';
-import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { routes } from '@/config/routes';
+import { Link } from '@/i18n/routing';
 
 export default function AccessDeniedPage() {
   const t = useTranslations('errorPages.accessDenied');
