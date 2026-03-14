@@ -30,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useRoles } from '../../roles/hooks/use-roles';
@@ -117,7 +118,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
         setDeactivatingMember(null);
       },
       onError: (error: ApiError) => {
-        toast.error(error.detail ?? t('deactivateError'));
+        toast.error(getErrorMessage(error, t('deactivateError')));
       },
     });
   }
@@ -128,7 +129,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
         toast.success(t('reactivateSuccess'));
       },
       onError: (error: ApiError) => {
-        toast.error(error.detail ?? t('reactivateError'));
+        toast.error(getErrorMessage(error, t('reactivateError')));
       },
     });
   }

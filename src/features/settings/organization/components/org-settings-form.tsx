@@ -27,6 +27,7 @@ import {
   orgSettingsSchema,
 } from '@/features/settings/organization/validators/org-settings.schema';
 import { useUnsavedChanges } from '@/hooks/use-unsaved-changes';
+import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { OrgSettingsSkeleton } from './org-settings-skeleton';
@@ -323,7 +324,7 @@ export function OrgSettingsForm({ canEdit }: OrgSettingsFormProps) {
         toast.success(t('saveSuccess'));
       },
       onError: (error: ApiError) => {
-        toast.error(error.detail ?? t('saveError'));
+        toast.error(getErrorMessage(error, t('saveError')));
       },
     });
   }

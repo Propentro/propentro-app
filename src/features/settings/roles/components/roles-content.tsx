@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useDeleteRole, useRoles } from '../hooks/use-roles';
@@ -64,7 +65,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
         setDeletingRole(null);
       },
       onError: (error: ApiError) => {
-        toast.error(error.detail ?? t('deleteError'));
+        toast.error(getErrorMessage(error, t('deleteError')));
       },
     });
   }

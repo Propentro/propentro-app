@@ -17,6 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useRoles } from '../../roles/hooks/use-roles';
@@ -60,7 +61,7 @@ export function EditMemberRolesSheet({
           onOpenChange(false);
         },
         onError: (error: ApiError) => {
-          toast.error(error.detail ?? t('rolesUpdateError'));
+          toast.error(getErrorMessage(error, t('rolesUpdateError')));
         },
       }
     );

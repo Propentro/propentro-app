@@ -19,6 +19,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
+import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useCreateRole, usePermissions, useUpdateRole } from '../hooks/use-roles';
@@ -67,7 +68,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
             onOpenChange(false);
           },
           onError: (error: ApiError) => {
-            toast.error(error.detail ?? t('updateError'));
+            toast.error(getErrorMessage(error, t('updateError')));
           },
         }
       );
@@ -78,7 +79,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
           onOpenChange(false);
         },
         onError: (error: ApiError) => {
-          toast.error(error.detail ?? t('createError'));
+          toast.error(getErrorMessage(error, t('createError')));
         },
       });
     }
