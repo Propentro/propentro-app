@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   type FieldValues,
   type Resolver,
@@ -40,10 +40,18 @@ export function Form<
     }),
   });
 
+  const prevResetValues = useRef<TFormValues | null>(null);
+
   useEffect(() => {
-    if (resetValues) {
-      methods.reset(resetValues);
+    if (!resetValues) return;
+    if (
+      prevResetValues.current !== null &&
+      JSON.stringify(prevResetValues.current) === JSON.stringify(resetValues)
+    ) {
+      return;
     }
+    prevResetValues.current = resetValues;
+    methods.reset(resetValues);
   }, [resetValues, methods]);
 
   return (
