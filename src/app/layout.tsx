@@ -12,7 +12,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Propentro',
+  title: {
+    default: 'Propentro',
+    template: '%s | Propentro',
+  },
   description: 'Property Management Dashboard',
 };
 
