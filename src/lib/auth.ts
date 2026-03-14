@@ -124,5 +124,5 @@ export async function requirePermission(
 export async function revalidateUserCache(): Promise<void> {
   // Dynamic import to avoid 'next/cache' being bundled client-side
   const { revalidateTag } = await import('next/cache');
-  revalidateTag('user-me');
+  revalidateTag('user-me', 'default');
 }
