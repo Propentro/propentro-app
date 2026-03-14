@@ -298,7 +298,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
         />
       ) : (
         <>
-          <DataTable table={table} emptyMessage={t('loadError')} />
+          <DataTable table={table} />
           <DataTablePagination table={table} />
         </>
       )}

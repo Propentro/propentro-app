@@ -13,6 +13,7 @@ import {
   Sheet,
   SheetContent,
   SheetFooter,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
@@ -70,6 +71,11 @@ export function EditMemberRolesSheet({
       <SheetContent>
         <SheetHeader>
           <SheetTitle>{t('editRolesTitle')}</SheetTitle>
+          {member && (
+            <SheetDescription>
+              {member.firstName} {member.lastName} &middot; {member.email}
+            </SheetDescription>
+          )}
         </SheetHeader>
 
         <Form<UpdateMemberRolesInput>

@@ -67,6 +67,7 @@ export function InviteMemberSheet({
         </SheetHeader>
 
         <Form<InviteMemberInput>
+          key={String(open)}
           validationSchema={inviteMemberSchema}
           resetValues={inviteMemberDefaults}
           onSubmit={handleSubmit}
