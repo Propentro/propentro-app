@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { FormField } from '@/components/shared/form-field';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,8 +15,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   toOrgSettingsInput,
   useOrgSettings,
@@ -46,44 +45,6 @@ type OrgSettingsFormFieldsProps = {
   isPending: boolean;
   t: ReturnType<typeof useTranslations<'settings.organization'>>;
 };
-
-// ---------------------------------------------------------------------------
-// Field helper
-// ---------------------------------------------------------------------------
-
-function FormField({
-  label,
-  name,
-  placeholder,
-  methods,
-  disabled,
-  type = 'text',
-}: {
-  label: string;
-  name: keyof OrgSettingsInput;
-  placeholder: string;
-  methods: UseFormReturn<OrgSettingsInput>;
-  disabled: boolean;
-  type?: string;
-}) {
-  const error = methods.formState.errors[name];
-
-  return (
-    <div className="space-y-1.5">
-      <Label htmlFor={name}>{label}</Label>
-      <Input
-        id={name}
-        type={type}
-        placeholder={placeholder}
-        disabled={disabled}
-        {...methods.register(name)}
-      />
-      {error?.message && (
-        <p className="text-destructive mt-1 text-xs">{error.message}</p>
-      )}
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Inner component — safe for hooks

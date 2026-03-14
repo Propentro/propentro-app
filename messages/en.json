@@ -51,7 +51,8 @@
       }
     },
     "header": {
-      "logoAria": "Site Logo"
+      "logoAria": "Site Logo",
+      "search": "Search..."
     },
     "search": {
       "placeholder": "Type a command or search...",
