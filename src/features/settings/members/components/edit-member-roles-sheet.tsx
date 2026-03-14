@@ -82,6 +82,7 @@ export function EditMemberRolesSheet({
           key={member?.userId ?? 'none'}
           validationSchema={updateMemberRolesSchema}
           resetValues={resetValues}
+          useFormProps={{ defaultValues: resetValues }}
           onSubmit={handleSubmit}
           className="flex flex-1 flex-col"
         >
