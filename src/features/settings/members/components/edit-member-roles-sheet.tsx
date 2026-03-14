@@ -79,6 +79,7 @@ export function EditMemberRolesSheet({
         </SheetHeader>
 
         <Form<UpdateMemberRolesInput>
+          key={member?.userId ?? 'none'}
           validationSchema={updateMemberRolesSchema}
           resetValues={resetValues}
           onSubmit={handleSubmit}

@@ -314,7 +314,10 @@ export function MembersContent({ canManage }: MembersContentProps) {
       {/* Deactivation confirmation dialog */}
       <Dialog
         open={!!deactivatingMember}
-        onOpenChange={(open) => !open && setDeactivatingMember(null)}
+        onOpenChange={(open) => {
+          if (deactivateMember.isPending) return;
+          if (!open) setDeactivatingMember(null);
+        }}
       >
         <DialogContent>
           <DialogHeader>

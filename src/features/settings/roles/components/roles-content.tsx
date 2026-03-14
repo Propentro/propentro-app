@@ -123,7 +123,10 @@ export function RolesContent({ canManage }: RolesContentProps) {
       {/* Delete confirmation dialog */}
       <Dialog
         open={!!deletingRole}
-        onOpenChange={(open) => !open && setDeletingRole(null)}
+        onOpenChange={(open) => {
+          if (deleteRole.isPending) return;
+          if (!open) setDeletingRole(null);
+        }}
       >
         <DialogContent>
           <DialogHeader>

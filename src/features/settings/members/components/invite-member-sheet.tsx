@@ -99,7 +99,7 @@ export function InviteMemberSheet({
                       setValue('roleId', value ?? '', { shouldValidate: true })
                     }
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger id="roleId" className="w-full">
                       <SelectValue placeholder={t('labelRole')} />
                     </SelectTrigger>
                     <SelectContent>
