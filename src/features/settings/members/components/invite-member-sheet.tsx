@@ -95,7 +95,7 @@ export function InviteMemberSheet({
                 <div className="space-y-2">
                   <Label htmlFor="roleId">{t('labelRole')}</Label>
                   <Select
-                    value={watch('roleId')}
+                    value={watch('roleId') ?? ''}
                     onValueChange={(value) =>
                       setValue('roleId', value ?? '', { shouldValidate: true })
                     }
