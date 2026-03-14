@@ -193,7 +193,10 @@
     "reactivateSuccess": "Member reactivated.",
     "reactivateError": "Failed to reactivate member.",
     "rolesUpdateSuccess": "Member roles updated.",
-    "rolesUpdateError": "Failed to update member roles."
+    "rolesUpdateError": "Failed to update member roles.",
+    "emptyTitle": "No members yet",
+    "emptyDescription": "Invite team members to collaborate on managing your properties",
+    "inviteDescription": "Send an email invitation to join this organisation"
   },
 
   "roles": {

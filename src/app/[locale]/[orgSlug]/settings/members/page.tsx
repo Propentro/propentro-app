@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { PERMISSIONS } from '@/config/permissions';
+import { MembersContent } from '@/features/settings/members/components/members-content';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
 export const metadata: Metadata = { title: 'Members | Propentro' };
@@ -14,7 +15,7 @@ export default async function MembersSettingsPage({ params }: Props) {
 
   await requirePermission(PERMISSIONS.members.read, locale);
 
-  const _canManage = await hasPermission(PERMISSIONS.members.manage);
+  const canManage = await hasPermission(PERMISSIONS.members.manage);
 
-  return <div>{/* Members feature UI will be built here */}</div>;
+  return <MembersContent canManage={canManage} />;
 }
