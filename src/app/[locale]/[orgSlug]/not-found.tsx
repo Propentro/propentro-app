@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { paths } from '@/config/routes';
 import { Link } from '@/i18n/routing';
 
 export default function OrgNotFound() {
@@ -17,7 +18,7 @@ export default function OrgNotFound() {
           </div>
           <h2 className="text-xl font-semibold">{t('title')}</h2>
           <p className="text-muted-foreground text-sm">{t('description')}</p>
-          <Button render={<Link href="/" />}>{t('backHome')}</Button>
+          <Button render={<Link href={paths.home} />}>{t('backHome')}</Button>
         </CardContent>
       </Card>
     </div>

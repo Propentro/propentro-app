@@ -3,6 +3,7 @@
 import { useOrganizationList } from '@clerk/nextjs';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { paths } from '@/config/routes';
 import { useRouter } from '@/i18n/routing';
 
 type Org = {
@@ -25,7 +26,7 @@ export function WorkspaceList({
   const handleSelect = async (org: Org) => {
     if (setActive) {
       await setActive({ organization: org.id });
-      router.push(`/${org.slug}`);
+      router.push(`/${org.slug}${paths.home}`);
     }
   };
 

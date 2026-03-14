@@ -49,16 +49,15 @@
       }
     },
     "header": {
-      "logoAria": "Site Logo",
-      "toggleTheme": "Toggle theme",
-      "language": "Language"
+      "logoAria": "Site Logo"
     },
     "search": {
       "placeholder": "Type a command or search...",
       "ariaLabel": "Search",
       "noResults": "No results found.",
       "navigation": "Navigation",
-      "settings": "Settings"
+      "settings": "Settings",
+      "account": "Account"
     },
     "profile": {
       "account": "Account",
@@ -76,7 +75,10 @@
     "settings": "Settings",
     "settingsOrganization": "Organisation",
     "settingsMembers": "Members",
-    "settingsRoles": "Roles & Permissions"
+    "settingsRoles": "Roles & Permissions",
+    "account": "Account",
+    "accountProfile": "Profile",
+    "accountPreferences": "Preferences"
   },
 
   "settings": {
@@ -122,6 +124,30 @@
       "saveSuccess": "Organisation settings saved.",
       "saveError": "Failed to save settings. Please try again.",
       "loadError": "Failed to load settings. Please refresh the page."
+    }
+  },
+
+  "account": {
+    "profile": {
+      "title": "Profile",
+      "description": "Your account information. This data is managed by your identity provider.",
+      "role": "Role",
+      "organization": "Organisation"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "description": "Customise how Propentro works for you.",
+      "theme": {
+        "title": "Theme",
+        "description": "Choose how Propentro looks for you.",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "language": {
+        "title": "Language",
+        "description": "Select your preferred language."
+      }
     }
   },
 
@@ -213,6 +239,11 @@
       "title": "Access Denied",
       "description": "You do not have permission to access this page. Please contact your administrator to request access.",
       "backHome": "Back to home"
+    },
+    "accountError": {
+      "title": "Account Error",
+      "description": "Failed to load this page. Please try again.",
+      "tryAgain": "Try again"
     }
   }
 }

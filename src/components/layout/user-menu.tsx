@@ -1,9 +1,8 @@
 'use client';
 
 import { useClerk } from '@clerk/nextjs';
-import { BadgeCheck, Check, Globe, LogOut, Moon, Sun } from 'lucide-react';
+import { LogOut, UserCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'next-themes';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -14,23 +13,22 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { paths } from '@/config/routes';
 import { useMe } from '@/hooks/use-me';
+import { usePathname, useRouter } from '@/i18n/routing';
 
 export function UserMenu() {
   const me = useMe();
-  const { signOut, openUserProfile } = useClerk();
+  const { signOut } = useClerk();
   const t = useTranslations('layout.profile');
-  const tHeader = useTranslations('layout.header');
-  const tLang = useTranslations('language');
-  const { resolvedTheme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const fullName = `${me.firstName} ${me.lastName}`;
   const initials = `${me.firstName[0]}${me.lastName[0]}`.toUpperCase();
+  const orgSlug = pathname.split('/')[1];
 
   return (
     <DropdownMenu>
@@ -63,30 +61,14 @@ export function UserMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => openUserProfile()}>
-            <BadgeCheck />
-            {t('account')}
-          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
-              setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+              router.push(`/${orgSlug}${paths.account.profile}`)
             }
           >
-            {resolvedTheme === 'dark' ? <Moon /> : <Sun />}
-            {tHeader('toggleTheme')}
+            <UserCircle />
+            {t('account')}
           </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <Globe />
-              {tHeader('language')}
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem>
-                <Check />
-                {tLang('en')}
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
