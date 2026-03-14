@@ -27,9 +27,16 @@ interface RoleCardProps {
   canManage: boolean;
   onEdit: (role: OrgRoleItem) => void;
   onDelete: (role: OrgRoleItem) => void;
+  onView: (role: OrgRoleItem) => void;
 }
 
-export function RoleCard({ role, canManage, onEdit, onDelete }: RoleCardProps) {
+export function RoleCard({
+  role,
+  canManage,
+  onEdit,
+  onDelete,
+  onView,
+}: RoleCardProps) {
   const t = useTranslations('roles');
 
   return (
@@ -44,7 +51,14 @@ export function RoleCard({ role, canManage, onEdit, onDelete }: RoleCardProps) {
           </div>
 
           {role.isSystem ? (
-            <LockIcon className="text-muted-foreground size-4 shrink-0" />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => onView(role)}
+              aria-label={t('viewPermissions')}
+            >
+              <LockIcon className="text-muted-foreground size-4" />
+            </Button>
           ) : canManage ? (
             <DropdownMenu>
               <DropdownMenuTrigger

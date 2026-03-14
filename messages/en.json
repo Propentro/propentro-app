@@ -236,7 +236,9 @@
     "editDescription": "Update the role name and permissions",
     "selectAll": "Select all",
     "deselectAll": "Deselect all",
-    "pageDescription": "Manage roles and their permissions for your organisation"
+    "pageDescription": "Manage roles and their permissions for your organisation",
+    "viewPermissions": "View Permissions",
+    "viewPermissionsDescription": "Permissions assigned to this system role"
   },
 
   "errorPages": {

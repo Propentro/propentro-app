@@ -23,6 +23,7 @@ import { RoleCard } from './role-card';
 import { RoleFormSheet } from './role-form-sheet';
 import { RolesEmptyState } from './roles-empty-state';
 import { RolesSkeleton } from './roles-skeleton';
+import { ViewPermissionsSheet } from './view-permissions-sheet';
 
 interface RolesContentProps {
   canManage: boolean;
@@ -37,6 +38,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
   const [formOpen, setFormOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<OrgRoleItem | null>(null);
   const [deletingRole, setDeletingRole] = useState<OrgRoleItem | null>(null);
+  const [viewingRole, setViewingRole] = useState<OrgRoleItem | null>(null);
 
   // ---------------------------------------------------------------------------
   // Queries & mutations
@@ -104,6 +106,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
               canManage={canManage}
               onEdit={handleEdit}
               onDelete={setDeletingRole}
+              onView={setViewingRole}
             />
           ))}
         </div>
@@ -154,6 +157,15 @@ export function RolesContent({ canManage }: RolesContentProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* View permissions sheet (system roles) */}
+      <ViewPermissionsSheet
+        role={viewingRole}
+        open={!!viewingRole}
+        onOpenChange={(open) => {
+          if (!open) setViewingRole(null);
+        }}
+      />
     </div>
   );
 }
