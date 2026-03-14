@@ -118,7 +118,7 @@ export function PhoneInput({
           </span>
           <ChevronsUpDownIcon className="text-muted-foreground size-3.5 shrink-0" />
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
+        <PopoverContent className="w-[300px] p-0" initialFocus={false}>
           <Command>
             <CommandInput placeholder={t('searchCountry')} />
             <CommandList>

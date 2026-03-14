@@ -66,7 +66,7 @@ export function CountryPicker({
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-[300px] p-0" initialFocus={false}>
         <Command>
           <CommandInput placeholder={t('searchCountry')} />
           <CommandList>
