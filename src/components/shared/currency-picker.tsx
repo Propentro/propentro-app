@@ -63,7 +63,7 @@ export function CurrencyPicker({
           )}
         >
           {selected
-            ? `${selected.code} — ${selected.name} (${selected.symbol})`
+            ? `${selected.name} (${selected.symbol})`
             : placeholderText}
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />
@@ -77,7 +77,7 @@ export function CurrencyPicker({
               {currencies.map((currency) => (
                 <CommandItem
                   key={currency.code}
-                  value={`${currency.code} ${currency.name} ${currency.symbol}`}
+                  value={`${currency.name} ${currency.symbol}`}
                   data-checked={value === currency.code}
                   onSelect={() => {
                     onChange(currency.code);
@@ -85,7 +85,7 @@ export function CurrencyPicker({
                   }}
                 >
                   <span>
-                    {currency.code} — {currency.name} ({currency.symbol})
+                    {currency.name} ({currency.symbol})
                   </span>
                 </CommandItem>
               ))}
