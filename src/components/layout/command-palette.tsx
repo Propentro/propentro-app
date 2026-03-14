@@ -25,7 +25,6 @@ export function CommandPalette() {
   const me = useMe();
   const t = useTranslations('layout.search');
   const tPages = useTranslations('pages');
-  const tNav = useTranslations('settings.nav');
 
   const orgSlug = pathname.split('/')[1];
 
@@ -65,15 +64,15 @@ export function CommandPalette() {
           <CommandGroup heading={t('settings')}>
             <CommandItem onSelect={() => navigate(paths.settings.organization)}>
               <Building2 />
-              {tNav('organisation')}
+              {tPages('settingsOrganization')}
             </CommandItem>
             <CommandItem onSelect={() => navigate(paths.settings.members)}>
               <Users />
-              {tNav('members')}
+              {tPages('settingsMembers')}
             </CommandItem>
             <CommandItem onSelect={() => navigate(paths.settings.roles)}>
               <Shield />
-              {tNav('roles')}
+              {tPages('settingsRoles')}
             </CommandItem>
           </CommandGroup>
           <CommandGroup heading={t('account')}>

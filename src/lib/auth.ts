@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
+import { routes } from '@/config/routes';
 import { env } from '@/env.mjs';
 import type { CurrentUser, Permission } from '@/types/user.types';
 
@@ -71,7 +72,7 @@ export async function getMeOrRedirect(locale: string): Promise<CurrentUser> {
   const user = await getMe();
 
   if (!user) {
-    redirect(`/${locale}/sign-in`);
+    redirect(routes.signIn(locale));
   }
 
   return user;
@@ -109,7 +110,7 @@ export async function requirePermission(
 ): Promise<void> {
   const allowed = await hasPermission(permission);
   if (!allowed) {
-    redirect(`/${locale}/access-denied`);
+    redirect(routes.accessDenied(locale));
   }
 }
 

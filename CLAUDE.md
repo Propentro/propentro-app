@@ -412,6 +412,7 @@ Use `lucide-react` for all icons.
 - Use `useFormatter()` from `next-intl` for all date/time/number formatting
 - Use semantic status colours consistently (green=active, red=destructive, yellow=warning, blue=info, muted=inactive)
 - Show rich empty states (icon + title + description + CTA) when lists have zero items
+- Use route constants from `@/config/routes` for all navigation — never hardcode URL path strings. Use `routes` (server-side `redirect()` — includes locale) and `paths` (client-side `router.push()` / `Link href` — locale handled by next-intl automatically)
 
 ### DON'T
 

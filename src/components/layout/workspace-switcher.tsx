@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { paths } from '@/config/routes';
 import { useOrganizations } from '@/hooks/use-organizations';
 import { useRouter } from '@/i18n/routing';
 
@@ -44,7 +45,7 @@ export function WorkspaceSwitcher() {
   const handleSwitch = async (orgId: string, slug: string) => {
     if (setActive) {
       await setActive({ organization: orgId });
-      router.push(`/${slug}`);
+      router.push(`/${slug}${paths.home}`);
     }
   };
 

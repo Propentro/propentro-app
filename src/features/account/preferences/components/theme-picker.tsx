@@ -3,9 +3,9 @@
 import { Check, Monitor, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMounted } from '@/hooks/use-mounted';
 import { cn } from '@/lib/utils';
 
 const themes = [
@@ -33,9 +33,7 @@ const themes = [
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();
   const t = useTranslations('account.preferences.theme');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   if (!mounted) {
     return (

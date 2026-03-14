@@ -5,24 +5,17 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { dark } from '@clerk/themes';
 import { useLocale } from 'next-intl';
 import { useTheme } from 'next-themes';
-import { useSyncExternalStore } from 'react';
+
+import { useMounted } from '@/hooks/use-mounted';
 
 const clerkLocales: Record<string, typeof enGB> = {
   en: enGB,
 };
 
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
-  const mounted = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
-  );
+  const mounted = useMounted();
 
   return (
     <ClerkProvider

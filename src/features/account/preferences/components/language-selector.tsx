@@ -28,7 +28,7 @@ export function LanguageSelector() {
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
       <SelectTrigger className="w-48">
-        <SelectValue />
+        <SelectValue>{t(locale)}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {routing.locales.map((loc) => (
