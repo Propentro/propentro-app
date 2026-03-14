@@ -5,7 +5,11 @@ import { useTranslations } from 'next-intl';
 import type { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { CountryPicker } from '@/components/shared/country-picker';
+import { CurrencyPicker } from '@/components/shared/currency-picker';
 import { FormField } from '@/components/shared/form-field';
+import { PhoneInput } from '@/components/shared/phone-input';
+import { TimezonePicker } from '@/components/shared/timezone-picker';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -112,11 +116,22 @@ function OrgSettingsFormFields({
             <FormField
               label={t('contactPhone')}
               name="contactPhone"
-              placeholder={t('contactPhonePlaceholder')}
               methods={methods}
               disabled={disabled}
-              type="tel"
-            />
+            >
+              <PhoneInput
+                id="contactPhone"
+                value={methods.watch('contactPhone')}
+                onChange={(val) =>
+                  methods.setValue('contactPhone', val, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                placeholder={t('contactPhonePlaceholder')}
+                disabled={disabled}
+              />
+            </FormField>
           </div>
         </CardContent>
       </Card>
@@ -171,10 +186,22 @@ function OrgSettingsFormFields({
             <FormField
               label={t('countryCode')}
               name="countryCode"
-              placeholder={t('countryCodePlaceholder')}
               methods={methods}
               disabled={disabled}
-            />
+            >
+              <CountryPicker
+                id="countryCode"
+                value={methods.watch('countryCode')}
+                onChange={(val) =>
+                  methods.setValue('countryCode', val, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                placeholder={t('countryCodePlaceholder')}
+                disabled={disabled}
+              />
+            </FormField>
           </div>
         </CardContent>
       </Card>
@@ -204,10 +231,22 @@ function OrgSettingsFormFields({
             <FormField
               label={t('taxCountry')}
               name="taxCountry"
-              placeholder={t('taxCountryPlaceholder')}
               methods={methods}
               disabled={disabled}
-            />
+            >
+              <CountryPicker
+                id="taxCountry"
+                value={methods.watch('taxCountry')}
+                onChange={(val) =>
+                  methods.setValue('taxCountry', val, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                placeholder={t('taxCountryPlaceholder')}
+                disabled={disabled}
+              />
+            </FormField>
           </div>
         </CardContent>
       </Card>
@@ -223,17 +262,41 @@ function OrgSettingsFormFields({
             <FormField
               label={t('currencyCode')}
               name="currencyCode"
-              placeholder={t('currencyCodePlaceholder')}
               methods={methods}
               disabled={disabled}
-            />
+            >
+              <CurrencyPicker
+                id="currencyCode"
+                value={methods.watch('currencyCode')}
+                onChange={(val) =>
+                  methods.setValue('currencyCode', val, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                placeholder={t('currencyCodePlaceholder')}
+                disabled={disabled}
+              />
+            </FormField>
             <FormField
               label={t('timezone')}
               name="timezone"
-              placeholder={t('timezonePlaceholder')}
               methods={methods}
               disabled={disabled}
-            />
+            >
+              <TimezonePicker
+                id="timezone"
+                value={methods.watch('timezone')}
+                onChange={(val) =>
+                  methods.setValue('timezone', val, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                placeholder={t('timezonePlaceholder')}
+                disabled={disabled}
+              />
+            </FormField>
           </div>
         </CardContent>
       </Card>
