@@ -19,6 +19,12 @@
       "nextPage": "Go to next page",
       "lastPage": "Go to last page"
     },
+    "selectCountry": "Select country",
+    "searchCountry": "Search countries...",
+    "selectCurrency": "Select currency",
+    "searchCurrency": "Search currencies...",
+    "selectTimezone": "Select timezone",
+    "searchTimezone": "Search timezones...",
     "dates": {
       "today": "Today",
       "yesterday": "Yesterday",
