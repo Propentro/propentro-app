@@ -38,14 +38,16 @@
       "logoAria": "Site Logo",
       "openSidebar": "Open Sidebar Menu",
       "labels": {
-        "overview": "Overview"
+        "overview": "Overview",
+        "settings": "Settings"
       },
       "workspaces": "Workspaces",
       "menu": {
         "dashboard": "Dashboard",
         "properties": "Properties",
         "tenants": "Tenants",
-        "finance": "Finance"
+        "finance": "Finance",
+        "settings": "Settings"
       }
     },
     "header": {
