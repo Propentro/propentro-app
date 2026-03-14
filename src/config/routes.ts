@@ -13,6 +13,11 @@ export const paths = {
     members: '/settings/members',
     roles: '/settings/roles',
   },
+  account: {
+    root: '/account',
+    profile: '/account/profile',
+    preferences: '/account/preferences',
+  },
 } as const;
 
 /**
@@ -30,5 +35,11 @@ export const routes = {
       `/${locale}/${orgSlug}${paths.settings.members}`,
     roles: (locale: string, orgSlug: string) =>
       `/${locale}/${orgSlug}${paths.settings.roles}`,
+  },
+  account: {
+    profile: (locale: string, orgSlug: string) =>
+      `/${locale}/${orgSlug}${paths.account.profile}`,
+    preferences: (locale: string, orgSlug: string) =>
+      `/${locale}/${orgSlug}${paths.account.preferences}`,
   },
 };
