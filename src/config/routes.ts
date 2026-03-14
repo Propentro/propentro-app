@@ -9,6 +9,7 @@ export const paths = {
   selectWorkspace: '/select-workspace',
   accessDenied: '/access-denied',
   settings: {
+    root: '/settings',
     organization: '/settings/organization',
     members: '/settings/members',
     roles: '/settings/roles',

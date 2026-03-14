@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { PERMISSIONS } from '@/config/permissions';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
-export const metadata: Metadata = { title: 'Roles & Permissions' };
+export const metadata: Metadata = { title: 'Roles & Permissions | Propentro' };
 
 interface Props {
   params: Promise<{ locale: string }>;

@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 
 import { PERMISSIONS } from '@/config/permissions';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
-export const metadata: Metadata = { title: 'Organisation Settings' };
+export const metadata: Metadata = { title: 'Organisation Settings | Propentro' };
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -15,18 +14,7 @@ export default async function OrganizationSettingsPage({ params }: Props) {
 
   await requirePermission(PERMISSIONS.settings.read, locale);
 
-  const [t, canEdit] = await Promise.all([
-    getTranslations('settings.organization'),
-    hasPermission(PERMISSIONS.settings.update),
-  ]);
+  const _canEdit = await hasPermission(PERMISSIONS.settings.update);
 
-  return (
-    <div>
-      <p className="text-muted-foreground text-sm">
-        {canEdit
-          ? t('readOnlyNotice').replace('do not', 'do')
-          : t('readOnlyNotice')}
-      </p>
-    </div>
-  );
+  return <div>{/* Organisation settings form will be built here */}</div>;
 }

@@ -7,7 +7,6 @@ import { paths } from '@/config/routes';
 import { useMe } from '@/hooks/use-me';
 import { Link, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
-import type { Permission } from '@/types/user.types';
 
 const settingsItems = [
   {
@@ -33,7 +32,7 @@ export function SettingsNav({ orgSlug }: { orgSlug: string }) {
   const { permissions } = useMe();
 
   const visibleItems = settingsItems.filter((item) =>
-    permissions.includes(item.permission as Permission)
+    permissions.includes(item.permission)
   );
 
   return (

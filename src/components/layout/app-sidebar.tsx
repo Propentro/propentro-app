@@ -61,7 +61,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
                 <SidebarNav
                   item={{
                     title: t('menu.settings'),
-                    href: paths.settings.organization,
+                    href: paths.settings.root,
                     icon: Settings,
                   }}
                 />
