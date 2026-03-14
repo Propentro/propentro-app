@@ -209,7 +209,7 @@ Use `lucide-react` for all icons.
 - Use `cn()` from `@/lib/utils` for conditional class names
 - Use `useSession()` for `clerkOrgId` in query keys
 - Use `orgKeys.scope(clerkOrgId, 'resource')` for all feature query keys
-- Use translation keys for all user-visible text
+- Use translation keys (`useTranslations` / `getTranslations`) for **every** user-visible string — labels, placeholders, aria-labels, error messages, empty states, button text, toasts, everything
 - Type mutations as `useMutation<TData, ApiError, TVariables>`
 - Use `render` prop (not `asChild`) with shadcn/ui v4 components
 - Put toast calls in components, cache invalidation in hooks
@@ -219,7 +219,36 @@ Use `lucide-react` for all icons.
 - Import `@clerk/nextjs` in feature code (use `useSession()` or `useMe()`)
 - Use `z.preprocess()` — always use `z.transform()`
 - Put feature-specific types in `src/types/`
-- Hardcode English text in components
+- **Hardcode ANY text** in components, pages, hooks, or utilities — every user-visible string must come from `messages/en.json` via `useTranslations` (client) or `getTranslations` (server). This includes button labels, placeholders, aria-labels, error messages, empty states, tooltips, and toast messages. The only exception is the brand name "Propentro" when used as a proper noun (e.g., metadata).
 - Use `next/link` or `next/navigation` (use `src/i18n/routing.ts` exports)
 - Use `asChild` prop — use `render` prop instead (shadcn v4 / Base UI)
-- Use meaningless fallback values (`?? 'Propentro'`, `?? 'P'`, `?? '?'`) — if data is guaranteed by auth guards or providers, access it directly. Use early returns or loading states instead of hiding broken state behind placeholder strings.
+- Use meaningless fallback values (`?? 'Propentro'`, `?? 'P'`, `?? '?'`, `|| 'U'`) — if data is guaranteed by auth guards, providers, or API contracts, access it directly without fallbacks. Use early returns or loading states instead of hiding broken state behind placeholder strings. `??` for null coalescing in data transforms (e.g., `data.field ?? ''` for form defaults) is fine.
+
+## Translation Key Guidelines
+
+All user-facing text lives in `messages/en.json`. Follow these conventions:
+
+### Structure
+
+- **Shared keys** go under `common.*` (e.g., `common.yes`, `common.cancel`, `common.table.rowsPerPage`)
+- **Feature keys** go under their own namespace (e.g., `members.*`, `roles.*`, `settings.organization.*`)
+- **Layout keys** go under `layout.*` (sidebar, header, profile)
+- **Page titles** go under `pages.*`
+- **Error pages** go under `errorPages.*`
+
+### Naming
+
+- Use camelCase for key names
+- Group related keys with dot notation (e.g., `common.table.firstPage`)
+- Use ICU message format for plurals: `"{count, plural, one {# item} other {# items}}"`
+- Use interpolation for dynamic values: `"Page {page} of {total}"`
+
+### Spelling
+
+- **Key names** (code layer): American English (`organization`, `color`)
+- **Key values** (UI text): British English (`Organisation`, `Colour`)
+
+### Reusable components
+
+- Generic components (DataTable, ConfirmPopover, PhoneInput) should use `common.*` translations internally
+- Feature-specific text should be passed as props from the calling component, which reads from its own namespace

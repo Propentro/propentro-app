@@ -39,7 +39,7 @@ export function WorkspaceList({
         >
           <CardContent className="flex items-center gap-3 p-4">
             <div className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded font-semibold">
-              {org.name[0]?.toUpperCase() ?? '?'}
+              {org.name[0].toUpperCase()}
             </div>
             <span className="font-medium">{org.name}</span>
           </CardContent>

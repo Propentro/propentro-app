@@ -30,8 +30,7 @@ export function UserMenu() {
   const { resolvedTheme, setTheme } = useTheme();
 
   const fullName = `${me.firstName} ${me.lastName}`;
-  const initials =
-    `${me.firstName?.[0] ?? ''}${me.lastName?.[0] ?? ''}`.toUpperCase() || 'U';
+  const initials = `${me.firstName[0]}${me.lastName[0]}`.toUpperCase();
 
   return (
     <DropdownMenu>
