@@ -72,10 +72,6 @@ function CommandInput({
       <InputGroup className="border-input/30 bg-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!">
         <CommandPrimitive.Input
           data-slot="command-input"
-          ref={(el) => {
-            // Focus with preventScroll to avoid page jump when inside a Portal
-            if (el) el.focus({ preventScroll: true });
-          }}
           className={cn(
             'w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
             className

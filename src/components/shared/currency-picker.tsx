@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import {
   Command,
   CommandEmpty,
@@ -37,13 +38,14 @@ export function CurrencyPicker({
   id,
 }: CurrencyPickerProps) {
   const [open, setOpen] = useState(false);
+  const handleOpenChange = usePreserveScroll(setOpen);
   const t = useTranslations('common');
 
   const selected = currencies.find((c) => c.code === value);
   const placeholderText = placeholder ?? t('selectCurrency');
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger
         render={
           <Button
@@ -69,7 +71,7 @@ export function CurrencyPicker({
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0" initialFocus={false}>
+      <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput placeholder={t('searchCurrency')} />
           <CommandList>

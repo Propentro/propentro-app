@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import {
   Command,
   CommandEmpty,
@@ -41,6 +42,7 @@ export function PhoneInput({
   id,
 }: PhoneInputProps) {
   const [open, setOpen] = useState(false);
+  const handleOpenChange = usePreserveScroll(setOpen);
   const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY);
   const [nationalNumber, setNationalNumber] = useState('');
   const t = useTranslations('common');
@@ -99,7 +101,7 @@ export function PhoneInput({
 
   return (
     <div className="flex gap-1.5">
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger
           render={
             <Button
@@ -119,7 +121,7 @@ export function PhoneInput({
           </span>
           <ChevronsUpDownIcon className="text-muted-foreground size-3.5 shrink-0" />
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0" initialFocus={false}>
+        <PopoverContent className="w-[300px] p-0">
           <Command>
             <CommandInput placeholder={t('searchCountry')} />
             <CommandList>
