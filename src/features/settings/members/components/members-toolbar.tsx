@@ -64,10 +64,16 @@ export function MembersToolbar({
         onValueChange={(value) => onStatusChange(value ?? 'all')}
       >
         <SelectTrigger className="w-36">
-          <SelectValue placeholder={t('filterStatus')} />
+          <SelectValue placeholder={t('filterStatus')}>
+            {status === 'all'
+              ? t('allStatuses')
+              : status === 'active'
+                ? t('statusActive')
+                : t('statusDeactivated')}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">{t('filterStatus')}</SelectItem>
+          <SelectItem value="all">{t('allStatuses')}</SelectItem>
           <SelectItem value="active">{t('statusActive')}</SelectItem>
           <SelectItem value="deactivated">{t('statusDeactivated')}</SelectItem>
         </SelectContent>
@@ -78,10 +84,14 @@ export function MembersToolbar({
         onValueChange={(value) => onRoleIdChange(value ?? 'all')}
       >
         <SelectTrigger className="w-36">
-          <SelectValue placeholder={t('filterRole')} />
+          <SelectValue placeholder={t('filterRole')}>
+            {roleId === 'all'
+              ? t('allRoles')
+              : roles.find((r) => r.roleId === roleId)?.name}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">{t('filterRole')}</SelectItem>
+          <SelectItem value="all">{t('allRoles')}</SelectItem>
           {roles.map((role) => (
             <SelectItem key={role.roleId} value={role.roleId}>
               {role.name}

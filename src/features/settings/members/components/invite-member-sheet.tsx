@@ -100,7 +100,9 @@ export function InviteMemberSheet({
                     }
                   >
                     <SelectTrigger id="roleId" className="w-full">
-                      <SelectValue placeholder={t('labelRole')} />
+                      <SelectValue placeholder={t('labelRole')}>
+                        {roles?.find((r) => r.roleId === watch('roleId'))?.name}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {roles?.map((role) => (

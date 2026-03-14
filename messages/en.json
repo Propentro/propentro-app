@@ -162,6 +162,8 @@
     "tableTitle": "All Members",
     "filterStatus": "Filter by status",
     "filterRole": "Filter by role",
+    "allStatuses": "All Statuses",
+    "allRoles": "All Roles",
     "searchPlaceholder": "Search members...",
     "addMember": "Invite Member",
     "clear": "Clear",
