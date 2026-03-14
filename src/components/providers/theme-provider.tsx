@@ -7,7 +7,7 @@ export function ThemeProvider({ children }: React.PropsWithChildren) {
     <NextThemeProvider
       attribute="class"
       defaultTheme="light"
-      enableSystem={false}
+      enableSystem={true}
     >
       {children}
     </NextThemeProvider>
