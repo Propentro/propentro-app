@@ -49,16 +49,15 @@
       }
     },
     "header": {
-      "logoAria": "Site Logo",
-      "toggleTheme": "Toggle theme",
-      "language": "Language"
+      "logoAria": "Site Logo"
     },
     "search": {
       "placeholder": "Type a command or search...",
       "ariaLabel": "Search",
       "noResults": "No results found.",
       "navigation": "Navigation",
-      "settings": "Settings"
+      "settings": "Settings",
+      "account": "Account"
     },
     "profile": {
       "account": "Account",
