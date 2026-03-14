@@ -117,10 +117,11 @@ export function AppHeader() {
   const pageSegments = parts.slice(1);
 
   function handleSearchClick() {
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent('keydown', {
         key: 'k',
         ctrlKey: true,
+        metaKey: true,
         bubbles: true,
       })
     );
