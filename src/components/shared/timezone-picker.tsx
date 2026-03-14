@@ -54,6 +54,7 @@ export function TimezonePicker({
       <PopoverTrigger
         render={
           <Button
+            type="button"
             variant="outline"
             role="combobox"
             aria-expanded={open}

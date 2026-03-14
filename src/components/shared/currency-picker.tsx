@@ -47,6 +47,7 @@ export function CurrencyPicker({
       <PopoverTrigger
         render={
           <Button
+            type="button"
             variant="outline"
             role="combobox"
             aria-expanded={open}

@@ -103,6 +103,7 @@ export function PhoneInput({
         <PopoverTrigger
           render={
             <Button
+              type="button"
               variant="outline"
               role="combobox"
               aria-expanded={open}
