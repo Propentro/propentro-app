@@ -226,7 +226,14 @@
     "updateSuccess": "Role updated successfully.",
     "updateError": "Failed to update role. Please try again.",
     "deleteSuccess": "Role deleted successfully.",
-    "deleteError": "Failed to delete role. Please try again."
+    "deleteError": "Failed to delete role. Please try again.",
+    "emptyTitle": "No custom roles",
+    "emptyDescription": "Create custom roles to define specific permissions for your team members",
+    "createDescription": "Define the role name and select permissions",
+    "editDescription": "Update the role name and permissions",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "pageDescription": "Manage roles and their permissions for your organisation"
   },
 
   "errorPages": {

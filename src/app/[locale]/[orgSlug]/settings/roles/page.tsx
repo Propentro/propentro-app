@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { PERMISSIONS } from '@/config/permissions';
+import { RolesContent } from '@/features/settings/roles/components/roles-content';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
 export const metadata: Metadata = { title: 'Roles & Permissions | Propentro' };
@@ -14,7 +15,7 @@ export default async function RolesSettingsPage({ params }: Props) {
 
   await requirePermission(PERMISSIONS.roles.read, locale);
 
-  const _canManage = await hasPermission(PERMISSIONS.roles.manage);
+  const canManage = await hasPermission(PERMISSIONS.roles.manage);
 
-  return <div>{/* Roles & permissions feature UI will be built here */}</div>;
+  return <RolesContent canManage={canManage} />;
 }
