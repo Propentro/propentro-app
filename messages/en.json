@@ -1,12 +1,28 @@
 {
   "common": {
     "clear": "Clear",
-    "noResultFound": "No Result Found",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "noResultFound": "No results found.",
+    "phoneNumber": "Phone number",
     "table": {
       "rowsPerPage": "Rows per page",
       "pageOf": "Page {page} of {total}",
+      "selectedCount": "{selected} of {total} row(s) selected",
       "searchPlaceholder": "Search...",
-      "clearFilters": "Clear"
+      "clearFilters": "Clear",
+      "firstPage": "Go to first page",
+      "previousPage": "Go to previous page",
+      "nextPage": "Go to next page",
+      "lastPage": "Go to last page"
+    },
+    "dates": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
     }
   },
 
