@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
+import { PERMISSIONS } from '@/config/permissions';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
 export const metadata: Metadata = { title: 'Organisation Settings' };
@@ -12,11 +13,11 @@ interface Props {
 export default async function OrganizationSettingsPage({ params }: Props) {
   const { locale } = await params;
 
-  await requirePermission('org:settings:read', locale);
+  await requirePermission(PERMISSIONS.settings.read, locale);
 
   const [t, canEdit] = await Promise.all([
     getTranslations('settings.organization'),
-    hasPermission('org:settings:update'),
+    hasPermission(PERMISSIONS.settings.update),
   ]);
 
   return (
