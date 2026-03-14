@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { PERMISSIONS } from '@/config/permissions';
+import { OrgSettingsForm } from '@/features/settings/organization/components/org-settings-form';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
 export const metadata: Metadata = { title: 'Organisation Settings | Propentro' };
@@ -14,7 +15,7 @@ export default async function OrganizationSettingsPage({ params }: Props) {
 
   await requirePermission(PERMISSIONS.settings.read, locale);
 
-  const _canEdit = await hasPermission(PERMISSIONS.settings.update);
+  const canEdit = await hasPermission(PERMISSIONS.settings.update);
 
-  return <div>{/* Organisation settings form will be built here */}</div>;
+  return <OrgSettingsForm canEdit={canEdit} />;
 }

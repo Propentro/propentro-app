@@ -86,10 +86,15 @@
   "settings": {
     "organization": {
       "sectionProfile": "Organisation Profile",
+      "sectionProfileDescription": "Basic information about your organisation",
       "sectionContact": "Primary Contact",
+      "sectionContactDescription": "Main point of contact for this organisation",
       "sectionAddress": "Address",
+      "sectionAddressDescription": "Registered business address",
       "sectionLegal": "Legal & Tax",
+      "sectionLegalDescription": "Legal entity and tax registration details",
       "sectionRegional": "Regional Settings",
+      "sectionRegionalDescription": "Currency and timezone for this organisation",
       "name": "Organisation Name",
       "namePlaceholder": "Enter organisation name",
       "contactName": "Contact Name",
