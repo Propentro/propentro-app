@@ -63,6 +63,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
   const [status, setStatus] = useState('all');
   const [roleId, setRoleId] = useState('all');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const timeout = setTimeout(() => setDebouncedSearch(search), 300);
@@ -72,7 +73,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
   // Reset page when filters change
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, status, roleId]);
+  }, [debouncedSearch, status, roleId, pageSize]);
 
   // ---------------------------------------------------------------------------
   // Sheet / dialog state
@@ -93,7 +94,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
     status: status === 'all' ? undefined : status,
     roleId: roleId === 'all' ? undefined : roleId,
     page,
-    pageSize: 10,
+    pageSize,
   });
   const { data: roles } = useRoles();
 
@@ -258,13 +259,14 @@ export function MembersContent({ canManage }: MembersContentProps) {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-    state: { pagination: { pageIndex: page - 1, pageSize: 10 } },
+    state: { pagination: { pageIndex: page - 1, pageSize } },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
-          ? updater({ pageIndex: page - 1, pageSize: 10 })
+          ? updater({ pageIndex: page - 1, pageSize })
           : updater;
       setPage(next.pageIndex + 1);
+      setPageSize(next.pageSize);
     },
   });
 
