@@ -25,6 +25,7 @@ import type { OrgRoleItem } from '../types';
 import {
   createRoleDefaults,
   type CreateRoleInput,
+  type CreateRoleOutput,
   createRoleSchema,
 } from '../validators/role.schema';
 
@@ -52,9 +53,11 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
     : createRoleDefaults;
 
   function handleSubmit(values: CreateRoleInput) {
+    // zodResolver already ran transforms; cast to output type
+    const payload = values as unknown as CreateRoleOutput;
     if (isEditing) {
       updateRole.mutate(
-        { roleId: role.roleId, ...values },
+        { roleId: role.roleId, ...payload },
         {
           onSuccess: () => {
             toast.success(t('updateSuccess'));
@@ -66,7 +69,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
         }
       );
     } else {
-      createRole.mutate(values, {
+      createRole.mutate(payload, {
         onSuccess: () => {
           toast.success(t('createSuccess'));
           onOpenChange(false);
