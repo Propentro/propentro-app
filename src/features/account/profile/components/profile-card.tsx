@@ -34,16 +34,18 @@ export function ProfileCard() {
         <Separator className="my-5" />
 
         <dl className="space-y-4">
-          <div className="flex items-center justify-between">
-            <dt className="text-muted-foreground text-sm">{t('role')}</dt>
-            <dd className="flex gap-1.5">
-              {me.role.map((r) => (
-                <Badge key={r} variant="secondary">
-                  {r}
-                </Badge>
-              ))}
-            </dd>
-          </div>
+          {me.role.length > 0 && (
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground text-sm">{t('role')}</dt>
+              <dd className="flex gap-1.5">
+                {me.role.map((r) => (
+                  <Badge key={r} variant="secondary">
+                    {r}
+                  </Badge>
+                ))}
+              </dd>
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground text-sm">
               {t('organization')}

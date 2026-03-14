@@ -3,7 +3,9 @@
 import { Check, Monitor, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 const themes = [
@@ -31,6 +33,19 @@ const themes = [
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();
   const t = useTranslations('account.preferences.theme');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div className="grid grid-cols-3 gap-3">
+        <Skeleton className="h-24 rounded-lg" />
+        <Skeleton className="h-24 rounded-lg" />
+        <Skeleton className="h-24 rounded-lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-3 gap-3">
