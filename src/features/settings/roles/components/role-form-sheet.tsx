@@ -2,6 +2,7 @@
 
 import { LoaderIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,6 @@ import type { OrgRoleItem } from '../types';
 import {
   createRoleDefaults,
   type CreateRoleInput,
-  type CreateRoleOutput,
   createRoleSchema,
 } from '../validators/role.schema';
 
@@ -44,17 +44,20 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
   const isEditing = !!role;
   const isPending = createRole.isPending || updateRole.isPending;
 
-  const resetValues: CreateRoleInput = role
-    ? {
-        name: role.name,
-        description: role.description ?? '',
-        permissionCodes: role.permissionCodes,
-      }
-    : createRoleDefaults;
+  const resetValues = useMemo<CreateRoleInput>(
+    () =>
+      role
+        ? {
+            name: role.name,
+            description: role.description ?? '',
+            permissionCodes: role.permissionCodes,
+          }
+        : createRoleDefaults,
+    [role]
+  );
 
   function handleSubmit(values: CreateRoleInput) {
-    // zodResolver already ran transforms; cast to output type
-    const payload = values as unknown as CreateRoleOutput;
+    const payload = createRoleSchema.parse(values);
     if (isEditing) {
       updateRole.mutate(
         { roleId: role.roleId, ...payload },
