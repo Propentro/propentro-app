@@ -3,7 +3,11 @@
 import type { LucideIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
-import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar';
 import { useHasPermission } from '@/hooks/use-me';
 import { Link, usePathname } from '@/i18n/routing';
 import type { Permission } from '@/types/user.types';
@@ -19,6 +23,7 @@ export function SidebarNav({ item }: { item: NavItem }) {
   const pathname = usePathname();
   const params = useParams();
   const orgSlug = params.orgSlug as string;
+  const { setOpenMobile, isMobile } = useSidebar();
   const hasPermission = useHasPermission(
     item.permission ?? ('org:settings:read' as Permission)
   );
@@ -39,6 +44,9 @@ export function SidebarNav({ item }: { item: NavItem }) {
         render={<Link href={fullHref} />}
         isActive={isActive}
         tooltip={item.title}
+        onClick={() => {
+          if (isMobile) setOpenMobile(false);
+        }}
       >
         <item.icon />
         <span>{item.title}</span>

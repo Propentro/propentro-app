@@ -39,7 +39,7 @@ export function MembersToolbar({
 }: MembersToolbarProps) {
   const t = useTranslations('members');
 
-  const hasFilters = status !== 'all' || roleId !== 'all';
+  const hasFilters = search !== '' || status !== 'all' || roleId !== 'all';
 
   function clearFilters() {
     onStatusChange('all');
