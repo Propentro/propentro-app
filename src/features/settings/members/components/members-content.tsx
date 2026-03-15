@@ -222,7 +222,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
                   <DropdownMenuItem
                     onClick={() => handleEditRoles(member)}
                   >
-                    {t('editRolesAriaLabel')}
+                    {t('actionEditRoles')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {member.status === 'active' ? (
@@ -230,13 +230,13 @@ export function MembersContent({ canManage }: MembersContentProps) {
                       variant="destructive"
                       onClick={() => setDeactivatingMember(member)}
                     >
-                      {t('deactivateAriaLabel')}
+                      {t('actionDeactivate')}
                     </DropdownMenuItem>
                   ) : (
                     <DropdownMenuItem
                       onClick={() => handleReactivate(member)}
                     >
-                      {t('reactivateAriaLabel')}
+                      {t('actionReactivate')}
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuContent>
