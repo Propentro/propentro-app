@@ -1,0 +1,29 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { apiClient } from '@/lib/api-client';
+import type { ApiError } from '@/types/api.types';
+
+import { adminKeys } from './admin-query-keys';
+
+// ---------------------------------------------------------------------------
+// Hooks
+// ---------------------------------------------------------------------------
+
+export function useRemoveMember(orgPublicId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, string>({
+    mutationFn: (userPublicId) =>
+      apiClient.delete<void>(
+        `/admin/organisations/${orgPublicId}/members/${userPublicId}`
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organisations.members(orgPublicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organisations.detail(orgPublicId),
+      });
+    },
+  });
+}
