@@ -76,6 +76,7 @@ const eslintConfig = defineConfig([
       'src/middleware.ts',
       'src/lib/auth.ts',
       'src/lib/proxy-request.ts',
+      'src/lib/admin-proxy-request.ts',
       'src/components/providers/**',
       'src/components/layout/**',
       'src/features/select-workspace/**',
