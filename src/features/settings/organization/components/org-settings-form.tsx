@@ -328,10 +328,10 @@ function OrgSettingsFormFields({
 
 export function OrgSettingsForm({ canEdit }: OrgSettingsFormProps) {
   const t = useTranslations('settings.organization');
-  const { data, isLoading, isError } = useOrgSettings();
+  const { data, isPending: isQueryPending, isError } = useOrgSettings();
   const { mutate, isPending } = useUpdateOrgSettings();
 
-  if (isLoading) {
+  if (isQueryPending) {
     return <OrgSettingsSkeleton />;
   }
 

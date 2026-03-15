@@ -90,7 +90,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
   // ---------------------------------------------------------------------------
   // Queries & mutations
   // ---------------------------------------------------------------------------
-  const { data, isLoading } = useMembers({
+  const { data, isPending } = useMembers({
     search: debouncedSearch || undefined,
     status: status === 'all' ? undefined : status,
     roleId: roleId === 'all' ? undefined : roleId,
@@ -274,7 +274,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-  if (isLoading) {
+  if (isPending) {
     return <MembersSkeleton />;
   }
 

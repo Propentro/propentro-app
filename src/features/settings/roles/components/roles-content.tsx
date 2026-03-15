@@ -43,7 +43,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
   // ---------------------------------------------------------------------------
   // Queries & mutations
   // ---------------------------------------------------------------------------
-  const { data: roles, isLoading } = useRoles();
+  const { data: roles, isPending } = useRoles();
   const deleteRole = useDeleteRole();
 
   // ---------------------------------------------------------------------------
@@ -75,7 +75,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-  if (isLoading) {
+  if (isPending) {
     return <RolesSkeleton />;
   }
 

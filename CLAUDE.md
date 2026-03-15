@@ -354,6 +354,7 @@ Global command palette triggered by `Cmd+K` (`Ctrl+K` on Windows/Linux). Uses th
 - Hooks handle cache invalidation ONLY — no toasts, no modals
 - Cross-feature invalidation is allowed
 - `enabled: !!orgId` prevents queries from firing before org is loaded
+- Use `isPending` (not `isLoading`) for loading checks — when `enabled` is false, `isLoading` is false but `isPending` is true, so `isLoading` skips the skeleton and can flash error states
 - Toast calls go in COMPONENTS (not hooks)
 
 ### Form Schema Pattern
