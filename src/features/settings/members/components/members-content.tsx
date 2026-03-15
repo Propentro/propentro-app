@@ -46,6 +46,7 @@ import { InviteMemberSheet } from './invite-member-sheet';
 import { MembersEmptyState } from './members-empty-state';
 import { MembersSkeleton } from './members-skeleton';
 import { MembersToolbar } from './members-toolbar';
+import { PendingInvitesSection } from './pending-invites-section';
 
 const columnHelper = createColumnHelper<OrgMember>();
 
@@ -305,6 +306,8 @@ export function MembersContent({ canManage }: MembersContentProps) {
           <DataTablePagination table={table} />
         </>
       )}
+
+      {canManage && <PendingInvitesSection canManage={canManage} />}
 
       <InviteMemberSheet open={inviteOpen} onOpenChange={setInviteOpen} />
 

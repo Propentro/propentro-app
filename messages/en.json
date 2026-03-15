@@ -207,7 +207,17 @@
     "rolesUpdateError": "Failed to update member roles.",
     "emptyTitle": "No members yet",
     "emptyDescription": "Invite team members to collaborate on managing your properties",
-    "inviteDescription": "Send an email invitation to join this organisation"
+    "inviteDescription": "Send an email invitation to join this organisation",
+    "pendingInvitationsTitle": "Pending Invitations",
+    "inviteColumnEmail": "Email",
+    "inviteColumnRole": "Role",
+    "inviteColumnExpires": "Expires",
+    "cancelInviteAction": "Cancel",
+    "cancelInviteTitle": "Cancel Invitation",
+    "cancelInviteDescription": "This invitation will be cancelled and the recipient will no longer be able to join the organisation.",
+    "cancelInviteConfirm": "Cancel Invitation",
+    "cancelInviteSuccess": "Invitation cancelled.",
+    "cancelInviteError": "Failed to cancel invitation."
   },
 
   "roles": {

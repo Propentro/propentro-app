@@ -25,3 +25,18 @@ export type OrgMember = {
   joinedAt: ISODateTimeString;
   roles: OrgRole[];
 };
+
+// ---------------------------------------------------------------------------
+// Invites
+// ---------------------------------------------------------------------------
+
+export type InviteStatus = 'pending' | 'accepted' | 'cancelled' | 'expired';
+
+export type OrgInvite = {
+  inviteId: Id<'inv'>;
+  email: Email;
+  roleName: string;
+  status: InviteStatus;
+  expiresAt?: ISODateTimeString;
+  createdAt: ISODateTimeString;
+};

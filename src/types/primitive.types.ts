@@ -13,7 +13,8 @@
 export type IdPrefix =
   | 'usr' // User
   | 'org' // Organization
-  | 'rol'; // Role
+  | 'rol' // Role
+  | 'inv'; // Invite
 
 /**
  * Prefixed public ID — e.g. `"usr_x7k2m9"`.
