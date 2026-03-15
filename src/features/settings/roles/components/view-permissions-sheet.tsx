@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
   SheetContent,
@@ -54,12 +53,15 @@ export function ViewPermissionsSheet({
                 {group.group}
               </span>
 
-              <div className="space-y-2 pl-1">
+              <div className="space-y-1 pl-1">
                 {group.permissions.map((permission) => (
-                  <div key={permission.code} className="flex items-start gap-2">
-                    <Badge variant="secondary" className="shrink-0">
+                  <div
+                    key={permission.code}
+                    className="bg-muted/40 flex flex-col gap-0.5 rounded-md px-3 py-2"
+                  >
+                    <span className="text-xs font-medium">
                       {permission.code}
-                    </Badge>
+                    </span>
                     {permission.description && (
                       <span className="text-muted-foreground text-xs">
                         {permission.description}
