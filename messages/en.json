@@ -19,6 +19,12 @@
       "nextPage": "Go to next page",
       "lastPage": "Go to last page"
     },
+    "selectCountry": "Select country",
+    "searchCountry": "Search countries...",
+    "selectCurrency": "Select currency",
+    "searchCurrency": "Search currencies...",
+    "selectTimezone": "Select timezone",
+    "searchTimezone": "Search timezones...",
     "dates": {
       "today": "Today",
       "yesterday": "Yesterday",
@@ -38,18 +44,21 @@
       "logoAria": "Site Logo",
       "openSidebar": "Open Sidebar Menu",
       "labels": {
-        "overview": "Overview"
+        "overview": "Overview",
+        "settings": "Settings"
       },
       "workspaces": "Workspaces",
       "menu": {
         "dashboard": "Dashboard",
         "properties": "Properties",
         "tenants": "Tenants",
-        "finance": "Finance"
+        "finance": "Finance",
+        "settings": "Settings"
       }
     },
     "header": {
-      "logoAria": "Site Logo"
+      "logoAria": "Site Logo",
+      "search": "Search..."
     },
     "search": {
       "placeholder": "Type a command or search...",
@@ -84,10 +93,15 @@
   "settings": {
     "organization": {
       "sectionProfile": "Organisation Profile",
+      "sectionProfileDescription": "Basic information about your organisation",
       "sectionContact": "Primary Contact",
+      "sectionContactDescription": "Main point of contact for this organisation",
       "sectionAddress": "Address",
+      "sectionAddressDescription": "Registered business address",
       "sectionLegal": "Legal & Tax",
+      "sectionLegalDescription": "Legal entity and tax registration details",
       "sectionRegional": "Regional Settings",
+      "sectionRegionalDescription": "Currency and timezone for this organisation",
       "name": "Organisation Name",
       "namePlaceholder": "Enter organisation name",
       "contactName": "Contact Name",
@@ -155,6 +169,8 @@
     "tableTitle": "All Members",
     "filterStatus": "Filter by status",
     "filterRole": "Filter by role",
+    "allStatuses": "All Statuses",
+    "allRoles": "All Roles",
     "searchPlaceholder": "Search members...",
     "addMember": "Invite Member",
     "clear": "Clear",
@@ -171,12 +187,12 @@
     "labelRole": "Role",
     "sendInvitation": "Invite Member",
     "cancel": "Cancel",
-    "deactivateAriaLabel": "Deactivate member",
+    "actionEditRoles": "Edit Roles",
+    "actionDeactivate": "Deactivate",
+    "actionReactivate": "Reactivate",
     "deactivateTitle": "Deactivate Member",
     "deactivateDescription": "This member will lose access to the organisation. You can reactivate them at any time.",
     "confirm": "Confirm",
-    "reactivateAriaLabel": "Reactivate member",
-    "editRolesAriaLabel": "Edit member roles",
     "editRolesTitle": "Edit Member Roles",
     "saveRoles": "Save Roles",
     "inviteSuccess": "Invitation sent. The member will appear in the list once they accept.",
@@ -186,7 +202,10 @@
     "reactivateSuccess": "Member reactivated.",
     "reactivateError": "Failed to reactivate member.",
     "rolesUpdateSuccess": "Member roles updated.",
-    "rolesUpdateError": "Failed to update member roles."
+    "rolesUpdateError": "Failed to update member roles.",
+    "emptyTitle": "No members yet",
+    "emptyDescription": "Invite team members to collaborate on managing your properties",
+    "inviteDescription": "Send an email invitation to join this organisation"
   },
 
   "roles": {
@@ -216,7 +235,16 @@
     "updateSuccess": "Role updated successfully.",
     "updateError": "Failed to update role. Please try again.",
     "deleteSuccess": "Role deleted successfully.",
-    "deleteError": "Failed to delete role. Please try again."
+    "deleteError": "Failed to delete role. Please try again.",
+    "emptyTitle": "No custom roles",
+    "emptyDescription": "Create custom roles to define specific permissions for your team members",
+    "createDescription": "Define the role name and select permissions",
+    "editDescription": "Update the role name and permissions",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "pageDescription": "Manage roles and their permissions for your organisation",
+    "viewPermissions": "View Permissions",
+    "viewPermissionsDescription": "Permissions assigned to this system role"
   },
 
   "errorPages": {

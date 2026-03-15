@@ -155,6 +155,17 @@ Clerk is isolated in 3 layers:
 
 **Rule:** Feature code (`src/features/**`) NEVER imports `@clerk/nextjs` directly. ESLint enforces this.
 
+#### Permission Constants (`src/config/permissions.ts`)
+
+Permissions are centralised in a `PERMISSIONS` object with `feature.action` structure:
+
+```ts
+PERMISSIONS.settings.read   // 'org:settings:read'
+PERMISSIONS.members.manage  // 'org:members:manage'
+```
+
+When adding a new feature, add its permissions to `PERMISSIONS` in `config/permissions.ts`. For sidebar/nav visibility that depends on _any_ permission in a group, create a derived array (e.g., `ANY_SETTINGS_READ_PERMISSION`).
+
 ---
 
 ## Feature Development
@@ -201,6 +212,10 @@ Every authenticated page follows this pattern:
 
 **Read vs write permission:** `requirePermission('org:resource:read')` is a **gate** — blocks the entire page. `hasPermission('org:resource:manage')` is a **prop** — passed to components to show/hide write actions (edit buttons, delete, create). Both happen in the server component `page.tsx`.
 
+### Hub Page Redirect
+
+When a section has multiple sub-pages (e.g., `/settings` → organisation, members, roles), the parent route's `page.tsx` should **not render content**. Instead, it iterates through a permission → path map and redirects to the first accessible sub-page. Falls back to `/access-denied` if the user has no permissions. See `src/app/[locale]/[orgSlug]/settings/page.tsx` for the pattern.
+
 ### Page Metadata
 
 Every page must export `metadata` (static) or `generateMetadata` (dynamic) with a descriptive title. Format: `"Page Name | Propentro"`. Never leave the browser tab showing just "Propentro".
@@ -239,6 +254,32 @@ Never show just a text row in an empty table. Empty states are a key onboarding 
 ---
 
 ## UX Patterns
+
+### Breadcrumbs
+
+Breadcrumbs live in `AppHeader` (`src/components/layout/app-header.tsx`) and are **automatically derived from the URL pathname**.
+
+#### How it works
+
+1. `usePathname()` returns the locale-stripped path (e.g., `/acme/settings/members`)
+2. Split into `orgSlug` + `pageSegments` (e.g., `["settings", "members"]`)
+3. Each segment is looked up in `SEGMENT_TO_TRANSLATION_KEY` to get a `pages.*` translation key
+4. Paths are accumulated to build hrefs (e.g., `/acme/settings`, `/acme/settings/members`)
+5. "Dashboard" is always the first item; last segment is non-clickable (`BreadcrumbPage`); others are links
+
+#### Adding breadcrumbs for a new page
+
+1. Add the URL segment → translation key mapping to `SEGMENT_TO_TRANSLATION_KEY` in `app-header.tsx`
+2. Add the corresponding `pages.*` translation to `messages/en.json`
+
+That's it — breadcrumbs appear automatically based on the URL.
+
+#### Rules
+
+- `AppHeader` is the single source for breadcrumbs — never render them elsewhere
+- `PageHeader` has an unused `breadcrumb` prop — do not use it; remove it when convenient
+- All breadcrumb labels must use `pages.*` translation keys
+- Breadcrumbs are hidden on mobile (`hidden md:flex`)
 
 ### CRUD UX — Dialog vs Page
 
@@ -313,6 +354,7 @@ Global command palette triggered by `Cmd+K` (`Ctrl+K` on Windows/Linux). Uses th
 - Hooks handle cache invalidation ONLY — no toasts, no modals
 - Cross-feature invalidation is allowed
 - `enabled: !!orgId` prevents queries from firing before org is loaded
+- Use `isPending` (not `isLoading`) for loading checks — when `enabled` is false, `isLoading` is false but `isPending` is true, so `isLoading` skips the skeleton and can flash error states
 - Toast calls go in COMPONENTS (not hooks)
 
 ### Form Schema Pattern
@@ -320,6 +362,68 @@ Global command palette triggered by `Cmd+K` (`Ctrl+K` on Windows/Linux). Uses th
 - `z.input<typeof schema>` → form state type (strings for inputs)
 - `z.output<typeof schema>` → API payload type (nulls for empty optional fields)
 - All nullable/optional helpers use `z.transform()`, NEVER `z.preprocess()`
+
+### `Form<T>` Component (`src/components/ui/form.tsx`)
+
+Custom wrapper around react-hook-form. Use this instead of raw `useForm` + `<form>`:
+
+```tsx
+<Form<MyFormValues>
+  validationSchema={mySchema}
+  resetValues={dataFromApi}       // auto-resets form when data changes (stable reference check)
+  onSubmit={handleSubmit}
+>
+  {(methods) => (
+    <>
+      <FormField label="Name" name="name" methods={methods} />
+      <Button type="submit" disabled={methods.formState.isSubmitting}>Save</Button>
+    </>
+  )}
+</Form>
+```
+
+- `validationSchema` — Zod schema, auto-wired to `zodResolver`
+- `resetValues` — when API data loads/changes, form resets to match (uses `JSON.stringify` comparison to avoid infinite loops)
+- `children` is a render function that receives `methods` (full `UseFormReturn`)
+
+### `FormField<T>` Component (`src/components/shared/form-field.tsx`)
+
+Reusable wrapper for Label + Input + error message. Reduces form boilerplate:
+
+- Pass `methods` and `name` — it handles `register()` and error display automatically
+- Pass `children` to replace the default `<Input>` with a custom control (picker, textarea, etc.)
+
+### Picker Components (`src/components/shared/`)
+
+Reusable searchable dropdowns: `CountryPicker`, `CurrencyPicker`, `TimezonePicker`, `PhoneInput`. All follow the same pattern:
+
+- Props: `value`, `onChange`, `placeholder?`, `disabled?`, `id?`
+- Use `Command` + `Popover` (shadcn/ui) for searchable list
+- Use `usePreserveScroll()` hook on `onOpenChange` to prevent scroll jumping (Base UI FloatingFocusManager issue)
+- Use `type="button"` on trigger to prevent form submission
+- Labels come from `common.*` translations
+
+When building a new picker, copy the `CountryPicker` pattern.
+
+### API Error Handling (`src/lib/parse-api-error.ts`)
+
+Use `getErrorMessage(error, fallbackTranslation)` to extract human-readable messages from `ApiError` in mutation `onError` handlers. It handles JSON-stringified error envelopes (e.g., Clerk errors with nested `errors[].long_message`).
+
+```tsx
+onError: (error) => {
+  toast.error(getErrorMessage(error, t('errorMessage')));
+}
+```
+
+### `useUnsavedChanges` Hook (`src/hooks/use-unsaved-changes.ts`)
+
+Warns user before losing form changes. Pass `isDirty` from react-hook-form:
+
+```tsx
+useUnsavedChanges(methods.formState.isDirty);
+```
+
+**Current limitation:** Only intercepts hard navigation (`beforeunload` — tab close, browser refresh, URL change). Does **not** intercept Next.js soft navigation (sidebar clicks, `<Link>` navigation). Soft nav interception is not yet implemented.
 
 ### Money Formatting
 
@@ -413,6 +517,12 @@ Use `lucide-react` for all icons.
 - Use semantic status colours consistently (green=active, red=destructive, yellow=warning, blue=info, muted=inactive)
 - Show rich empty states (icon + title + description + CTA) when lists have zero items
 - Use route constants from `@/config/routes` for all navigation — never hardcode URL path strings. Use `routes` (server-side `redirect()` — includes locale) and `paths` (client-side `router.push()` / `Link href` — locale handled by next-intl automatically)
+- Use `PERMISSIONS.feature.action` from `@/config/permissions` — never inline permission strings
+- Use `Form<T>` component for all forms — never use raw `useForm` + `<form>`
+- Use `FormField<T>` for simple form fields — never manually write Label + Input + error boilerplate
+- Use `getErrorMessage(error, t('fallback'))` in mutation `onError` — never access `error.detail` directly
+- Use `usePreserveScroll()` on any Popover/Command picker's `onOpenChange`
+- Use `useUnsavedChanges(isDirty)` in forms that edit existing data
 
 ### DON'T
 

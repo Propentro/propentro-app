@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Settings } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ComponentProps } from 'react';
 
@@ -9,25 +9,25 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarRail,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
+import { ANY_SETTINGS_READ_PERMISSION } from '@/config/permissions';
+import { paths } from '@/config/routes';
+import { useMe } from '@/hooks/use-me';
 
 import { SidebarNav } from './sidebar-nav';
 import { WorkspaceSwitcher } from './workspace-switcher';
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   const t = useTranslations('layout.sidebar');
+  const { permissions } = useMe();
 
-  const overviewItems = [
-    {
-      title: t('menu.dashboard'),
-      href: '/',
-      icon: LayoutDashboard,
-    },
-  ];
+  const showSettings = ANY_SETTINGS_READ_PERMISSION.some((p) =>
+    permissions.includes(p)
+  );
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -35,16 +35,41 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
         <WorkspaceSwitcher />
       </SidebarHeader>
       <SidebarContent>
+        {/* Main navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel>{t('labels.overview')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {overviewItems.map((item) => (
-                <SidebarNav key={item.href} item={item} />
-              ))}
+              <SidebarNav
+                item={{
+                  title: t('menu.dashboard'),
+                  href: paths.home,
+                  icon: LayoutDashboard,
+                }}
+              />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Spacer pushes settings to bottom */}
+        <div className="flex-1" />
+
+        {/* Settings at bottom */}
+        {showSettings && (
+          <SidebarGroup>
+            <SidebarSeparator />
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarNav
+                  item={{
+                    title: t('menu.settings'),
+                    href: paths.settings.root,
+                    icon: Settings,
+                  }}
+                />
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 
+import { PERMISSIONS } from '@/config/permissions';
+import { OrgSettingsForm } from '@/features/settings/organization/components/org-settings-form';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
-export const metadata: Metadata = { title: 'Organisation Settings' };
+export const metadata: Metadata = { title: 'Organisation Settings | Propentro' };
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -12,20 +13,9 @@ interface Props {
 export default async function OrganizationSettingsPage({ params }: Props) {
   const { locale } = await params;
 
-  await requirePermission('org:settings:read', locale);
+  await requirePermission(PERMISSIONS.settings.read, locale);
 
-  const [t, canEdit] = await Promise.all([
-    getTranslations('settings.organization'),
-    hasPermission('org:settings:update'),
-  ]);
+  const canEdit = await hasPermission(PERMISSIONS.settings.update);
 
-  return (
-    <div>
-      <p className="text-muted-foreground text-sm">
-        {canEdit
-          ? t('readOnlyNotice').replace('do not', 'do')
-          : t('readOnlyNotice')}
-      </p>
-    </div>
-  );
+  return <OrgSettingsForm canEdit={canEdit} />;
 }
