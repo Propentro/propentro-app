@@ -19,6 +19,12 @@ export const paths = {
     profile: '/account/profile',
     preferences: '/account/preferences',
   },
+  admin: {
+    root: '/admin',
+    organisations: '/admin/organisations',
+    users: '/admin/users',
+    invites: '/admin/invites',
+  },
 } as const;
 
 /**
@@ -42,5 +48,12 @@ export const routes = {
       `/${locale}/${orgSlug}${paths.account.profile}`,
     preferences: (locale: string, orgSlug: string) =>
       `/${locale}/${orgSlug}${paths.account.preferences}`,
+  },
+  admin: {
+    root: (locale: string) => `/${locale}${paths.admin.root}`,
+    organisations: (locale: string) =>
+      `/${locale}${paths.admin.organisations}`,
+    users: (locale: string) => `/${locale}${paths.admin.users}`,
+    invites: (locale: string) => `/${locale}${paths.admin.invites}`,
   },
 };

@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import {
   Command,
   CommandEmpty,
@@ -19,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import { cn } from '@/lib/utils';
 
 interface TimezonePickerProps {

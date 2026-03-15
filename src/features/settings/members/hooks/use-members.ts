@@ -63,6 +63,9 @@ export function useInviteMember() {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'roles'),
       });
+      queryClient.invalidateQueries({
+        queryKey: orgKeys.scope(clerkOrgId, 'invites'),
+      });
     },
   });
 }

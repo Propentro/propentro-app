@@ -3,21 +3,43 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { routes } from '@/config/routes';
+import { env } from '@/env.mjs';
 import { WorkspaceList } from '@/features/select-workspace/components/workspace-list';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+async function checkSuperAdmin(token: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/v1/admin/me`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export default async function SelectWorkspacePage({ params }: Props) {
   const { locale } = await params;
-  const { userId } = await auth();
+  const { userId, getToken } = await auth();
 
   if (!userId) {
     redirect(routes.signIn(locale));
   }
 
-  const t = await getTranslations('workspace');
+  const [t, token] = await Promise.all([
+    getTranslations('workspace'),
+    getToken(),
+  ]);
+
+  const isSuperAdmin = token ? await checkSuperAdmin(token) : false;
 
   const client = await clerkClient();
   const memberships = await client.users.getOrganizationMembershipList({
@@ -31,8 +53,8 @@ export default async function SelectWorkspacePage({ params }: Props) {
     imageUrl: m.organization.imageUrl,
   }));
 
-  // 0 orgs — show message
-  if (orgs.length === 0) {
+  // 0 orgs and not super admin — show message
+  if (orgs.length === 0 && !isSuperAdmin) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
         <h1 className="text-2xl font-semibold">{t('noWorkspaces')}</h1>
@@ -41,19 +63,25 @@ export default async function SelectWorkspacePage({ params }: Props) {
     );
   }
 
-  // 1 org — auto redirect
-  if (orgs.length === 1) {
+  // 1 org and not super admin — auto redirect
+  if (orgs.length === 1 && !isSuperAdmin) {
     redirect(routes.home(locale, orgs[0].slug));
   }
 
-  // 2+ orgs — show list
+  // Super admin with 0 orgs — show only admin option
+  // Super admin with 1+ orgs — show admin option + org list
+  // Non-admin with 2+ orgs — show org list
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6">
       <div className="text-center">
         <h1 className="text-2xl font-semibold">{t('selectWorkspace')}</h1>
         <p className="text-muted-foreground mt-2">{t('selectDescription')}</p>
       </div>
-      <WorkspaceList orgs={orgs} locale={locale} />
+      <WorkspaceList
+        orgs={orgs}
+        locale={locale}
+        isSuperAdmin={isSuperAdmin}
+      />
     </div>
   );
 }
