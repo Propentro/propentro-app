@@ -44,10 +44,15 @@ export function TimezonePicker({
   const handleOpenChange = usePreserveScroll(setOpen);
   const t = useTranslations('common');
 
-  const timezones = useMemo(
-    () => Intl.supportedValuesOf('timeZone'),
-    []
-  );
+  const timezones = useMemo(() => {
+    try {
+      return Intl.supportedValuesOf('timeZone');
+    } catch {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone
+        ? [Intl.DateTimeFormat().resolvedOptions().timeZone]
+        : ['UTC'];
+    }
+  }, []);
 
   const placeholderText = placeholder ?? t('selectTimezone');
 

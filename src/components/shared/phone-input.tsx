@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import {
   Command,
   CommandEmpty,
@@ -21,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { usePreserveScroll } from '@/hooks/use-scroll-lock';
 import { phoneCountries } from '@/lib/data/phone-codes';
 import { cn } from '@/lib/utils';
 
@@ -72,7 +72,7 @@ export function PhoneInput({
 
   const buildE164 = useCallback(
     (dialCode: string, number: string) => {
-      const cleaned = number.replace(/\D/g, '');
+      const cleaned = number.replace(/\D/g, '').replace(/^0+/, '');
       if (!cleaned) {
         onChange('');
         return;
