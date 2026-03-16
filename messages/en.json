@@ -55,7 +55,8 @@
         "properties": "Properties",
         "tenants": "Tenants",
         "finance": "Finance",
-        "settings": "Settings"
+        "settings": "Settings",
+        "admin": "Platform Admin"
       }
     },
     "header": {
