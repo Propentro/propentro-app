@@ -15,14 +15,14 @@ export function useRemoveMember(orgPublicId: string) {
   return useMutation<void, ApiError, string>({
     mutationFn: (userPublicId) =>
       apiClient.delete<void>(
-        `/admin/organisations/${orgPublicId}/members/${userPublicId}`
+        `/admin/organizations/${orgPublicId}/members/${userPublicId}`
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.members(orgPublicId),
+        queryKey: adminKeys.organizations.members(orgPublicId),
       });
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.detail(orgPublicId),
+        queryKey: adminKeys.organizations.detail(orgPublicId),
       });
     },
   });

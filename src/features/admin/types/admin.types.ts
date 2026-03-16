@@ -72,10 +72,15 @@ export type AdminUserListItem = {
   createdAt: ISODateTimeString;
 };
 
+export type MemberRoleInfo = {
+  id: string;
+  name: string;
+};
+
 export type UserOrganizationInfo = {
   organizationId: string;
   name: string;
-  roleName: string;
+  roles: MemberRoleInfo[];
 };
 
 // ---------------------------------------------------------------------------
@@ -103,7 +108,6 @@ export type AdminMember = {
   email: string;
   firstName?: string;
   lastName?: string;
-  roleName: string;
-  rolePublicId: string;
+  roles: MemberRoleInfo[];
   joinedAt: ISODateTimeString;
 };

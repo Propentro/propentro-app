@@ -55,7 +55,8 @@
         "properties": "Properties",
         "tenants": "Tenants",
         "finance": "Finance",
-        "settings": "Settings"
+        "settings": "Settings",
+        "admin": "Platform Admin"
       }
     },
     "header": {
@@ -266,19 +267,19 @@
       "title": "Platform Admin",
       "menu": {
         "dashboard": "Dashboard",
-        "organisations": "Organisations",
+        "organizations": "Organisations",
         "users": "Users",
         "invites": "Invites"
       }
     },
     "pages": {
       "dashboard": "Dashboard",
-      "organisations": "Organisations",
+      "organizations": "Organisations",
       "users": "Users",
       "invites": "Invites",
       "detail": "Detail"
     },
-    "organisations": {
+    "organizations": {
       "title": "Organisations",
       "description": "Manage all organisations on the platform.",
       "searchPlaceholder": "Search organisations...",
@@ -292,7 +293,7 @@
       "columnMembers": "Members",
       "columnStatus": "Status",
       "columnCreated": "Created",
-      "createOrganisation": "Create Organisation",
+      "createOrganization": "Create Organisation",
       "createTitle": "Create Organisation",
       "createDescription": "Add a new organisation to the platform.",
       "labelName": "Name",
@@ -379,10 +380,10 @@
       "labelLastName": "Last Name",
       "labelStatus": "Status",
       "labelCreated": "Created",
-      "sectionOrganisations": "Organisation Memberships",
+      "sectionOrganizations": "Organisation Memberships",
       "columnOrgName": "Organisation",
       "columnRole": "Role",
-      "noOrganisations": "This user is not a member of any organisation.",
+      "noOrganizations": "This user is not a member of any organisation.",
       "deactivate": "Deactivate User",
       "reactivate": "Reactivate User",
       "deactivateTitle": "Deactivate User",
@@ -397,7 +398,7 @@
       "description": "View and manage all invitations across the platform.",
       "searchPlaceholder": "Search invitations...",
       "columnEmail": "Email",
-      "columnOrganisation": "Organisation",
+      "columnOrganization": "Organisation",
       "columnRole": "Role",
       "columnStatus": "Status",
       "columnInvitedBy": "Invited By",

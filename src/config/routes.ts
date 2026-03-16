@@ -21,7 +21,7 @@ export const paths = {
   },
   admin: {
     root: '/admin',
-    organisations: '/admin/organisations',
+    organizations: '/admin/organizations',
     users: '/admin/users',
     invites: '/admin/invites',
   },
@@ -51,8 +51,8 @@ export const routes = {
   },
   admin: {
     root: (locale: string) => `/${locale}${paths.admin.root}`,
-    organisations: (locale: string) =>
-      `/${locale}${paths.admin.organisations}`,
+    organizations: (locale: string) =>
+      `/${locale}${paths.admin.organizations}`,
     users: (locale: string) => `/${locale}${paths.admin.users}`,
     invites: (locale: string) => `/${locale}${paths.admin.invites}`,
   },

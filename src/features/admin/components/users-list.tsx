@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { paths } from '@/config/routes';
+import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
 
 import { useAdminUsers } from '../hooks/use-admin-users';
@@ -38,15 +39,10 @@ export function UsersList() {
   // Filter state
   // ---------------------------------------------------------------------------
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [status, setStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   useEffect(() => {
     setPage(1);

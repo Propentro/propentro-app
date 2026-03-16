@@ -32,10 +32,10 @@ export const adminInvitesQueryOptions = (params: AdminInvitesParams = {}) =>
 
 export const adminOrgInvitesQueryOptions = (orgPublicId: string) =>
   queryOptions({
-    queryKey: adminKeys.organisations.invites(orgPublicId),
+    queryKey: adminKeys.organizations.invites(orgPublicId),
     queryFn: () =>
       apiClient.get<AdminInvite[]>(
-        `/admin/organisations/${orgPublicId}/invites`
+        `/admin/organizations/${orgPublicId}/invites`
       ),
     enabled: !!orgPublicId,
   });
@@ -58,16 +58,16 @@ export function useInviteUser(orgPublicId: string) {
   return useMutation<
     void,
     ApiError,
-    { email: string; rolePublicId: string }
+    { email: string; roleId: string }
   >({
     mutationFn: (payload) =>
       apiClient.post<void>(
-        `/admin/organisations/${orgPublicId}/invites`,
+        `/admin/organizations/${orgPublicId}/invites`,
         payload
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.invites(orgPublicId),
+        queryKey: adminKeys.organizations.invites(orgPublicId),
       });
       queryClient.invalidateQueries({
         queryKey: adminKeys.invites.all(),
@@ -87,7 +87,7 @@ export function useCancelInvite() {
         queryKey: adminKeys.invites.all(),
       });
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.all(),
+        queryKey: adminKeys.organizations.all(),
       });
     },
   });

@@ -24,6 +24,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useDebounce } from '@/hooks/use-debounce';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -40,17 +41,12 @@ export function InvitesList() {
   // Filter state
   // ---------------------------------------------------------------------------
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [cancellingInvite, setCancellingInvite] = useState<AdminInvite | null>(
     null
   );
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   useEffect(() => {
     setPage(1);
@@ -93,7 +89,7 @@ export function InvitesList() {
         ),
       }),
       columnHelper.accessor('organizationName', {
-        header: t('columnOrganisation'),
+        header: t('columnOrganization'),
       }),
       columnHelper.accessor('roleName', {
         header: t('columnRole'),
