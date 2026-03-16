@@ -18,13 +18,13 @@ import { Link, usePathname } from '@/i18n/routing';
 
 type AdminPageTranslationKey =
   | 'dashboard'
-  | 'organisations'
+  | 'organizations'
   | 'users'
   | 'invites'
   | 'detail';
 
 const ADMIN_SEGMENT_TO_KEY: Record<string, AdminPageTranslationKey> = {
-  organisations: 'organisations',
+  organizations: 'organizations',
   users: 'users',
   invites: 'invites',
 };
@@ -33,7 +33,7 @@ export function AdminHeader() {
   const t = useTranslations('admin.pages');
   const pathname = usePathname();
 
-  // pathname from next-intl: "/admin/organisations/org_abc123"
+  // pathname from next-intl: "/admin/organizations/org_abc123"
   const parts = pathname.split('/').filter(Boolean);
   // parts[0] = "admin", parts[1] = segment, parts[2] = publicId (detail)
   const segment = parts[1];

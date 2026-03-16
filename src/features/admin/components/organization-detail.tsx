@@ -51,12 +51,12 @@ import { AdminFormattedDate } from './admin-formatted-date';
 const memberColumnHelper = createColumnHelper<AdminMember>();
 const inviteColumnHelper = createColumnHelper<AdminInvite>();
 
-interface OrganisationDetailProps {
+interface OrganizationDetailProps {
   publicId: string;
 }
 
-export function OrganisationDetail({ publicId }: OrganisationDetailProps) {
-  const t = useTranslations('admin.organisations');
+export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
+  const t = useTranslations('admin.organizations');
   const { data: org, isPending } = useAdminOrganization(publicId);
   const updateOrg = useUpdateOrganization(publicId);
   const deactivateOrg = useDeactivateOrganization();
@@ -261,7 +261,7 @@ export function OrganisationDetail({ publicId }: OrganisationDetailProps) {
 // ---------------------------------------------------------------------------
 
 function OrgMembersTable({ publicId }: { publicId: string }) {
-  const t = useTranslations('admin.organisations');
+  const t = useTranslations('admin.organizations');
   const { data: members, isPending } = useAdminOrgMembers(publicId);
   const removeMember = useRemoveMember(publicId);
   const [removingMember, setRemovingMember] = useState<AdminMember | null>(
@@ -392,7 +392,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
 // ---------------------------------------------------------------------------
 
 function OrgInvitesTable({ publicId }: { publicId: string }) {
-  const t = useTranslations('admin.organisations');
+  const t = useTranslations('admin.organizations');
   const { data: invites, isPending } = useAdminOrgInvites(publicId);
   const cancelInvite = useCancelInvite();
 

@@ -190,17 +190,17 @@ export function UserDetail({ publicId }: UserDetailProps) {
         </CardContent>
       </Card>
 
-      {/* Organisation Memberships */}
+      {/* Organization Memberships */}
       <Card>
         <CardHeader>
           <h2 className="text-lg font-medium">
-            {t('sectionOrganisations')}
+            {t('sectionOrganizations')}
           </h2>
         </CardHeader>
         <CardContent>
           {user.organizations.length === 0 ? (
             <p className="text-muted-foreground py-4 text-center text-sm">
-              {t('noOrganisations')}
+              {t('noOrganizations')}
             </p>
           ) : (
             <DataTable table={orgTable} />

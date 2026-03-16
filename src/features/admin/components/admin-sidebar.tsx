@@ -44,8 +44,8 @@ export function AdminSidebar(props: ComponentProps<typeof Sidebar>) {
               />
               <AdminSidebarNav
                 item={{
-                  title: t('menu.organisations'),
-                  href: '/admin/organisations',
+                  title: t('menu.organizations'),
+                  href: '/admin/organizations',
                   icon: Building2,
                 }}
               />

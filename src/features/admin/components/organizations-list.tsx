@@ -59,8 +59,8 @@ function slugify(value: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export function OrganisationsList() {
-  const t = useTranslations('admin.organisations');
+export function OrganizationsList() {
+  const t = useTranslations('admin.organizations');
 
   // ---------------------------------------------------------------------------
   // Filter state
@@ -91,13 +91,13 @@ export function OrganisationsList() {
     pageSize,
   });
 
-  const createOrganisation = useCreateOrganization();
+  const createOrganization = useCreateOrganization();
 
   // ---------------------------------------------------------------------------
   // Create handler
   // ---------------------------------------------------------------------------
   function handleCreate(values: Record<string, unknown>) {
-    createOrganisation.mutate(values as unknown as CreateOrganizationInput, {
+    createOrganization.mutate(values as unknown as CreateOrganizationInput, {
       onSuccess: () => {
         toast.success(t('createSuccess'));
         setCreateOpen(false);
@@ -120,7 +120,7 @@ export function OrganisationsList() {
           const { name, organizationId } = row.original;
           return (
             <Link
-              href={`${paths.admin.organisations}/${organizationId}`}
+              href={`${paths.admin.organizations}/${organizationId}`}
               className="font-medium hover:underline"
             >
               {name}
@@ -249,7 +249,7 @@ export function OrganisationsList() {
 
           <Button className="ml-auto" onClick={() => setCreateOpen(true)}>
             <PlusIcon />
-            {t('createOrganisation')}
+            {t('createOrganization')}
           </Button>
         </div>
 
@@ -268,7 +268,7 @@ export function OrganisationsList() {
               {t('emptyDescription')}
             </p>
             <Button className="mt-4" onClick={() => setCreateOpen(true)}>
-              {t('createOrganisation')}
+              {t('createOrganization')}
             </Button>
           </div>
         ) : (
@@ -279,12 +279,12 @@ export function OrganisationsList() {
         )}
       </div>
 
-      {/* Create Organisation Dialog */}
-      <CreateOrganisationDialog
+      {/* Create Organization Dialog */}
+      <CreateOrganizationDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSubmit={handleCreate}
-        isPending={createOrganisation.isPending}
+        isPending={createOrganization.isPending}
       />
     </div>
   );
@@ -295,10 +295,10 @@ export function OrganisationsList() {
 }
 
 // ---------------------------------------------------------------------------
-// Create Organisation Dialog
+// Create Organization Dialog
 // ---------------------------------------------------------------------------
 
-function CreateOrganisationDialog({
+function CreateOrganizationDialog({
   open,
   onOpenChange,
   onSubmit,
@@ -309,7 +309,7 @@ function CreateOrganisationDialog({
   onSubmit: (values: Record<string, unknown>) => void;
   isPending: boolean;
 }) {
-  const t = useTranslations('admin.organisations');
+  const t = useTranslations('admin.organizations');
 
   return (
     <Dialog

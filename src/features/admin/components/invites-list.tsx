@@ -93,7 +93,7 @@ export function InvitesList() {
         ),
       }),
       columnHelper.accessor('organizationName', {
-        header: t('columnOrganisation'),
+        header: t('columnOrganization'),
       }),
       columnHelper.accessor('roleName', {
         header: t('columnRole'),
