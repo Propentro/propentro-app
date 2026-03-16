@@ -58,7 +58,7 @@ export function useInviteUser(orgPublicId: string) {
   return useMutation<
     void,
     ApiError,
-    { email: string; rolePublicId: string }
+    { email: string; roleId: string }
   >({
     mutationFn: (payload) =>
       apiClient.post<void>(

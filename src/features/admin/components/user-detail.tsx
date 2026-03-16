@@ -32,7 +32,7 @@ import {
   useDeactivateUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
-import type { UserOrganizationInfo } from '../types/admin.types';
+import type { MemberRoleInfo, UserOrganizationInfo } from '../types/admin.types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
@@ -83,10 +83,17 @@ export function UserDetail({ publicId }: UserDetailProps) {
           <span className="font-medium">{getValue()}</span>
         ),
       }),
-      orgColumnHelper.accessor('roleName', {
+      orgColumnHelper.display({
+        id: 'roles',
         header: t('columnRole'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
+        cell: ({ row }) => (
+          <div className="flex flex-wrap gap-1">
+            {row.original.roles.map((role: MemberRoleInfo) => (
+              <Badge key={role.id} variant="secondary">
+                {role.name}
+              </Badge>
+            ))}
+          </div>
         ),
       }),
     ];

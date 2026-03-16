@@ -43,6 +43,7 @@ import {
 import type {
   AdminInvite,
   AdminMember,
+  MemberRoleInfo,
   UpdateOrganizationInput,
 } from '../types/admin.types';
 import { AdminFormattedDate } from './admin-formatted-date';
@@ -293,10 +294,17 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
       memberColumnHelper.accessor('email', {
         header: t('memberColumnEmail'),
       }),
-      memberColumnHelper.accessor('roleName', {
+      memberColumnHelper.display({
+        id: 'roles',
         header: t('memberColumnRole'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
+        cell: ({ row }) => (
+          <div className="flex flex-wrap gap-1">
+            {row.original.roles.map((role: MemberRoleInfo) => (
+              <Badge key={role.id} variant="secondary">
+                {role.name}
+              </Badge>
+            ))}
+          </div>
         ),
       }),
       memberColumnHelper.accessor('joinedAt', {

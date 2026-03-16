@@ -20,8 +20,9 @@ export type CurrentUser = {
   lastName: string;
   imageUrl?: string; // injected server-side from Clerk, not from backend
   organization: Organization;
-  role: string[];
+  roles: string[];
   permissions: Permission[];
+  isSystemAdmin: boolean;
 };
 
 export type Organization = {
