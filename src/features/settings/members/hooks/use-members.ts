@@ -55,7 +55,7 @@ export function useInviteMember() {
 
   return useMutation<void, ApiError, InviteMemberInput>({
     mutationFn: (payload) =>
-      apiClient.post<void>('/organizations/members/invite', payload),
+      apiClient.post<void>('/organizations/invites', payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),

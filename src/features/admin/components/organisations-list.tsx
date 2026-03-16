@@ -41,9 +41,9 @@ import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import {
-  useAdminOrganisations,
-  useCreateOrganisation,
-} from '../hooks/use-admin-organisations';
+  useAdminOrganizations,
+  useCreateOrganization,
+} from '../hooks/use-admin-organizations';
 import type {
   AdminOrganizationListItem,
   CreateOrganizationInput,
@@ -84,14 +84,14 @@ export function OrganisationsList() {
   // ---------------------------------------------------------------------------
   // Queries & mutations
   // ---------------------------------------------------------------------------
-  const { data, isPending } = useAdminOrganisations({
+  const { data, isPending } = useAdminOrganizations({
     search: debouncedSearch || undefined,
     status: status === 'all' ? undefined : status,
     page,
     pageSize,
   });
 
-  const createOrganisation = useCreateOrganisation();
+  const createOrganisation = useCreateOrganization();
 
   // ---------------------------------------------------------------------------
   // Create handler

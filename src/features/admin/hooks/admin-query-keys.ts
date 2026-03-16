@@ -7,16 +7,16 @@
 export const adminKeys = {
   root: ['admin'] as const,
 
-  organisations: {
-    all: () => ['admin', 'organisations'] as const,
+  organizations: {
+    all: () => ['admin', 'organizations'] as const,
     list: (params: Record<string, unknown>) =>
-      ['admin', 'organisations', 'list', params] as const,
+      ['admin', 'organizations', 'list', params] as const,
     detail: (publicId: string) =>
-      ['admin', 'organisations', publicId] as const,
+      ['admin', 'organizations', publicId] as const,
     members: (publicId: string) =>
-      ['admin', 'organisations', publicId, 'members'] as const,
+      ['admin', 'organizations', publicId, 'members'] as const,
     invites: (publicId: string) =>
-      ['admin', 'organisations', publicId, 'invites'] as const,
+      ['admin', 'organizations', publicId, 'invites'] as const,
   },
 
   users: {

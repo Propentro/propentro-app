@@ -21,7 +21,7 @@ import { adminKeys } from './admin-query-keys';
 // Params
 // ---------------------------------------------------------------------------
 
-export type AdminOrganisationsParams = ListParams & {
+export type AdminOrganizationsParams = ListParams & {
   status?: string;
 };
 
@@ -29,32 +29,32 @@ export type AdminOrganisationsParams = ListParams & {
 // Query options factories
 // ---------------------------------------------------------------------------
 
-export const adminOrganisationsQueryOptions = (
-  params: AdminOrganisationsParams = {}
+export const adminOrganizationsQueryOptions = (
+  params: AdminOrganizationsParams = {}
 ) =>
   queryOptions({
-    queryKey: adminKeys.organisations.list(params),
+    queryKey: adminKeys.organizations.list(params),
     queryFn: () =>
       apiClient.get<PagedResult<AdminOrganizationListItem>>(
-        '/admin/organisations',
+        '/admin/organizations',
         params
       ),
   });
 
-export const adminOrganisationQueryOptions = (publicId: string) =>
+export const adminOrganizationQueryOptions = (publicId: string) =>
   queryOptions({
-    queryKey: adminKeys.organisations.detail(publicId),
+    queryKey: adminKeys.organizations.detail(publicId),
     queryFn: () =>
-      apiClient.get<AdminOrganization>(`/admin/organisations/${publicId}`),
+      apiClient.get<AdminOrganization>(`/admin/organizations/${publicId}`),
     enabled: !!publicId,
   });
 
 export const adminOrgMembersQueryOptions = (publicId: string) =>
   queryOptions({
-    queryKey: adminKeys.organisations.members(publicId),
+    queryKey: adminKeys.organizations.members(publicId),
     queryFn: () =>
       apiClient.get<AdminMember[]>(
-        `/admin/organisations/${publicId}/members`
+        `/admin/organizations/${publicId}/members`
       ),
     enabled: !!publicId,
   });
@@ -63,58 +63,58 @@ export const adminOrgMembersQueryOptions = (publicId: string) =>
 // Hooks
 // ---------------------------------------------------------------------------
 
-export function useAdminOrganisations(params: AdminOrganisationsParams = {}) {
-  return useQuery(adminOrganisationsQueryOptions(params));
+export function useAdminOrganizations(params: AdminOrganizationsParams = {}) {
+  return useQuery(adminOrganizationsQueryOptions(params));
 }
 
-export function useAdminOrganisation(publicId: string) {
-  return useQuery(adminOrganisationQueryOptions(publicId));
+export function useAdminOrganization(publicId: string) {
+  return useQuery(adminOrganizationQueryOptions(publicId));
 }
 
 export function useAdminOrgMembers(publicId: string) {
   return useQuery(adminOrgMembersQueryOptions(publicId));
 }
 
-export function useCreateOrganisation() {
+export function useCreateOrganization() {
   const queryClient = useQueryClient();
 
   return useMutation<AdminOrganization, ApiError, CreateOrganizationInput>({
     mutationFn: (payload) =>
-      apiClient.post<AdminOrganization>('/admin/organisations', payload),
+      apiClient.post<AdminOrganization>('/admin/organizations', payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.all(),
+        queryKey: adminKeys.organizations.all(),
       });
     },
   });
 }
 
-export function useUpdateOrganisation(publicId: string) {
+export function useUpdateOrganization(publicId: string) {
   const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, UpdateOrganizationInput>({
     mutationFn: (payload) =>
-      apiClient.put<void>(`/admin/organisations/${publicId}`, payload),
+      apiClient.patch<void>(`/admin/organizations/${publicId}`, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.all(),
+        queryKey: adminKeys.organizations.all(),
       });
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.detail(publicId),
+        queryKey: adminKeys.organizations.detail(publicId),
       });
     },
   });
 }
 
-export function useDeactivateOrganisation() {
+export function useDeactivateOrganization() {
   const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, string>({
     mutationFn: (publicId) =>
-      apiClient.delete<void>(`/admin/organisations/${publicId}`),
+      apiClient.patch<void>(`/admin/organizations/${publicId}/deactivate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: adminKeys.organisations.all(),
+        queryKey: adminKeys.organizations.all(),
       });
     },
   });

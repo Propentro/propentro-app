@@ -35,11 +35,11 @@ import type { ApiError } from '@/types/api.types';
 import { useAdminOrgInvites, useCancelInvite } from '../hooks/use-admin-invites';
 import { useRemoveMember } from '../hooks/use-admin-members';
 import {
-  useAdminOrganisation,
+  useAdminOrganization,
   useAdminOrgMembers,
-  useDeactivateOrganisation,
-  useUpdateOrganisation,
-} from '../hooks/use-admin-organisations';
+  useDeactivateOrganization,
+  useUpdateOrganization,
+} from '../hooks/use-admin-organizations';
 import type {
   AdminInvite,
   AdminMember,
@@ -57,9 +57,9 @@ interface OrganisationDetailProps {
 
 export function OrganisationDetail({ publicId }: OrganisationDetailProps) {
   const t = useTranslations('admin.organisations');
-  const { data: org, isPending } = useAdminOrganisation(publicId);
-  const updateOrg = useUpdateOrganisation(publicId);
-  const deactivateOrg = useDeactivateOrganisation();
+  const { data: org, isPending } = useAdminOrganization(publicId);
+  const updateOrg = useUpdateOrganization(publicId);
+  const deactivateOrg = useDeactivateOrganization();
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   function handleUpdate(values: Record<string, unknown>) {
