@@ -30,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDebounce } from '@/hooks/use-debounce';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -61,16 +62,11 @@ export function MembersContent({ canManage }: MembersContentProps) {
   // Filter state
   // ---------------------------------------------------------------------------
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [status, setStatus] = useState('all');
   const [roleId, setRoleId] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   // Reset page when filters change
   useEffect(() => {

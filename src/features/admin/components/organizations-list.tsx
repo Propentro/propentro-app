@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { paths } from '@/config/routes';
+import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
@@ -66,16 +67,11 @@ export function OrganizationsList() {
   // Filter state
   // ---------------------------------------------------------------------------
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [status, setStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [createOpen, setCreateOpen] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   useEffect(() => {
     setPage(1);
