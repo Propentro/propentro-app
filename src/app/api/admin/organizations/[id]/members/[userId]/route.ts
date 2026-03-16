@@ -1,11 +1,11 @@
 import { adminProxyRequest } from '@/lib/admin-proxy-request';
 
-type Ctx = { params: Promise<{ invitePublicId: string }> };
+type Ctx = { params: Promise<{ id: string; userId: string }> };
 
 export const DELETE = async (req: Request, ctx: Ctx) => {
-  const { invitePublicId } = await ctx.params;
+  const { id, userId } = await ctx.params;
   return adminProxyRequest(
     req,
-    `/v1/admin/invites/${invitePublicId}`
+    `/v1/admin/organizations/${id}/members/${userId}`
   );
 };
