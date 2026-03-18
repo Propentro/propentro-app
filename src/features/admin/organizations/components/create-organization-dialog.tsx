@@ -139,7 +139,7 @@ export function CreateOrganizationDialog({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="starter">{t('planStarter')}</SelectItem>
-                    <SelectItem value="pro">{t('planPro')}</SelectItem>
+                    <SelectItem value="pro">{t('planProfessional')}</SelectItem>
                     <SelectItem value="enterprise">{t('planEnterprise')}</SelectItem>
                   </SelectContent>
                 </Select>
