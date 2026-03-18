@@ -34,7 +34,7 @@ export const adminOrgInvitesQueryOptions = (orgPublicId: string) =>
   queryOptions({
     queryKey: adminKeys.organizations.invites(orgPublicId),
     queryFn: () =>
-      apiClient.get<AdminInvite[]>(
+      apiClient.get<PagedResult<AdminInvite>>(
         `/admin/organizations/${orgPublicId}/invites`
       ),
     enabled: !!orgPublicId,

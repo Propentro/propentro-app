@@ -328,7 +328,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
   }, [t]);
 
   const table = useReactTable({
-    data: members ?? [],
+    data: members?.items ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -337,7 +337,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
     return <Skeleton className="h-48 w-full" />;
   }
 
-  if (!members?.length) {
+  if (!members?.items?.length) {
     return (
       <p className="text-muted-foreground py-8 text-center text-sm">
         {t('noMembers')}
@@ -461,7 +461,7 @@ function OrgInvitesTable({ publicId }: { publicId: string }) {
   }, [t]);
 
   const table = useReactTable({
-    data: invites ?? [],
+    data: invites?.items ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -470,7 +470,7 @@ function OrgInvitesTable({ publicId }: { publicId: string }) {
     return <Skeleton className="h-48 w-full" />;
   }
 
-  if (!invites?.length) {
+  if (!invites?.items?.length) {
     return (
       <p className="text-muted-foreground py-8 text-center text-sm">
         {t('noInvites')}

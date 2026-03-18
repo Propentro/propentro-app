@@ -53,7 +53,7 @@ export const adminOrgMembersQueryOptions = (publicId: string) =>
   queryOptions({
     queryKey: adminKeys.organizations.members(publicId),
     queryFn: () =>
-      apiClient.get<AdminMember[]>(
+      apiClient.get<PagedResult<AdminMember>>(
         `/admin/organizations/${publicId}/members`
       ),
     enabled: !!publicId,
