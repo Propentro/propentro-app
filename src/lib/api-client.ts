@@ -13,6 +13,7 @@ type FetchOptions = {
   method?: string;
   body?: unknown;
   params?: QueryParams;
+  headers?: Record<string, string>;
 };
 
 function buildUrl(path: string, params?: QueryParams): string {
@@ -29,13 +30,14 @@ async function apiFetch<T>(
   path: string,
   options: FetchOptions = {}
 ): Promise<T> {
-  const { method = 'GET', body, params } = options;
+  const { method = 'GET', body, params, headers } = options;
   const hasBody = body !== undefined;
 
   const res = await fetch(`${BASE}${buildUrl(path, params)}`, {
     method,
     headers: {
       ...(hasBody && { 'Content-Type': 'application/json' }),
+      ...headers,
     },
     body: hasBody ? JSON.stringify(body) : undefined,
     signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -67,5 +69,6 @@ export const apiClient = {
   patch: <T>(path: string, body: unknown) =>
     apiFetch<T>(path, { method: 'PATCH', body }),
 
-  delete: <T>(path: string) => apiFetch<T>(path, { method: 'DELETE' }),
+  delete: <T>(path: string, headers?: Record<string, string>) =>
+    apiFetch<T>(path, { method: 'DELETE', headers }),
 };
