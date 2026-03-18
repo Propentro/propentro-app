@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
 
-import { UserMenu } from '@/components/layout/user-menu';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +14,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Link, usePathname } from '@/i18n/routing';
+
+import { AdminUserMenu } from './admin-user-menu';
 
 type AdminPageTranslationKey =
   | 'dashboard'
@@ -79,7 +80,7 @@ export function AdminHeader() {
       )}
 
       <div className="flex-1" />
-      <UserMenu />
+      <AdminUserMenu />
     </header>
   );
 }
