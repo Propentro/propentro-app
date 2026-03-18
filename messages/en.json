@@ -498,6 +498,21 @@
       "title": "Account Error",
       "description": "Failed to load this page. Please try again.",
       "tryAgain": "Try again"
+    },
+    "adminError": {
+      "title": "Admin Error",
+      "description": "Failed to load this admin page. Please try again.",
+      "tryAgain": "Try again"
+    },
+    "adminOrgNotFound": {
+      "title": "Organization Not Found",
+      "description": "The organization you are looking for might have been removed or does not exist.",
+      "backToList": "Back to organizations"
+    },
+    "adminUserNotFound": {
+      "title": "User Not Found",
+      "description": "The user you are looking for might have been removed or does not exist.",
+      "backToList": "Back to users"
     }
   }
 }
