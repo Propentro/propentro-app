@@ -17,13 +17,6 @@ import {
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 import type { CreateOrganizationInput } from '../../types';
 import {
@@ -121,33 +114,6 @@ export function CreateOrganizationDialog({
                   value={methods.watch('timezone')}
                   onChange={(val) => methods.setValue('timezone', val)}
                 />
-              </FormField>
-              <FormField<CreateOrganizationFormValues>
-                label={t('labelPlan')}
-                name="subscriptionPlan"
-                methods={methods}
-              >
-                <Select
-                  value={methods.watch('subscriptionPlan')}
-                  onValueChange={(val) =>
-                    methods.setValue(
-                      'subscriptionPlan',
-                      (val ??
-                        'starter') as CreateOrganizationFormValues['subscriptionPlan']
-                    )
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="starter">{t('planStarter')}</SelectItem>
-                    <SelectItem value="pro">{t('planProfessional')}</SelectItem>
-                    <SelectItem value="enterprise">
-                      {t('planEnterprise')}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
               </FormField>
               <DialogFooter>
                 <Button
