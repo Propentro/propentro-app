@@ -11,6 +11,8 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { DangerZone, DangerZoneItem } from '@/components/shared/danger-zone';
+import { HardDeleteConfirmation } from '@/components/shared/hard-delete-confirmation';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,9 +32,13 @@ import type { ApiError } from '@/types/api.types';
 import {
   useAdminUser,
   useDeactivateUser,
+  useDeleteUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
-import type { MemberRoleInfo, UserOrganizationInfo } from '../types/admin.types';
+import type {
+  MemberRoleInfo,
+  UserOrganizationInfo,
+} from '../types/admin.types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
@@ -43,9 +49,11 @@ interface UserDetailProps {
 
 export function UserDetail({ publicId }: UserDetailProps) {
   const t = useTranslations('admin.users');
+  const tCommon = useTranslations('common');
   const { data: user, isPending } = useAdminUser(publicId);
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
+  const deleteUser = useDeleteUser();
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   function handleDeactivate() {
@@ -117,6 +125,9 @@ export function UserDetail({ publicId }: UserDetailProps) {
 
   if (!user) return null;
 
+  const displayName =
+    `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.email;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -153,7 +164,9 @@ export function UserDetail({ publicId }: UserDetailProps) {
         <CardContent>
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-muted-foreground text-sm">{t('labelEmail')}</dt>
+              <dt className="text-muted-foreground text-sm">
+                {t('labelEmail')}
+              </dt>
               <dd className="font-medium">{user.email}</dd>
             </div>
             <div>
@@ -208,6 +221,47 @@ export function UserDetail({ publicId }: UserDetailProps) {
         </CardContent>
       </Card>
 
+      {/* Danger Zone */}
+      <DangerZone>
+        <DangerZoneItem
+          title={t('dangerZoneTitle')}
+          description={t('dangerZoneDescription')}
+          action={
+            <HardDeleteConfirmation
+              entityName={displayName}
+              warningTitle={t('deleteWarningTitle')}
+              warningDescription={t('deleteWarningDescription')}
+              confirmTitle={t('deleteConfirmTitle')}
+              confirmDescription={t('deleteConfirmDescription', {
+                name: displayName,
+              })}
+              confirmButtonLabel={t('deleteButton')}
+              onConfirm={() => {
+                deleteUser.mutate(
+                  { publicId: user.userId },
+                  {
+                    onSuccess: () => {
+                      toast.success(t('deleteSuccess'));
+                    },
+                    onError: (error) =>
+                      toast.error(
+                        getErrorMessage(error, t('deleteError'))
+                      ),
+                  }
+                );
+              }}
+              isPending={deleteUser.isPending}
+              loadingLabel={tCommon('hardDelete.deleting')}
+              trigger={
+                <Button variant="destructive" size="sm">
+                  {t('deleteUser')}
+                </Button>
+              }
+            />
+          }
+        />
+      </DangerZone>
+
       {/* Deactivate confirmation dialog */}
       <Dialog
         open={deactivateOpen}
@@ -228,7 +282,7 @@ export function UserDetail({ publicId }: UserDetailProps) {
               variant="outline"
               onClick={() => setDeactivateOpen(false)}
             >
-              {t('allStatuses')}
+              {t('cancel')}
             </Button>
             <Button
               variant="destructive"

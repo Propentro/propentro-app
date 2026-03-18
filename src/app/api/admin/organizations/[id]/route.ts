@@ -11,3 +11,8 @@ export const PATCH = async (req: Request, ctx: Ctx) => {
   const { id } = await ctx.params;
   return adminProxyRequest(req, `/v1/admin/organizations/${id}`);
 };
+
+export const DELETE = async (req: Request, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  return adminProxyRequest(req, `/v1/admin/organizations/${id}`);
+};

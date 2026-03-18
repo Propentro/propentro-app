@@ -27,3 +27,43 @@ export function useRemoveMember(orgPublicId: string) {
     },
   });
 }
+
+export function useAdminDeactivateMember(orgPublicId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, string>({
+    mutationFn: (userPublicId) =>
+      apiClient.patch<void>(
+        `/admin/organizations/${orgPublicId}/members/${userPublicId}/deactivate`,
+        {}
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.members(orgPublicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(orgPublicId),
+      });
+    },
+  });
+}
+
+export function useAdminReactivateMember(orgPublicId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, string>({
+    mutationFn: (userPublicId) =>
+      apiClient.patch<void>(
+        `/admin/organizations/${orgPublicId}/members/${userPublicId}/reactivate`,
+        {}
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.members(orgPublicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(orgPublicId),
+      });
+    },
+  });
+}

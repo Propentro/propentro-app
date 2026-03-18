@@ -111,3 +111,16 @@ export type AdminMember = {
   roles: MemberRoleInfo[];
   joinedAt: ISODateTimeString;
 };
+
+// ---------------------------------------------------------------------------
+// Admin Me (profile)
+// ---------------------------------------------------------------------------
+
+export type AdminMe = {
+  userId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  adminRole: string;
+  assignedAt: ISODateTimeString;
+};

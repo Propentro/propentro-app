@@ -22,7 +22,6 @@ export type CurrentUser = {
   organization: Organization;
   roles: string[];
   permissions: Permission[];
-  isSystemAdmin: boolean;
 };
 
 export type Organization = {

@@ -53,12 +53,16 @@ export async function proxyRequest(
 
   const hasBody = !NO_BODY_METHODS.has(method);
 
+  // ── Custom header forwarding (whitelist) ──────────────────────────────
+  const confirmDeleteHeader = request.headers.get('X-Confirm-Delete');
+
   try {
     const res = await fetch(backendUrl.toString(), {
       method,
       headers: {
         ...(hasBody && { 'Content-Type': 'application/json' }),
         Authorization: `Bearer ${token}`,
+        ...(confirmDeleteHeader && { 'X-Confirm-Delete': confirmDeleteHeader }),
       },
       body: hasBody ? await request.text() : undefined,
     });

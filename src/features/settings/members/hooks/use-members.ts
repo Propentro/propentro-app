@@ -40,9 +40,25 @@ export const membersQueryOptions = (
     enabled: !!orgId,
   });
 
+export const memberQueryOptions = (
+  orgId: string | null | undefined,
+  userId: string
+) =>
+  queryOptions({
+    queryKey: [...orgKeys.scope(orgId, 'members'), userId] as const,
+    queryFn: () =>
+      apiClient.get<OrgMember>(`/organizations/members/${userId}`),
+    enabled: !!orgId && !!userId,
+  });
+
 // ---------------------------------------------------------------------------
 // Hooks
 // ---------------------------------------------------------------------------
+
+export function useMember(userId: string) {
+  const { clerkOrgId } = useSession();
+  return useQuery(memberQueryOptions(clerkOrgId, userId));
+}
 
 export function useMembers(params: MembersParams = {}) {
   const { clerkOrgId } = useSession();
@@ -80,7 +96,9 @@ export function useUpdateMemberRoles() {
     { userId: string } & UpdateMemberRolesInput
   >({
     mutationFn: ({ userId, roleIds }) =>
-      apiClient.patch<void>(`/organizations/members/${userId}`, { roleIds }),
+      apiClient.patch<void>(`/organizations/members/${userId}/roles`, {
+        roleIds,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),
@@ -98,7 +116,7 @@ export function useDeactivateMember() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (userId) =>
-      apiClient.post<void>(`/organizations/members/${userId}/deactivate`, {}),
+      apiClient.patch<void>(`/organizations/members/${userId}/deactivate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),
@@ -113,7 +131,7 @@ export function useReactivateMember() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (userId) =>
-      apiClient.post<void>(`/organizations/members/${userId}/reactivate`, {}),
+      apiClient.patch<void>(`/organizations/members/${userId}/reactivate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),

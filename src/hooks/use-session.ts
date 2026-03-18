@@ -16,11 +16,17 @@ import { useAuth } from '@clerk/nextjs';
  * Use useMe() for:    user data, permissions, display name, DB IDs.
  */
 export function useSession() {
-  const { orgId, userId, isLoaded, isSignedIn } = useAuth();
+  const { orgId, userId, isLoaded, isSignedIn, sessionClaims } = useAuth();
+
+  const isSystemAdmin =
+    (sessionClaims?.metadata as { systemRole?: string } | undefined)
+      ?.systemRole === 'super_admin';
+
   return {
     clerkOrgId: orgId,
     clerkUserId: userId,
     isLoaded,
     isSignedIn,
+    isSystemAdmin,
   };
 }
