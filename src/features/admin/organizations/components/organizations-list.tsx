@@ -6,33 +6,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import {
-  Building2,
-  LoaderIcon,
-  PlusIcon,
-  SearchIcon,
-  XIcon,
-} from 'lucide-react';
+import { Building2, PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { CurrencyPicker } from '@/components/shared/currency-picker';
-import { FormField } from '@/components/shared/form-field';
-import { TimezonePicker } from '@/components/shared/timezone-picker';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -48,23 +30,17 @@ import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import {
-  useAdminOrganizations,
-  useCreateOrganization,
-} from '../hooks/use-admin-organizations';
 import type {
   AdminOrganizationListItem,
   CreateOrganizationInput,
 } from '../../types';
+import {
+  useAdminOrganizations,
+  useCreateOrganization,
+} from '../hooks/use-admin-organizations';
+import { CreateOrganizationDialog } from './create-organization-dialog';
 
 const columnHelper = createColumnHelper<AdminOrganizationListItem>();
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
 
 export function OrganizationsList() {
   const t = useTranslations('admin.organizations');
@@ -99,8 +75,8 @@ export function OrganizationsList() {
   // ---------------------------------------------------------------------------
   // Create handler
   // ---------------------------------------------------------------------------
-  function handleCreate(values: Record<string, unknown>) {
-    createOrganization.mutate(values as unknown as CreateOrganizationInput, {
+  function handleCreate(values: CreateOrganizationInput) {
+    createOrganization.mutate(values, {
       onSuccess: () => {
         toast.success(t('createSuccess'));
         setCreateOpen(false);
@@ -294,143 +270,4 @@ export function OrganizationsList() {
   function onSearchChange(value: string) {
     setSearch(value);
   }
-}
-
-// ---------------------------------------------------------------------------
-// Create Organization Dialog
-// ---------------------------------------------------------------------------
-
-function CreateOrganizationDialog({
-  open,
-  onOpenChange,
-  onSubmit,
-  isPending,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSubmit: (values: Record<string, unknown>) => void;
-  isPending: boolean;
-}) {
-  const t = useTranslations('admin.organizations');
-
-  return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        if (isPending) return;
-        onOpenChange(nextOpen);
-      }}
-    >
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t('createTitle')}</DialogTitle>
-          <DialogDescription>{t('createDescription')}</DialogDescription>
-        </DialogHeader>
-        <Form<CreateOrganizationInput>
-          onSubmit={onSubmit as (values: CreateOrganizationInput) => void}
-          useFormProps={{
-            defaultValues: {
-              name: '',
-              slug: '',
-              contactName: '',
-              contactEmail: '',
-              currencyCode: 'GBP',
-              timezone: 'Europe/London',
-              subscriptionPlan: 'free',
-            },
-          }}
-          className="space-y-4"
-        >
-          {(methods) => (
-            <>
-              <FormField<CreateOrganizationInput>
-                label={t('labelName')}
-                name="name"
-                placeholder={t('placeholderName')}
-                methods={methods}
-              />
-              <FormField<CreateOrganizationInput>
-                label={t('labelSlug')}
-                name="slug"
-                placeholder={t('placeholderSlug')}
-                methods={methods}
-              >
-                <Input
-                  id="slug"
-                  placeholder={t('placeholderSlug')}
-                  {...methods.register('slug')}
-                  onFocus={() => {
-                    const name = methods.getValues('name');
-                    const slug = methods.getValues('slug');
-                    if (name && !slug) {
-                      methods.setValue('slug', slugify(name));
-                    }
-                  }}
-                />
-              </FormField>
-              <FormField<CreateOrganizationInput>
-                label={t('labelCurrency')}
-                name="currencyCode"
-                methods={methods}
-              >
-                <CurrencyPicker
-                  value={methods.watch('currencyCode')}
-                  onChange={(val) => methods.setValue('currencyCode', val)}
-                />
-              </FormField>
-              <FormField<CreateOrganizationInput>
-                label={t('labelTimezone')}
-                name="timezone"
-                methods={methods}
-              >
-                <TimezonePicker
-                  value={methods.watch('timezone')}
-                  onChange={(val) => methods.setValue('timezone', val)}
-                />
-              </FormField>
-              <FormField<CreateOrganizationInput>
-                label={t('labelPlan')}
-                name="subscriptionPlan"
-                methods={methods}
-              >
-                <Select
-                  value={methods.watch('subscriptionPlan')}
-                  onValueChange={(val) =>
-                    methods.setValue('subscriptionPlan', val ?? 'free')
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="free">{t('planFree')}</SelectItem>
-                    <SelectItem value="starter">{t('planStarter')}</SelectItem>
-                    <SelectItem value="professional">
-                      {t('planProfessional')}
-                    </SelectItem>
-                    <SelectItem value="enterprise">
-                      {t('planEnterprise')}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormField>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                >
-                  {t('cancelInvite')}
-                </Button>
-                <Button type="submit" disabled={isPending}>
-                  {isPending && <LoaderIcon className="animate-spin" />}
-                  {t('createButton')}
-                </Button>
-              </DialogFooter>
-            </>
-          )}
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
 }
