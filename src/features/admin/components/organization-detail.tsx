@@ -6,13 +6,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { LoaderIcon, TrashIcon } from 'lucide-react';
+import { LoaderIcon, MoreHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { CurrencyPicker } from '@/components/shared/currency-picker';
+import { DangerZone, DangerZoneItem } from '@/components/shared/danger-zone';
 import { FormField } from '@/components/shared/form-field';
+import { HardDeleteConfirmation } from '@/components/shared/hard-delete-confirmation';
 import { TimezonePicker } from '@/components/shared/timezone-picker';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
@@ -26,18 +28,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Form } from '@/components/ui/form';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { paths } from '@/config/routes';
+import { Link } from '@/i18n/routing';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import { useAdminOrgInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import { useRemoveMember } from '../hooks/use-admin-members';
+import {
+  useAdminOrgInvites,
+  useCancelInvite,
+} from '../hooks/use-admin-invites';
+import {
+  useAdminDeactivateMember,
+  useAdminReactivateMember,
+  useRemoveMember,
+} from '../hooks/use-admin-members';
 import {
   useAdminOrganization,
   useAdminOrgMembers,
   useDeactivateOrganization,
+  useDeleteOrganization,
+  useReactivateOrganization,
   useUpdateOrganization,
 } from '../hooks/use-admin-organizations';
 import type {
@@ -46,6 +66,7 @@ import type {
   MemberRoleInfo,
   UpdateOrganizationInput,
 } from '../types/admin.types';
+import { updateOrganizationSchema } from '../validators/update-organization.schema';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const memberColumnHelper = createColumnHelper<AdminMember>();
@@ -57,9 +78,12 @@ interface OrganizationDetailProps {
 
 export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
   const t = useTranslations('admin.organizations');
+  const tCommon = useTranslations('common');
   const { data: org, isPending } = useAdminOrganization(publicId);
   const updateOrg = useUpdateOrganization(publicId);
   const deactivateOrg = useDeactivateOrganization();
+  const reactivateOrg = useReactivateOrganization();
+  const deleteOrg = useDeleteOrganization();
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   function handleUpdate(values: Record<string, unknown>) {
@@ -81,6 +105,17 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
       },
       onError: (error: ApiError) => {
         toast.error(getErrorMessage(error, t('deactivateError')));
+      },
+    });
+  }
+
+  function handleReactivate() {
+    reactivateOrg.mutate(publicId, {
+      onSuccess: () => {
+        toast.success(t('reactivateSuccess'));
+      },
+      onError: (error: ApiError) => {
+        toast.error(getErrorMessage(error, t('reactivateError')));
       },
     });
   }
@@ -107,13 +142,24 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
           <Badge variant={org.isActive ? 'default' : 'destructive'}>
             {org.isActive ? t('statusActive') : t('statusInactive')}
           </Badge>
-          {org.isActive && (
+          {org.isActive ? (
             <Button
               variant="destructive"
               size="sm"
               onClick={() => setDeactivateOpen(true)}
             >
               {t('deactivate')}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              onClick={handleReactivate}
+              disabled={reactivateOrg.isPending}
+            >
+              {reactivateOrg.isPending && (
+                <LoaderIcon className="animate-spin" />
+              )}
+              {t('reactivate')}
             </Button>
           )}
         </div>
@@ -126,10 +172,11 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
           <TabsTrigger value="invites">{t('tabInvites')}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="info" className="mt-4">
+        <TabsContent value="info" className="mt-4 space-y-6">
           <Card>
             <CardContent className="pt-6">
               <Form<UpdateOrganizationInput>
+                validationSchema={updateOrganizationSchema}
                 onSubmit={
                   handleUpdate as (
                     values: UpdateOrganizationInput
@@ -206,6 +253,47 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
               </Form>
             </CardContent>
           </Card>
+
+          <DangerZone>
+            <DangerZoneItem
+              title={t('dangerZoneTitle')}
+              description={t('dangerZoneDescription')}
+              action={
+                <HardDeleteConfirmation
+                  entityName={org.name}
+                  warningTitle={t('deleteWarningTitle')}
+                  warningDescription={t('deleteWarningDescription')}
+                  confirmTitle={t('deleteConfirmTitle')}
+                  confirmDescription={t('deleteConfirmDescription', {
+                    name: org.name,
+                  })}
+                  confirmButtonLabel={t('deleteButton')}
+                  onConfirm={() => {
+                    deleteOrg.mutate(
+                      { publicId: org.organizationId },
+                      {
+                        onSuccess: () => {
+                          toast.success(t('deleteSuccess'));
+                          // Redirect handled by the caller or layout
+                        },
+                        onError: (error) =>
+                          toast.error(
+                            getErrorMessage(error, t('deleteError'))
+                          ),
+                      }
+                    );
+                  }}
+                  isPending={deleteOrg.isPending}
+                  loadingLabel={tCommon('hardDelete.deleting')}
+                  trigger={
+                    <Button variant="destructive" size="sm">
+                      {t('deleteOrganization')}
+                    </Button>
+                  }
+                />
+              }
+            />
+          </DangerZone>
         </TabsContent>
 
         <TabsContent value="members" className="mt-4">
@@ -237,7 +325,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
               variant="outline"
               onClick={() => setDeactivateOpen(false)}
             >
-              {t('cancelInvite')}
+              {tCommon('cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -257,16 +345,44 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
 }
 
 // ---------------------------------------------------------------------------
-// Org Members Table
+// Invite status badge variant helper
+// ---------------------------------------------------------------------------
+
+function inviteStatusVariant(
+  status: string
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'outline';
+    case 'accepted':
+      return 'default';
+    case 'canceled':
+      return 'destructive';
+    case 'expired':
+      return 'secondary';
+    default:
+      return 'secondary';
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Org Members Table (Task D: row actions dropdown + user links)
 // ---------------------------------------------------------------------------
 
 function OrgMembersTable({ publicId }: { publicId: string }) {
   const t = useTranslations('admin.organizations');
+  const tCommon = useTranslations('common');
   const { data: members, isPending } = useAdminOrgMembers(publicId);
   const removeMember = useRemoveMember(publicId);
+  const deactivateMember = useAdminDeactivateMember(publicId);
+  const reactivateMember = useAdminReactivateMember(publicId);
   const [removingMember, setRemovingMember] = useState<AdminMember | null>(
     null
   );
+  const [deactivatingMember, setDeactivatingMember] =
+    useState<AdminMember | null>(null);
+  const [reactivatingMember, setReactivatingMember] =
+    useState<AdminMember | null>(null);
 
   function handleRemove() {
     if (!removingMember) return;
@@ -281,14 +397,49 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
     });
   }
 
+  function handleDeactivateMember() {
+    if (!deactivatingMember) return;
+    deactivateMember.mutate(deactivatingMember.userId, {
+      onSuccess: () => {
+        toast.success(t('deactivateMemberSuccess'));
+        setDeactivatingMember(null);
+      },
+      onError: (error: ApiError) => {
+        toast.error(getErrorMessage(error, t('deactivateMemberError')));
+      },
+    });
+  }
+
+  function handleReactivateMember() {
+    if (!reactivatingMember) return;
+    reactivateMember.mutate(reactivatingMember.userId, {
+      onSuccess: () => {
+        toast.success(t('reactivateMemberSuccess'));
+        setReactivatingMember(null);
+      },
+      onError: (error: ApiError) => {
+        toast.error(getErrorMessage(error, t('reactivateMemberError')));
+      },
+    });
+  }
+
   const columns = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cols: ColumnDef<AdminMember, any>[] = [
       memberColumnHelper.accessor('firstName', {
         header: t('memberColumnName'),
         cell: ({ row }) => {
-          const { firstName, lastName } = row.original;
-          return `${firstName ?? ''} ${lastName ?? ''}`.trim() || '-';
+          const { firstName, lastName, userId } = row.original;
+          const displayName =
+            `${firstName ?? ''} ${lastName ?? ''}`.trim() || '-';
+          return (
+            <Link
+              href={`${paths.admin.users}/${userId}`}
+              className="font-medium hover:underline"
+            >
+              {displayName}
+            </Link>
+          );
         },
       }),
       memberColumnHelper.accessor('email', {
@@ -313,14 +464,44 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
       }),
       memberColumnHelper.display({
         id: 'actions',
+        header: t('memberActions'),
         cell: ({ row }) => (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setRemovingMember(row.original)}
-          >
-            <TrashIcon className="size-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={<Button variant="ghost" size="icon-sm" />}
+            >
+              <MoreHorizontal className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                render={
+                  <Link
+                    href={`${paths.admin.users}/${row.original.userId}`}
+                  />
+                }
+              >
+                {t('viewUser')}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setDeactivatingMember(row.original)}
+              >
+                {t('deactivateMember')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setReactivatingMember(row.original)}
+              >
+                {t('reactivateMember')}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => setRemovingMember(row.original)}
+              >
+                {t('removeMember')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ),
       }),
     ];
@@ -349,6 +530,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
     <>
       <DataTable table={table} />
 
+      {/* Remove member dialog */}
       <Dialog
         open={!!removingMember}
         onOpenChange={(open) => {
@@ -368,7 +550,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
               variant="outline"
               onClick={() => setRemovingMember(null)}
             >
-              {t('cancelInvite')}
+              {tCommon('cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -383,12 +565,83 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Deactivate member dialog */}
+      <Dialog
+        open={!!deactivatingMember}
+        onOpenChange={(open) => {
+          if (deactivateMember.isPending) return;
+          if (!open) setDeactivatingMember(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('deactivateMemberTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('deactivateMemberDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeactivatingMember(null)}
+            >
+              {tCommon('cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeactivateMember}
+              disabled={deactivateMember.isPending}
+            >
+              {deactivateMember.isPending && (
+                <LoaderIcon className="animate-spin" />
+              )}
+              {t('deactivateMember')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reactivate member dialog */}
+      <Dialog
+        open={!!reactivatingMember}
+        onOpenChange={(open) => {
+          if (reactivateMember.isPending) return;
+          if (!open) setReactivatingMember(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('reactivateMemberTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('reactivateMemberDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setReactivatingMember(null)}
+            >
+              {tCommon('cancel')}
+            </Button>
+            <Button
+              onClick={handleReactivateMember}
+              disabled={reactivateMember.isPending}
+            >
+              {reactivateMember.isPending && (
+                <LoaderIcon className="animate-spin" />
+              )}
+              {t('reactivateMember')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Org Invites Table
+// Org Invites Table (Task E: status badge colors)
 // ---------------------------------------------------------------------------
 
 function OrgInvitesTable({ publicId }: { publicId: string }) {
@@ -423,13 +676,7 @@ function OrgInvitesTable({ publicId }: { publicId: string }) {
         header: t('inviteColumnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          const variant =
-            s === 'pending'
-              ? 'outline'
-              : s === 'accepted'
-                ? 'default'
-                : 'destructive';
-          return <Badge variant={variant}>{s}</Badge>;
+          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
         },
       }),
       inviteColumnHelper.accessor('expiresAt', {

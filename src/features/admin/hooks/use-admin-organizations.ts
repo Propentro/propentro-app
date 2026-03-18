@@ -112,9 +112,57 @@ export function useDeactivateOrganization() {
   return useMutation<void, ApiError, string>({
     mutationFn: (publicId) =>
       apiClient.patch<void>(`/admin/organizations/${publicId}/deactivate`, {}),
-    onSuccess: () => {
+    onSuccess: (_data, publicId) => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.organizations.all(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(publicId),
+      });
+    },
+  });
+}
+
+export function useReactivateOrganization() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, string>({
+    mutationFn: (publicId) =>
+      apiClient.patch<void>(
+        `/admin/organizations/${publicId}/reactivate`,
+        {}
+      ),
+    onSuccess: (_data, publicId) => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.all(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(publicId),
+      });
+    },
+  });
+}
+
+export function useDeleteOrganization() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, { publicId: string }>({
+    mutationFn: ({ publicId }) =>
+      apiClient.delete<void>(`/admin/organizations/${publicId}`, {
+        'X-Confirm-Delete': publicId,
+      }),
+    onSuccess: (_data, { publicId }) => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.all(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(publicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.members(publicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.invites(publicId),
       });
     },
   });
