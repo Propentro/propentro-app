@@ -7,53 +7,14 @@ import type { ComponentProps } from 'react';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { Skeleton } from '@/components/ui/skeleton';
 
-import { useAdminMe } from '../hooks/use-admin-me';
 import { AdminSidebarNav } from './admin-sidebar-nav';
-
-function AdminProfile() {
-  const t = useTranslations('admin.me');
-  const { data: me, isPending } = useAdminMe();
-
-  if (isPending) {
-    return (
-      <div className="flex items-center gap-2 px-2 py-1.5">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <div className="space-y-1 group-data-[collapsible=icon]:hidden">
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-3 w-16" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!me) return null;
-
-  const displayName =
-    [me.firstName, me.lastName].filter(Boolean).join(' ') || me.email;
-
-  return (
-    <div className="flex items-center gap-2 px-2 py-1.5">
-      <div className="bg-muted flex size-8 items-center justify-center rounded-full text-xs font-medium">
-        {(me.firstName?.[0] ?? me.email[0]).toUpperCase()}
-      </div>
-      <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-        <p className="truncate text-sm font-medium">{displayName}</p>
-        <p className="text-muted-foreground truncate text-xs">
-          {t('role', { role: me.adminRole })}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 export function AdminSidebar(props: ComponentProps<typeof Sidebar>) {
   const t = useTranslations('admin.sidebar');
@@ -61,13 +22,16 @@ export function AdminSidebar(props: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded font-semibold text-sm">
-            PA
+        <div className="flex items-center gap-2 px-2 py-1.5 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+          <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded text-sm font-semibold">
+            P
           </div>
-          <span className="truncate text-sm font-semibold group-data-[collapsible=icon]:hidden">
-            {t('title')}
-          </span>
+          <div className="flex items-center gap-1.5 group-data-[collapsible=icon]:hidden">
+            <span className="truncate text-sm font-semibold">Propentro</span>
+            <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+              {t('adminBadge')}
+            </span>
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -106,9 +70,6 @@ export function AdminSidebar(props: ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <AdminProfile />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
