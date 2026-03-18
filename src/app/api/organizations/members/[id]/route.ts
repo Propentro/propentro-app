@@ -1,9 +1,13 @@
 import { proxyRequest } from '@/lib/proxy-request';
 
-export const PATCH = (
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) =>
-  params.then(({ id }) =>
-    proxyRequest(req, `/v1/organizations/members/${id}`)
-  );
+type Ctx = { params: Promise<{ id: string }> };
+
+export const GET = async (req: Request, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  return proxyRequest(req, `/v1/organizations/members/${id}`);
+};
+
+export const PATCH = async (req: Request, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  return proxyRequest(req, `/v1/organizations/members/${id}`);
+};

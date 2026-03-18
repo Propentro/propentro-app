@@ -40,9 +40,25 @@ export const membersQueryOptions = (
     enabled: !!orgId,
   });
 
+export const memberQueryOptions = (
+  orgId: string | null | undefined,
+  userId: string
+) =>
+  queryOptions({
+    queryKey: [...orgKeys.scope(orgId, 'members'), userId] as const,
+    queryFn: () =>
+      apiClient.get<OrgMember>(`/organizations/members/${userId}`),
+    enabled: !!orgId && !!userId,
+  });
+
 // ---------------------------------------------------------------------------
 // Hooks
 // ---------------------------------------------------------------------------
+
+export function useMember(userId: string) {
+  const { clerkOrgId } = useSession();
+  return useQuery(memberQueryOptions(clerkOrgId, userId));
+}
 
 export function useMembers(params: MembersParams = {}) {
   const { clerkOrgId } = useSession();
