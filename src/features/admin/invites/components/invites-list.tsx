@@ -29,8 +29,8 @@ import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
+import { type AdminInvite,inviteStatusVariant } from '../../types';
 import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import { inviteStatusVariant, type AdminInvite } from '../../types';
 
 const columnHelper = createColumnHelper<AdminInvite>();
 
@@ -172,11 +172,6 @@ export function InvitesList() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('description')}</p>
-      </div>
-
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2">

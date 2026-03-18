@@ -30,16 +30,16 @@ import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
+import type {
+  MemberRoleInfo,
+  UserOrganizationInfo,
+} from '../../types';
 import {
   useAdminUser,
   useDeactivateUser,
   useDeleteUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
-import type {
-  MemberRoleInfo,
-  UserOrganizationInfo,
-} from '../../types';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
 
@@ -131,10 +131,7 @@ export function UserDetail({ id }: UserDetailProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {t('detailTitle')}
-        </h1>
+      <div>
         {user.isActive ? (
           <Button
             variant="destructive"

@@ -27,8 +27,8 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
 import { DATE_PRESETS } from '@/lib/format-date';
 
-import { useAdminUsers } from '../hooks/use-admin-users';
 import type { AdminUserListItem } from '../../types';
+import { useAdminUsers } from '../hooks/use-admin-users';
 
 const columnHelper = createColumnHelper<AdminUserListItem>();
 
@@ -138,11 +138,6 @@ export function UsersList() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('description')}</p>
-      </div>
-
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2">
