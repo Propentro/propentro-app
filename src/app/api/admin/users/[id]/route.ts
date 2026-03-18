@@ -6,3 +6,8 @@ export const GET = async (req: Request, ctx: Ctx) => {
   const { id } = await ctx.params;
   return adminProxyRequest(req, `/v1/admin/users/${id}`);
 };
+
+export const DELETE = async (req: Request, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  return adminProxyRequest(req, `/v1/admin/users/${id}`);
+};
