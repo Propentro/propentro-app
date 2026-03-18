@@ -120,6 +120,8 @@ This project uses **shadcn/ui v4** which is built on **Base UI** (not Radix UI).
 Browser → apiClient (src/lib/api-client.ts) → /api/* route handlers → proxyRequest() → .NET backend
 ```
 
+**Proxy path convention:** All proxy route handler paths MUST include the `/v1` API version prefix (e.g., `/v1/organizations/members`, `/v1/admin/organizations`). `NEXT_PUBLIC_BASE_API_URL` must NOT include a version prefix.
+
 #### Query Key System
 
 All server data is org-scoped. `orgKeys` from `src/lib/query-keys.ts` guarantees every query key includes the orgId.
@@ -448,7 +450,7 @@ Money is stored as minor units (cents/pence) in `BIGINT`. For display:
 
 - Messages in `messages/en.json`
 - Use `Link`, `redirect`, `usePathname`, `useRouter` from `src/i18n/routing.ts` — NOT from `next/navigation` or `next/link`
-- **Code:** American English (`organization`); **UI text:** British English (`Organisation`)
+- **American English everywhere** — code, UI text, translations, labels, page titles (matches parent CLAUDE.md convention)
 
 ### Translation Key Guidelines
 
@@ -472,7 +474,7 @@ All user-facing text lives in `messages/en.json`. Follow these conventions:
 #### Spelling
 
 - **Key names** (code layer): American English (`organization`, `color`)
-- **Key values** (UI text): British English (`Organisation`, `Colour`)
+- **Key values** (UI text): American English (`Organization`, `Color`)
 
 #### Reusable components
 
