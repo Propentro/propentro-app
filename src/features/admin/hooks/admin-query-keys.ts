@@ -6,6 +6,7 @@
  */
 export const adminKeys = {
   root: ['admin'] as const,
+  me: () => ['admin', 'me'] as const,
 
   organizations: {
     all: () => ['admin', 'organizations'] as const,
