@@ -1,6 +1,6 @@
 'use client';
 
-import { useClerk } from '@clerk/nextjs';
+import { useClerk, useUser } from '@clerk/nextjs';
 import {
   Building2,
   Check,
@@ -13,7 +13,7 @@ import {
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -47,6 +47,7 @@ const THEME_OPTIONS = [
 export function AdminUserMenu() {
   const { data: me, isPending } = useAdminMe();
   const { signOut } = useClerk();
+  const { user } = useUser();
   const tProfile = useTranslations('layout.profile');
   const tAdmin = useTranslations('admin.userMenu');
   const tTheme = useTranslations('account.preferences.theme');
@@ -74,6 +75,7 @@ export function AdminUserMenu() {
         render={<Button variant="ghost" size="icon" className="rounded-full" />}
       >
         <Avatar className="size-7">
+          <AvatarImage src={user?.imageUrl} alt={displayName} />
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -83,6 +85,7 @@ export function AdminUserMenu() {
           <DropdownMenuLabel className="p-0 font-normal">
             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar className="size-8 rounded-lg">
+                <AvatarImage src={user?.imageUrl} alt={displayName} className="rounded-lg" />
                 <AvatarFallback className="rounded-lg">
                   {initials}
                 </AvatarFallback>
