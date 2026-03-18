@@ -14,8 +14,8 @@ import type {
   AdminOrganizationListItem,
   CreateOrganizationInput,
   UpdateOrganizationInput,
-} from '../types';
-import { adminKeys } from './admin-query-keys';
+} from '../../types';
+import { adminKeys } from '../../hooks/admin-query-keys';
 
 // ---------------------------------------------------------------------------
 // Params
