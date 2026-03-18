@@ -6,131 +6,105 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { LoaderIcon, Mail, SearchIcon, XIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { SearchIcon, Users, XIcon } from 'lucide-react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
-import { getErrorMessage } from '@/lib/parse-api-error';
-import type { ApiError } from '@/types/api.types';
+import { Link } from '@/i18n/routing';
+import { DATE_PRESETS } from '@/lib/format-date';
 
-import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import { inviteStatusVariant, type AdminInvite } from '../types';
-import { AdminFormattedDate } from './admin-formatted-date';
+import { useAdminUsers } from '../hooks/use-admin-users';
+import type { AdminUserListItem } from '../../types';
 
-const columnHelper = createColumnHelper<AdminInvite>();
+const columnHelper = createColumnHelper<AdminUserListItem>();
 
-export function InvitesList() {
-  const t = useTranslations('admin.invites');
+export function UsersList() {
+  const t = useTranslations('admin.users');
+  const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
+  const [status, setStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [cancellingInvite, setCancellingInvite] = useState<AdminInvite | null>(
-    null
-  );
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, pageSize]);
+  }, [debouncedSearch, status, pageSize]);
 
   // ---------------------------------------------------------------------------
-  // Query & mutations
+  // Query
   // ---------------------------------------------------------------------------
-  const { data, isPending } = useAdminInvites({
+  const { data, isPending } = useAdminUsers({
     search: debouncedSearch || undefined,
+    status: status === 'all' ? undefined : status,
     page,
     pageSize,
   });
-
-  const cancelInvite = useCancelInvite();
-
-  function handleCancel() {
-    if (!cancellingInvite) return;
-    cancelInvite.mutate(cancellingInvite.inviteId, {
-      onSuccess: () => {
-        toast.success(t('cancelSuccess'));
-        setCancellingInvite(null);
-      },
-      onError: (error: ApiError) => {
-        toast.error(getErrorMessage(error, t('cancelError')));
-      },
-    });
-  }
 
   // ---------------------------------------------------------------------------
   // Columns
   // ---------------------------------------------------------------------------
   const columns = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cols: ColumnDef<AdminInvite, any>[] = [
+    const cols: ColumnDef<AdminUserListItem, any>[] = [
       columnHelper.accessor('email', {
         header: t('columnEmail'),
+        cell: ({ row }) => {
+          const { email, userId } = row.original;
+          return (
+            <Link
+              href={`${paths.admin.users}/${userId}`}
+              className="font-medium hover:underline"
+            >
+              {email}
+            </Link>
+          );
+        },
+      }),
+      columnHelper.accessor('firstName', {
+        header: t('columnName'),
+        cell: ({ row }) => {
+          const { firstName, lastName } = row.original;
+          return `${firstName ?? ''} ${lastName ?? ''}`.trim() || '-';
+        },
+      }),
+      columnHelper.accessor('isActive', {
+        header: t('columnStatus'),
         cell: ({ getValue }) => (
-          <span className="font-medium">{getValue()}</span>
+          <Badge variant={getValue() ? 'default' : 'destructive'}>
+            {getValue() ? t('statusActive') : t('statusInactive')}
+          </Badge>
         ),
       }),
-      columnHelper.accessor('organizationName', {
-        header: t('columnOrganization'),
-      }),
-      columnHelper.accessor('roleName', {
-        header: t('columnRole'),
-        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
-      }),
-      columnHelper.accessor('status', {
-        header: t('columnStatus'),
-        cell: ({ getValue }) => {
-          const s = getValue();
-          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
-        },
-      }),
-      columnHelper.accessor('invitedBy', {
-        header: t('columnInvitedBy'),
-        cell: ({ getValue }) => getValue() ?? '-',
-      }),
-      columnHelper.accessor('expiresAt', {
-        header: t('columnExpires'),
-        cell: ({ getValue }) => {
-          const val = getValue();
-          return val ? <AdminFormattedDate value={val} /> : '-';
-        },
+      columnHelper.accessor('organizationCount', {
+        header: t('columnOrgs'),
+        cell: ({ getValue }) => getValue(),
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => <AdminFormattedDate value={getValue()} />,
-      }),
-      columnHelper.display({
-        id: 'actions',
-        cell: ({ row }) => {
-          if (row.original.status !== 'pending') return null;
-          return (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCancellingInvite(row.original)}
-            >
-              {t('cancel')}
-            </Button>
-          );
-        },
+        cell: ({ getValue }) => (
+          <time dateTime={getValue()}>
+            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
+          </time>
+        ),
       }),
     ];
     return cols;
@@ -156,7 +130,8 @@ export function InvitesList() {
     },
   });
 
-  const isEmpty = !data?.items.length && !debouncedSearch;
+  const hasFilters = search !== '' || status !== 'all';
+  const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
 
   // ---------------------------------------------------------------------------
   // Render
@@ -181,9 +156,37 @@ export function InvitesList() {
             />
           </div>
 
-          {search && (
-            <Button variant="ghost" size="sm" onClick={() => setSearch('')}>
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value ?? 'all')}
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder={t('filterStatus')}>
+                {status === 'all'
+                  ? t('allStatuses')
+                  : status === 'active'
+                    ? t('statusActive')
+                    : t('statusInactive')}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allStatuses')}</SelectItem>
+              <SelectItem value="active">{t('statusActive')}</SelectItem>
+              <SelectItem value="inactive">{t('statusInactive')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {hasFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearch('');
+                setStatus('all');
+              }}
+            >
               <XIcon />
+              {t('allStatuses')}
             </Button>
           )}
         </div>
@@ -196,7 +199,7 @@ export function InvitesList() {
         ) : isEmpty ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="bg-muted mb-4 flex size-12 items-center justify-center rounded-full">
-              <Mail className="text-muted-foreground size-6" />
+              <Users className="text-muted-foreground size-6" />
             </div>
             <h3 className="text-lg font-medium">{t('emptyTitle')}</h3>
             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
@@ -210,37 +213,6 @@ export function InvitesList() {
           </>
         )}
       </div>
-
-      {/* Cancel confirmation dialog */}
-      <Dialog
-        open={!!cancellingInvite}
-        onOpenChange={(open) => {
-          if (cancelInvite.isPending) return;
-          if (!open) setCancellingInvite(null);
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('cancelTitle')}</DialogTitle>
-            <DialogDescription>{t('cancelDescription')}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCancellingInvite(null)}>
-              {t('keepInvite')}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleCancel}
-              disabled={cancelInvite.isPending}
-            >
-              {cancelInvite.isPending && (
-                <LoaderIcon className="animate-spin" />
-              )}
-              {t('confirmCancel')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

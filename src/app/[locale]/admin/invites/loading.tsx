@@ -1,4 +1,4 @@
-import { InvitesListSkeleton } from '@/features/admin/components/invites-list-skeleton';
+import { InvitesListSkeleton } from '@/features/admin/invites/components/invites-list-skeleton';
 
 export default function AdminInvitesLoading() {
   return <InvitesListSkeleton />;

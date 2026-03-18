@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { OrganizationDetail } from '@/features/admin/components/organization-detail';
+import { OrganizationDetail } from '@/features/admin/organizations/components/organization-detail';
 
 export const metadata: Metadata = {
   title: 'Organisation Detail | Platform Admin | Propentro',
@@ -12,5 +12,5 @@ interface Props {
 
 export default async function AdminOrganizationDetailPage({ params }: Props) {
   const { id } = await params;
-  return <OrganizationDetail publicId={id} />;
+  return <OrganizationDetail organizationId={id} />;
 }

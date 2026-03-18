@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, MoreHorizontal } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -40,18 +40,24 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { paths } from '@/config/routes';
 import { Link } from '@/i18n/routing';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
+import { useCancelInvite } from '../../invites/hooks/use-admin-invites';
 import {
-  useAdminOrgInvites,
-  useCancelInvite,
-} from '../hooks/use-admin-invites';
+  inviteStatusVariant,
+  type AdminInvite,
+  type AdminMember,
+  type MemberRoleInfo,
+  type UpdateOrganizationInput,
+} from '../../types';
 import {
   useAdminDeactivateMember,
   useAdminReactivateMember,
   useRemoveMember,
 } from '../hooks/use-admin-members';
+import { useAdminOrgInvites } from '../hooks/use-admin-org-invites';
 import {
   useAdminOrganization,
   useAdminOrgMembers,
@@ -60,28 +66,20 @@ import {
   useReactivateOrganization,
   useUpdateOrganization,
 } from '../hooks/use-admin-organizations';
-import {
-  inviteStatusVariant,
-  type AdminInvite,
-  type AdminMember,
-  type MemberRoleInfo,
-  type UpdateOrganizationInput,
-} from '../types';
 import { updateOrganizationSchema } from '../validators/update-organization.schema';
-import { AdminFormattedDate } from './admin-formatted-date';
 
 const memberColumnHelper = createColumnHelper<AdminMember>();
 const inviteColumnHelper = createColumnHelper<AdminInvite>();
 
 interface OrganizationDetailProps {
-  publicId: string;
+  organizationId: string;
 }
 
-export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
+export function OrganizationDetail({ organizationId }: OrganizationDetailProps) {
   const t = useTranslations('admin.organizations');
   const tCommon = useTranslations('common');
-  const { data: org, isPending } = useAdminOrganization(publicId);
-  const updateOrg = useUpdateOrganization(publicId);
+  const { data: org, isPending } = useAdminOrganization(organizationId);
+  const updateOrg = useUpdateOrganization(organizationId);
   const deactivateOrg = useDeactivateOrganization();
   const reactivateOrg = useReactivateOrganization();
   const deleteOrg = useDeleteOrganization();
@@ -99,7 +97,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
   }
 
   function handleDeactivate() {
-    deactivateOrg.mutate(publicId, {
+    deactivateOrg.mutate(organizationId, {
       onSuccess: () => {
         toast.success(t('deactivateSuccess'));
         setDeactivateOpen(false);
@@ -111,7 +109,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
   }
 
   function handleReactivate() {
-    reactivateOrg.mutate(publicId, {
+    reactivateOrg.mutate(organizationId, {
       onSuccess: () => {
         toast.success(t('reactivateSuccess'));
       },
@@ -292,11 +290,11 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
         </TabsContent>
 
         <TabsContent value="members" className="mt-4">
-          <OrgMembersTable publicId={publicId} />
+          <OrgMembersTable organizationId={organizationId} />
         </TabsContent>
 
         <TabsContent value="invites" className="mt-4">
-          <OrgInvitesTable publicId={publicId} />
+          <OrgInvitesTable organizationId={organizationId} />
         </TabsContent>
       </Tabs>
 
@@ -338,13 +336,14 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
 // Org Members Table (Task D: row actions dropdown + user links)
 // ---------------------------------------------------------------------------
 
-function OrgMembersTable({ publicId }: { publicId: string }) {
+function OrgMembersTable({ organizationId }: { organizationId: string }) {
   const t = useTranslations('admin.organizations');
   const tCommon = useTranslations('common');
-  const { data: members, isPending } = useAdminOrgMembers(publicId);
-  const removeMember = useRemoveMember(publicId);
-  const deactivateMember = useAdminDeactivateMember(publicId);
-  const reactivateMember = useAdminReactivateMember(publicId);
+  const format = useFormatter();
+  const { data: members, isPending } = useAdminOrgMembers(organizationId);
+  const removeMember = useRemoveMember(organizationId);
+  const deactivateMember = useAdminDeactivateMember(organizationId);
+  const reactivateMember = useAdminReactivateMember(organizationId);
   const [removingMember, setRemovingMember] = useState<AdminMember | null>(
     null
   );
@@ -429,7 +428,11 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
       }),
       memberColumnHelper.accessor('joinedAt', {
         header: t('memberColumnJoined'),
-        cell: ({ getValue }) => <AdminFormattedDate value={getValue()} />,
+        cell: ({ getValue }) => (
+          <time dateTime={getValue()}>
+            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
+          </time>
+        ),
       }),
       memberColumnHelper.display({
         id: 'actions',
@@ -608,9 +611,10 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
 // Org Invites Table (Task E: status badge colors)
 // ---------------------------------------------------------------------------
 
-function OrgInvitesTable({ publicId }: { publicId: string }) {
+function OrgInvitesTable({ organizationId }: { organizationId: string }) {
   const t = useTranslations('admin.organizations');
-  const { data: invites, isPending } = useAdminOrgInvites(publicId);
+  const format = useFormatter();
+  const { data: invites, isPending } = useAdminOrgInvites(organizationId);
   const cancelInvite = useCancelInvite();
 
   function handleCancel(inviteId: string) {
@@ -645,7 +649,11 @@ function OrgInvitesTable({ publicId }: { publicId: string }) {
         header: t('inviteColumnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? <AdminFormattedDate value={val} /> : '-';
+          return val ? (
+            <time dateTime={val}>
+              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
+            </time>
+          ) : '-';
         },
       }),
       inviteColumnHelper.display({

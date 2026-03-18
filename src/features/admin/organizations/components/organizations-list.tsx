@@ -13,7 +13,7 @@ import {
   SearchIcon,
   XIcon,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -44,6 +44,7 @@ import {
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -54,8 +55,7 @@ import {
 import type {
   AdminOrganizationListItem,
   CreateOrganizationInput,
-} from '../types';
-import { AdminFormattedDate } from './admin-formatted-date';
+} from '../../types';
 
 const columnHelper = createColumnHelper<AdminOrganizationListItem>();
 
@@ -68,6 +68,7 @@ function slugify(value: string): string {
 
 export function OrganizationsList() {
   const t = useTranslations('admin.organizations');
+  const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
@@ -156,7 +157,11 @@ export function OrganizationsList() {
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => <AdminFormattedDate value={getValue()} />,
+        cell: ({ getValue }) => (
+          <time dateTime={getValue()}>
+            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
+          </time>
+        ),
       }),
     ];
 

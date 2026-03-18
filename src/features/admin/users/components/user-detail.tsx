@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -38,26 +39,26 @@ import {
 import type {
   MemberRoleInfo,
   UserOrganizationInfo,
-} from '../types';
-import { AdminFormattedDate } from './admin-formatted-date';
+} from '../../types';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
 
 interface UserDetailProps {
-  publicId: string;
+  id: string;
 }
 
-export function UserDetail({ publicId }: UserDetailProps) {
+export function UserDetail({ id }: UserDetailProps) {
   const t = useTranslations('admin.users');
   const tCommon = useTranslations('common');
-  const { data: user, isPending } = useAdminUser(publicId);
+  const format = useFormatter();
+  const { data: user, isPending } = useAdminUser(id);
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
   const deleteUser = useDeleteUser();
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   function handleDeactivate() {
-    deactivateUser.mutate(publicId, {
+    deactivateUser.mutate(id, {
       onSuccess: () => {
         toast.success(t('deactivateSuccess'));
         setDeactivateOpen(false);
@@ -69,7 +70,7 @@ export function UserDetail({ publicId }: UserDetailProps) {
   }
 
   function handleReactivate() {
-    reactivateUser.mutate(publicId, {
+    reactivateUser.mutate(id, {
       onSuccess: () => {
         toast.success(t('reactivateSuccess'));
       },
@@ -196,7 +197,9 @@ export function UserDetail({ publicId }: UserDetailProps) {
                 {t('labelCreated')}
               </dt>
               <dd>
-                <AdminFormattedDate value={user.createdAt} />
+                <time dateTime={user.createdAt}>
+                  {format.dateTime(new Date(user.createdAt), DATE_PRESETS.medium)}
+                </time>
               </dd>
             </div>
           </dl>
