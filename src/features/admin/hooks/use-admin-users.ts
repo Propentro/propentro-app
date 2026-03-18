@@ -69,9 +69,34 @@ export function useReactivateUser() {
   return useMutation<void, ApiError, string>({
     mutationFn: (publicId) =>
       apiClient.patch<void>(`/admin/users/${publicId}/reactivate`, {}),
-    onSuccess: () => {
+    onSuccess: (_data, publicId) => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.users.all(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.users.detail(publicId),
+      });
+    },
+  });
+}
+
+export function useDeleteUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, { publicId: string }>({
+    mutationFn: ({ publicId }) =>
+      apiClient.delete<void>(`/admin/users/${publicId}`, {
+        'X-Confirm-Delete': publicId,
+      }),
+    onSuccess: (_data, { publicId }) => {
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.users.all(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.users.detail(publicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.all(),
       });
     },
   });

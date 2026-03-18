@@ -428,7 +428,18 @@
       "deactivateSuccess": "User deactivated.",
       "deactivateError": "Failed to deactivate user.",
       "reactivateSuccess": "User reactivated.",
-      "reactivateError": "Failed to reactivate user."
+      "reactivateError": "Failed to reactivate user.",
+      "deleteUser": "Delete User",
+      "deleteWarningTitle": "Delete User?",
+      "deleteWarningDescription": "This action is permanent and cannot be undone. The user and all their memberships will be permanently deleted.",
+      "deleteConfirmTitle": "Confirm Permanent Deletion",
+      "deleteConfirmDescription": "Type \"{name}\" to confirm permanent deletion of this user.",
+      "deleteButton": "Permanently Delete",
+      "deleteSuccess": "User permanently deleted.",
+      "deleteError": "Failed to delete user.",
+      "dangerZoneTitle": "Delete this user",
+      "dangerZoneDescription": "Permanently delete this user and all their data. This action cannot be undone.",
+      "cancel": "Cancel"
     },
     "invites": {
       "title": "Invitations",
