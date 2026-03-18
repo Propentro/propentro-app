@@ -8,6 +8,7 @@ import {
 import { apiClient } from '@/lib/api-client';
 import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
+import { adminKeys } from '../../hooks/admin-query-keys';
 import type {
   AdminMember,
   AdminOrganization,
@@ -15,7 +16,6 @@ import type {
   CreateOrganizationInput,
   UpdateOrganizationInput,
 } from '../../types';
-import { adminKeys } from '../../hooks/admin-query-keys';
 
 // ---------------------------------------------------------------------------
 // Params

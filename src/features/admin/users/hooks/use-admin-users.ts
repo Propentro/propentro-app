@@ -8,8 +8,8 @@ import {
 import { apiClient } from '@/lib/api-client';
 import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
-import type { AdminUser, AdminUserListItem } from '../../types';
 import { adminKeys } from '../../hooks/admin-query-keys';
+import type { AdminUser, AdminUserListItem } from '../../types';
 
 // ---------------------------------------------------------------------------
 // Params

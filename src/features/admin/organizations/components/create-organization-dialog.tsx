@@ -28,8 +28,8 @@ import {
 import type { CreateOrganizationInput } from '../../types';
 import {
   createOrganizationDefaults,
-  createOrganizationSchema,
   type CreateOrganizationFormValues,
+  createOrganizationSchema,
 } from '../validators/create-organization.schema';
 
 function slugify(value: string): string {
