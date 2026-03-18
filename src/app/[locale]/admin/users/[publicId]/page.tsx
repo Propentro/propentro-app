@@ -10,7 +10,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { publicId } = await params;
   const t = await getTranslations('admin.users');
-  return { title: `${t('detailTitle')} ${publicId} | Platform Admin | Propentro` };
+  return {
+    title: `${t('detailTitle')} ${publicId} | Platform Admin | Propentro`,
+  };
 }
 
 export default async function AdminUserDetailPage({ params }: Props) {

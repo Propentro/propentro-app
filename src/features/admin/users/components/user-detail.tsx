@@ -30,10 +30,7 @@ import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import type {
-  MemberRoleInfo,
-  UserOrganizationInfo,
-} from '../../types';
+import type { MemberRoleInfo, UserOrganizationInfo } from '../../types';
 import {
   useAdminUser,
   useDeactivateUser,
@@ -195,7 +192,10 @@ export function UserDetail({ id }: UserDetailProps) {
               </dt>
               <dd>
                 <time dateTime={user.createdAt}>
-                  {format.dateTime(new Date(user.createdAt), DATE_PRESETS.medium)}
+                  {format.dateTime(
+                    new Date(user.createdAt),
+                    DATE_PRESETS.medium
+                  )}
                 </time>
               </dd>
             </div>

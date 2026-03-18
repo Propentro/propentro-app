@@ -29,7 +29,7 @@ import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import { type AdminInvite,inviteStatusVariant } from '../../types';
+import { type AdminInvite, inviteStatusVariant } from '../../types';
 import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
 
 const columnHelper = createColumnHelper<AdminInvite>();
@@ -115,7 +115,9 @@ export function InvitesList() {
             <time dateTime={val}>
               {format.dateTime(new Date(val), DATE_PRESETS.medium)}
             </time>
-          ) : '-';
+          ) : (
+            '-'
+          );
         },
       }),
       columnHelper.accessor('createdAt', {

@@ -19,7 +19,7 @@ import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useCancelInvite } from '../../invites/hooks/use-admin-invites';
-import { type AdminInvite,inviteStatusVariant } from '../../types';
+import { type AdminInvite, inviteStatusVariant } from '../../types';
 import { useAdminOrgInvites } from '../hooks/use-admin-org-invites';
 
 const inviteColumnHelper = createColumnHelper<AdminInvite>();

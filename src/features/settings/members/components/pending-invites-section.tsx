@@ -117,7 +117,6 @@ export function PendingInvitesSection({
     }
 
     return cols;
-     
   }, [canManage, t]);
 
   // ---------------------------------------------------------------------------

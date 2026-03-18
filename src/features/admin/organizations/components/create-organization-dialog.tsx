@@ -70,7 +70,9 @@ export function CreateOrganizationDialog({
         <Form<CreateOrganizationFormValues>
           validationSchema={createOrganizationSchema}
           useFormProps={{ defaultValues: createOrganizationDefaults }}
-          onSubmit={(values) => onSubmit(values as unknown as CreateOrganizationInput)}
+          onSubmit={(values) =>
+            onSubmit(values as unknown as CreateOrganizationInput)
+          }
           className="space-y-4"
         >
           {(methods) => (
@@ -130,7 +132,8 @@ export function CreateOrganizationDialog({
                   onValueChange={(val) =>
                     methods.setValue(
                       'subscriptionPlan',
-                      (val ?? 'starter') as CreateOrganizationFormValues['subscriptionPlan'],
+                      (val ??
+                        'starter') as CreateOrganizationFormValues['subscriptionPlan']
                     )
                   }
                 >
@@ -140,7 +143,9 @@ export function CreateOrganizationDialog({
                   <SelectContent>
                     <SelectItem value="starter">{t('planStarter')}</SelectItem>
                     <SelectItem value="pro">{t('planProfessional')}</SelectItem>
-                    <SelectItem value="enterprise">{t('planEnterprise')}</SelectItem>
+                    <SelectItem value="enterprise">
+                      {t('planEnterprise')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </FormField>

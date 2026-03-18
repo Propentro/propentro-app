@@ -43,9 +43,7 @@ export function OrganizationInfoForm({
       <CardContent className="pt-6">
         <Form<UpdateOrganizationInput>
           validationSchema={updateOrganizationSchema}
-          onSubmit={
-            handleUpdate as (values: UpdateOrganizationInput) => void
-          }
+          onSubmit={handleUpdate as (values: UpdateOrganizationInput) => void}
           resetValues={{
             name: organization.name,
             contactName: organization.contactName ?? '',
@@ -89,9 +87,7 @@ export function OrganizationInfoForm({
               >
                 <CurrencyPicker
                   value={methods.watch('currencyCode')}
-                  onChange={(val) =>
-                    methods.setValue('currencyCode', val)
-                  }
+                  onChange={(val) => methods.setValue('currencyCode', val)}
                 />
               </FormField>
               <FormField<UpdateOrganizationInput>
@@ -105,9 +101,7 @@ export function OrganizationInfoForm({
                 />
               </FormField>
               <Button type="submit" disabled={updateOrg.isPending}>
-                {updateOrg.isPending && (
-                  <LoaderIcon className="animate-spin" />
-                )}
+                {updateOrg.isPending && <LoaderIcon className="animate-spin" />}
                 {t('saveChanges')}
               </Button>
             </>

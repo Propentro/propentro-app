@@ -193,6 +193,7 @@ When adding a new feature, add its permissions to `PERMISSIONS` in `config/permi
 Any dialog, sheet, or modal that contains a form MUST be in its own file. Display-only helper components (<30 lines, stateless) may remain in the same file.
 
 **Naming convention:**
+
 - `create-{entity}-dialog.tsx` — create form in a dialog
 - `edit-{entity}-sheet.tsx` — edit form in a sheet/side panel
 - `{entity}-danger-zone.tsx` — destructive actions section
@@ -238,6 +239,7 @@ Every authenticated page follows this pattern:
 **Read vs write permission:** `requirePermission('org:resource:read')` is a **gate** — blocks the entire page. `hasPermission('org:resource:manage')` is a **prop** — passed to components to show/hide write actions (edit buttons, delete, create). Both happen in the server component `page.tsx`.
 
 **Admin page.tsx pattern:**
+
 - Metadata format: `"Page Name | Platform Admin | Propentro"`
 - Static pages use `export const metadata`
 - Dynamic pages use `export async function generateMetadata`
