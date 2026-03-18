@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, MoreHorizontalIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useDebounce } from '@/hooks/use-debounce';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -42,7 +43,6 @@ import {
 } from '../hooks/use-members';
 import type { OrgMember } from '../types';
 import { EditMemberRolesSheet } from './edit-member-roles-sheet';
-import { FormattedDate } from './formatted-date';
 import { InviteMemberSheet } from './invite-member-sheet';
 import { MembersEmptyState } from './members-empty-state';
 import { MembersSkeleton } from './members-skeleton';
@@ -57,6 +57,7 @@ interface MembersContentProps {
 
 export function MembersContent({ canManage }: MembersContentProps) {
   const t = useTranslations('members');
+  const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
@@ -180,7 +181,14 @@ export function MembersContent({ canManage }: MembersContentProps) {
       }),
       columnHelper.accessor('joinedAt', {
         header: t('columnJoined'),
-        cell: ({ getValue }) => <FormattedDate value={getValue()} />,
+        cell: ({ getValue }) => {
+          const value = getValue();
+          return (
+            <time dateTime={value}>
+              {format.dateTime(new Date(value), DATE_PRESETS.medium)}
+            </time>
+          );
+        },
       }),
       columnHelper.accessor('status', {
         header: t('columnStatus'),

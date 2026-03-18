@@ -29,7 +29,7 @@ import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import type { AdminInvite } from '../types/admin.types';
+import type { AdminInvite } from '../types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 function inviteStatusVariant(

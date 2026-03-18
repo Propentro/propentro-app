@@ -26,7 +26,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "countries-list": "^3.3.0",
-    "dayjs": "^1.11.20",
     "jotai": "^2.18.1",
     "libphonenumber-js": "^1.12.40",
     "lodash": "^4.17.23",

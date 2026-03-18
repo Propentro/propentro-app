@@ -27,7 +27,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
 
 import { useAdminUsers } from '../hooks/use-admin-users';
-import type { AdminUserListItem } from '../types/admin.types';
+import type { AdminUserListItem } from '../types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const columnHelper = createColumnHelper<AdminUserListItem>();

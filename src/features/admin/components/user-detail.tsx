@@ -38,7 +38,7 @@ import {
 import type {
   MemberRoleInfo,
   UserOrganizationInfo,
-} from '../types/admin.types';
+} from '../types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();

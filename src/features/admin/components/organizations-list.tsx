@@ -54,7 +54,7 @@ import {
 import type {
   AdminOrganizationListItem,
   CreateOrganizationInput,
-} from '../types/admin.types';
+} from '../types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
 const columnHelper = createColumnHelper<AdminOrganizationListItem>();

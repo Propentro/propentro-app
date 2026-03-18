@@ -65,7 +65,7 @@ import type {
   AdminMember,
   MemberRoleInfo,
   UpdateOrganizationInput,
-} from '../types/admin.types';
+} from '../types';
 import { updateOrganizationSchema } from '../validators/update-organization.schema';
 import { AdminFormattedDate } from './admin-formatted-date';
 
