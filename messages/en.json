@@ -453,12 +453,17 @@
       "columnExpires": "Expires",
       "columnCreated": "Created",
       "cancel": "Cancel",
+      "confirmCancel": "Cancel Invitation",
+      "keepInvite": "Keep",
       "cancelTitle": "Cancel Invitation",
       "cancelDescription": "This invitation will be canceled and the recipient will not be able to join.",
       "cancelSuccess": "Invitation canceled.",
       "cancelError": "Failed to cancel invitation.",
       "emptyTitle": "No invitations",
       "emptyDescription": "No invitations found matching your criteria."
+    },
+    "me": {
+      "role": "Role: {role}"
     }
   },
 

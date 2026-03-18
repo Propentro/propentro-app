@@ -32,6 +32,23 @@ import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
 import type { AdminInvite } from '../types/admin.types';
 import { AdminFormattedDate } from './admin-formatted-date';
 
+function inviteStatusVariant(
+  status: string
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'outline';
+    case 'accepted':
+      return 'default';
+    case 'canceled':
+      return 'destructive';
+    case 'expired':
+      return 'secondary';
+    default:
+      return 'secondary';
+  }
+}
+
 const columnHelper = createColumnHelper<AdminInvite>();
 
 export function InvitesList() {
@@ -101,13 +118,7 @@ export function InvitesList() {
         header: t('columnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          const variant =
-            s === 'pending'
-              ? 'outline'
-              : s === 'accepted'
-                ? 'default'
-                : 'destructive';
-          return <Badge variant={variant}>{s}</Badge>;
+          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
         },
       }),
       columnHelper.accessor('invitedBy', {
@@ -243,7 +254,7 @@ export function InvitesList() {
               variant="outline"
               onClick={() => setCancellingInvite(null)}
             >
-              {t('cancel')}
+              {t('keepInvite')}
             </Button>
             <Button
               variant="destructive"
@@ -253,7 +264,7 @@ export function InvitesList() {
               {cancelInvite.isPending && (
                 <LoaderIcon className="animate-spin" />
               )}
-              {t('cancel')}
+              {t('confirmCancel')}
             </Button>
           </DialogFooter>
         </DialogContent>
