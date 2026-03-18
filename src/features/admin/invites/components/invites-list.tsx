@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, Mail, SearchIcon, XIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -25,34 +25,18 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
+import { type AdminInvite, inviteStatusVariant } from '../../types';
 import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import type { AdminInvite } from '../types/admin.types';
-import { AdminFormattedDate } from './admin-formatted-date';
-
-function inviteStatusVariant(
-  status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return 'outline';
-    case 'accepted':
-      return 'default';
-    case 'canceled':
-      return 'destructive';
-    case 'expired':
-      return 'secondary';
-    default:
-      return 'secondary';
-  }
-}
 
 const columnHelper = createColumnHelper<AdminInvite>();
 
 export function InvitesList() {
   const t = useTranslations('admin.invites');
+  const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
@@ -127,12 +111,22 @@ export function InvitesList() {
         header: t('columnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? <AdminFormattedDate value={val} /> : '-';
+          return val ? (
+            <time dateTime={val}>
+              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
+            </time>
+          ) : (
+            '-'
+          );
         },
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => <AdminFormattedDate value={getValue()} />,
+        cell: ({ getValue }) => (
+          <time dateTime={getValue()}>
+            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
+          </time>
+        ),
       }),
       columnHelper.display({
         id: 'actions',
@@ -180,11 +174,6 @@ export function InvitesList() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('description')}</p>
-      </div>
-
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2">

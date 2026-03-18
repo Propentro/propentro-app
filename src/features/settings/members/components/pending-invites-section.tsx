@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, MailIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -22,12 +22,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useCancelInvite, useOrgInvites } from '../hooks/use-invites';
 import type { OrgInvite } from '../types';
-import { FormattedDate } from './formatted-date';
 
 const columnHelper = createColumnHelper<OrgInvite>();
 
@@ -39,6 +39,7 @@ export function PendingInvitesSection({
   canManage,
 }: PendingInvitesSectionProps) {
   const t = useTranslations('members');
+  const format = useFormatter();
   const { data: invites, isPending } = useOrgInvites();
   const cancelInvite = useCancelInvite();
   const [cancellingInvite, setCancellingInvite] = useState<OrgInvite | null>(
@@ -86,7 +87,13 @@ export function PendingInvitesSection({
         header: t('inviteColumnExpires'),
         cell: ({ getValue }) => {
           const value = getValue();
-          return value ? <FormattedDate value={value} /> : <span>—</span>;
+          return value ? (
+            <time dateTime={value}>
+              {format.dateTime(new Date(value), DATE_PRESETS.medium)}
+            </time>
+          ) : (
+            <span>—</span>
+          );
         },
       }),
     ];
@@ -110,7 +117,6 @@ export function PendingInvitesSection({
     }
 
     return cols;
-     
   }, [canManage, t]);
 
   // ---------------------------------------------------------------------------

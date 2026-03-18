@@ -6,9 +6,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { SearchIcon, Users, XIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { Building2, PlusIcon, SearchIcon, XIcon } from 'lucide-react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
@@ -25,15 +26,25 @@ import {
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Link } from '@/i18n/routing';
+import { DATE_PRESETS } from '@/lib/format-date';
+import { getErrorMessage } from '@/lib/parse-api-error';
+import type { ApiError } from '@/types/api.types';
 
-import { useAdminUsers } from '../hooks/use-admin-users';
-import type { AdminUserListItem } from '../types/admin.types';
-import { AdminFormattedDate } from './admin-formatted-date';
+import type {
+  AdminOrganizationListItem,
+  CreateOrganizationInput,
+} from '../../types';
+import {
+  useAdminOrganizations,
+  useCreateOrganization,
+} from '../hooks/use-admin-organizations';
+import { CreateOrganizationDialog } from './create-organization-dialog';
 
-const columnHelper = createColumnHelper<AdminUserListItem>();
+const columnHelper = createColumnHelper<AdminOrganizationListItem>();
 
-export function UsersList() {
-  const t = useTranslations('admin.users');
+export function OrganizationsList() {
+  const t = useTranslations('admin.organizations');
+  const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
@@ -43,47 +54,74 @@ export function UsersList() {
   const [status, setStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [createOpen, setCreateOpen] = useState(false);
 
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch, status, pageSize]);
 
   // ---------------------------------------------------------------------------
-  // Query
+  // Queries & mutations
   // ---------------------------------------------------------------------------
-  const { data, isPending } = useAdminUsers({
+  const { data, isPending } = useAdminOrganizations({
     search: debouncedSearch || undefined,
     status: status === 'all' ? undefined : status,
     page,
     pageSize,
   });
 
+  const createOrganization = useCreateOrganization();
+
+  // ---------------------------------------------------------------------------
+  // Create handler
+  // ---------------------------------------------------------------------------
+  function handleCreate(values: CreateOrganizationInput) {
+    createOrganization.mutate(values, {
+      onSuccess: () => {
+        toast.success(t('createSuccess'));
+        setCreateOpen(false);
+      },
+      onError: (error: ApiError) => {
+        toast.error(getErrorMessage(error, t('createError')));
+      },
+    });
+  }
+
   // ---------------------------------------------------------------------------
   // Columns
   // ---------------------------------------------------------------------------
   const columns = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cols: ColumnDef<AdminUserListItem, any>[] = [
-      columnHelper.accessor('email', {
-        header: t('columnEmail'),
+    const cols: ColumnDef<AdminOrganizationListItem, any>[] = [
+      columnHelper.accessor('name', {
+        header: t('columnName'),
         cell: ({ row }) => {
-          const { email, userId } = row.original;
+          const { name, organizationId } = row.original;
           return (
             <Link
-              href={`${paths.admin.users}/${userId}`}
+              href={`${paths.admin.organizations}/${organizationId}`}
               className="font-medium hover:underline"
             >
-              {email}
+              {name}
             </Link>
           );
         },
       }),
-      columnHelper.accessor('firstName', {
-        header: t('columnName'),
-        cell: ({ row }) => {
-          const { firstName, lastName } = row.original;
-          return `${firstName ?? ''} ${lastName ?? ''}`.trim() || '-';
-        },
+      columnHelper.accessor('slug', {
+        header: t('columnSlug'),
+        cell: ({ getValue }) => (
+          <span className="text-muted-foreground font-mono text-xs">
+            {getValue()}
+          </span>
+        ),
+      }),
+      columnHelper.accessor('subscriptionPlan', {
+        header: t('columnPlan'),
+        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
+      }),
+      columnHelper.accessor('memberCount', {
+        header: t('columnMembers'),
+        cell: ({ getValue }) => getValue(),
       }),
       columnHelper.accessor('isActive', {
         header: t('columnStatus'),
@@ -93,15 +131,16 @@ export function UsersList() {
           </Badge>
         ),
       }),
-      columnHelper.accessor('organizationCount', {
-        header: t('columnOrgs'),
-        cell: ({ getValue }) => getValue(),
-      }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => <AdminFormattedDate value={getValue()} />,
+        cell: ({ getValue }) => (
+          <time dateTime={getValue()}>
+            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
+          </time>
+        ),
       }),
     ];
+
     return cols;
   }, [t]);
 
@@ -126,6 +165,7 @@ export function UsersList() {
   });
 
   const hasFilters = search !== '' || status !== 'all';
+
   const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
 
   // ---------------------------------------------------------------------------
@@ -133,11 +173,6 @@ export function UsersList() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('description')}</p>
-      </div>
-
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2">
@@ -146,7 +181,7 @@ export function UsersList() {
             <Input
               placeholder={t('searchPlaceholder')}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="w-56 pl-8"
             />
           </div>
@@ -184,6 +219,11 @@ export function UsersList() {
               {t('allStatuses')}
             </Button>
           )}
+
+          <Button className="ml-auto" onClick={() => setCreateOpen(true)}>
+            <PlusIcon />
+            {t('createOrganization')}
+          </Button>
         </div>
 
         {/* Content */}
@@ -194,12 +234,15 @@ export function UsersList() {
         ) : isEmpty ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="bg-muted mb-4 flex size-12 items-center justify-center rounded-full">
-              <Users className="text-muted-foreground size-6" />
+              <Building2 className="text-muted-foreground size-6" />
             </div>
             <h3 className="text-lg font-medium">{t('emptyTitle')}</h3>
             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
               {t('emptyDescription')}
             </p>
+            <Button className="mt-4" onClick={() => setCreateOpen(true)}>
+              {t('createOrganization')}
+            </Button>
           </div>
         ) : (
           <>
@@ -208,6 +251,18 @@ export function UsersList() {
           </>
         )}
       </div>
+
+      {/* Create Organization Dialog */}
+      <CreateOrganizationDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSubmit={handleCreate}
+        isPending={createOrganization.isPending}
+      />
     </div>
   );
+
+  function onSearchChange(value: string) {
+    setSearch(value);
+  }
 }

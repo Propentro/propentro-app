@@ -1,16 +1,26 @@
-import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-import { OrganizationDetail } from '@/features/admin/components/organization-detail';
-
-export const metadata: Metadata = {
-  title: 'Organisation Detail | Platform Admin | Propentro',
-};
+import { PageHeader } from '@/components/page-header';
+import { OrganizationDetail } from '@/features/admin/organizations/components/organization-detail';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
+export async function generateMetadata({ params }: Props) {
+  const { id } = await params;
+  const t = await getTranslations('admin.organizations');
+  return { title: `${t('detailTitle')} ${id} | Platform Admin | Propentro` };
+}
+
 export default async function AdminOrganizationDetailPage({ params }: Props) {
   const { id } = await params;
-  return <OrganizationDetail publicId={id} />;
+  const t = await getTranslations('admin.organizations');
+
+  return (
+    <>
+      <PageHeader title={t('detailTitle')} />
+      <OrganizationDetail organizationId={id} />
+    </>
+  );
 }

@@ -1,4 +1,4 @@
-import { UserDetailSkeleton } from '@/features/admin/components/user-detail-skeleton';
+import { UserDetailSkeleton } from '@/features/admin/users/components/user-detail-skeleton';
 
 export default function AdminUserDetailLoading() {
   return <UserDetailSkeleton />;

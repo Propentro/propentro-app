@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api-client';
 import type { ApiError } from '@/types/api.types';
 
-import { adminKeys } from './admin-query-keys';
+import { adminKeys } from '../../hooks/admin-query-keys';
 
 // ---------------------------------------------------------------------------
 // Hooks
