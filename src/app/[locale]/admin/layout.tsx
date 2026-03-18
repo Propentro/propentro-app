@@ -1,8 +1,8 @@
+import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 import { routes } from '@/config/routes';
 import { AdminLayout } from '@/features/admin/components/admin-layout';
-import { getMeOrRedirect } from '@/lib/auth';
 
 type Props = {
   children: React.ReactNode;
@@ -11,10 +11,13 @@ type Props = {
 
 export default async function AdminRootLayout({ children, params }: Props) {
   const { locale } = await params;
+  const { sessionClaims } = await auth();
 
-  const user = await getMeOrRedirect(locale);
+  const isSuperAdmin =
+    (sessionClaims?.metadata as { systemRole?: string } | undefined)
+      ?.systemRole === 'super_admin';
 
-  if (!user.isSystemAdmin) {
+  if (!isSuperAdmin) {
     redirect(routes.selectWorkspace(locale));
   }
 

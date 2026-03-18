@@ -19,6 +19,7 @@ import {
 import { ANY_SETTINGS_READ_PERMISSION } from '@/config/permissions';
 import { paths } from '@/config/routes';
 import { useMe } from '@/hooks/use-me';
+import { useSession } from '@/hooks/use-session';
 import { Link, usePathname } from '@/i18n/routing';
 
 import { SidebarNav } from './sidebar-nav';
@@ -26,7 +27,8 @@ import { WorkspaceSwitcher } from './workspace-switcher';
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   const t = useTranslations('layout.sidebar');
-  const { permissions, isSystemAdmin } = useMe();
+  const { permissions } = useMe();
+  const { isSystemAdmin } = useSession();
   const pathname = usePathname();
 
   const showSettings = ANY_SETTINGS_READ_PERMISSION.some((p) =>

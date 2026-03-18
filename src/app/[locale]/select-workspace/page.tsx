@@ -3,45 +3,29 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { routes } from '@/config/routes';
-import { env } from '@/env.mjs';
 import { WorkspaceList } from '@/features/select-workspace/components/workspace-list';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-async function checkSuperAdmin(token: string): Promise<boolean> {
-  try {
-    const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/v1/admin/me`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 export default async function SelectWorkspacePage({ params }: Props) {
   const { locale } = await params;
-  const { userId, getToken } = await auth();
+  const { userId, sessionClaims } = await auth();
 
   if (!userId) {
     redirect(routes.signIn(locale));
   }
 
-  const [t, token] = await Promise.all([
+  const isSuperAdmin =
+    (sessionClaims?.metadata as { systemRole?: string } | undefined)
+      ?.systemRole === 'super_admin';
+
+  const [t, client] = await Promise.all([
     getTranslations('workspace'),
-    getToken(),
+    clerkClient(),
   ]);
 
-  const isSuperAdmin = token ? await checkSuperAdmin(token) : false;
-
-  const client = await clerkClient();
   const memberships = await client.users.getOrganizationMembershipList({
     userId,
   });
