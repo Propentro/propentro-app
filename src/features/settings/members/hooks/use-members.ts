@@ -46,8 +46,7 @@ export const memberQueryOptions = (
 ) =>
   queryOptions({
     queryKey: [...orgKeys.scope(orgId, 'members'), userId] as const,
-    queryFn: () =>
-      apiClient.get<OrgMember>(`/organizations/members/${userId}`),
+    queryFn: () => apiClient.get<OrgMember>(`/organizations/members/${userId}`),
     enabled: !!orgId && !!userId,
   });
 

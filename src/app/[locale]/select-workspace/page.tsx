@@ -61,11 +61,7 @@ export default async function SelectWorkspacePage({ params }: Props) {
         <h1 className="text-2xl font-semibold">{t('selectWorkspace')}</h1>
         <p className="text-muted-foreground mt-2">{t('selectDescription')}</p>
       </div>
-      <WorkspaceList
-        orgs={orgs}
-        locale={locale}
-        isSuperAdmin={isSuperAdmin}
-      />
+      <WorkspaceList orgs={orgs} locale={locale} isSuperAdmin={isSuperAdmin} />
     </div>
   );
 }

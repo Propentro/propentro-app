@@ -25,8 +25,7 @@ const themes = [
     value: 'system' as const,
     icon: Monitor,
     previewBg: 'bg-gradient-to-r from-gray-100 from-50% to-gray-900 to-50%',
-    previewBar:
-      'bg-gradient-to-r from-white from-50% to-gray-800 to-50%',
+    previewBar: 'bg-gradient-to-r from-white from-50% to-gray-800 to-50%',
   },
 ];
 
@@ -61,7 +60,7 @@ export function ThemePicker() {
                 : 'border-border hover:border-muted-foreground/30'
             )}
           >
-            <div className={cn('p-3 space-y-1.5', previewBg)}>
+            <div className={cn('space-y-1.5 p-3', previewBg)}>
               <div className={cn('h-1.5 w-full rounded', previewBar)} />
               <div className={cn('h-1.5 w-3/5 rounded', previewBar)} />
             </div>

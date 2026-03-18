@@ -12,8 +12,7 @@ export const adminKeys = {
     all: () => ['admin', 'organizations'] as const,
     list: (params: Record<string, unknown>) =>
       ['admin', 'organizations', 'list', params] as const,
-    detail: (publicId: string) =>
-      ['admin', 'organizations', publicId] as const,
+    detail: (publicId: string) => ['admin', 'organizations', publicId] as const,
     members: (publicId: string) =>
       ['admin', 'organizations', publicId, 'members'] as const,
     invites: (publicId: string) =>

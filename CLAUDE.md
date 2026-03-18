@@ -162,8 +162,8 @@ Clerk is isolated in 3 layers:
 Permissions are centralised in a `PERMISSIONS` object with `feature.action` structure:
 
 ```ts
-PERMISSIONS.settings.read   // 'org:settings:read'
-PERMISSIONS.members.manage  // 'org:members:manage'
+PERMISSIONS.settings.read; // 'org:settings:read'
+PERMISSIONS.members.manage; // 'org:members:manage'
 ```
 
 When adding a new feature, add its permissions to `PERMISSIONS` in `config/permissions.ts`. For sidebar/nav visibility that depends on _any_ permission in a group, create a derived array (e.g., `ANY_SETTINGS_READ_PERMISSION`).
@@ -372,13 +372,15 @@ Custom wrapper around react-hook-form. Use this instead of raw `useForm` + `<for
 ```tsx
 <Form<MyFormValues>
   validationSchema={mySchema}
-  resetValues={dataFromApi}       // auto-resets form when data changes (stable reference check)
+  resetValues={dataFromApi} // auto-resets form when data changes (stable reference check)
   onSubmit={handleSubmit}
 >
   {(methods) => (
     <>
       <FormField label="Name" name="name" methods={methods} />
-      <Button type="submit" disabled={methods.formState.isSubmitting}>Save</Button>
+      <Button type="submit" disabled={methods.formState.isSubmitting}>
+        Save
+      </Button>
     </>
   )}
 </Form>
@@ -414,7 +416,7 @@ Use `getErrorMessage(error, fallbackTranslation)` to extract human-readable mess
 ```tsx
 onError: (error) => {
   toast.error(getErrorMessage(error, t('errorMessage')));
-}
+};
 ```
 
 ### `useUnsavedChanges` Hook (`src/hooks/use-unsaved-changes.ts`)

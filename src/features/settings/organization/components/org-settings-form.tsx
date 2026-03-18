@@ -304,7 +304,10 @@ function OrgSettingsFormFields({
       {/* Actions */}
       {canEdit && (
         <div className="flex items-center gap-2">
-          <Button type="submit" disabled={isPending || !methods.formState.isDirty}>
+          <Button
+            type="submit"
+            disabled={isPending || !methods.formState.isDirty}
+          >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('save')}
           </Button>

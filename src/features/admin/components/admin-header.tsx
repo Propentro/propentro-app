@@ -58,9 +58,7 @@ export function AdminHeader() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               {hasDetail ? (
-                <BreadcrumbLink
-                  render={<Link href={`/admin/${segment}`} />}
-                >
+                <BreadcrumbLink render={<Link href={`/admin/${segment}`} />}>
                   {t(segmentKey)}
                 </BreadcrumbLink>
               ) : (

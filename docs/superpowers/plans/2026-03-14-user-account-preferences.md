@@ -17,6 +17,7 @@
 ### Task 1: Add route path constants
 
 **Files:**
+
 - Modify: `src/config/routes.ts`
 
 - [ ] **Step 1: Add account paths and route builders**
@@ -59,6 +60,7 @@ git commit -m "feat(account): add route path constants for account pages"
 ### Task 2: Add i18n translation keys
 
 **Files:**
+
 - Modify: `messages/en.json`
 
 - [ ] **Step 1: Add page title keys**
@@ -135,6 +137,7 @@ git commit -m "feat(account): add i18n translation keys for account pages"
 ### Task 3: Enable system theme in ThemeProvider
 
 **Files:**
+
 - Modify: `src/components/providers/theme-provider.tsx`
 
 - [ ] **Step 1: Enable system theme**
@@ -177,6 +180,7 @@ git commit -m "feat(account): enable system theme support in ThemeProvider"
 ### Task 4: Create account layout with tab navigation
 
 **Files:**
+
 - Create: `src/features/account/components/account-nav.tsx`
 - Create: `src/app/[locale]/[orgSlug]/account/layout.tsx`
 
@@ -279,6 +283,7 @@ git commit -m "feat(account): add account layout with tab navigation"
 ### Task 5: Create account loading, error, and redirect pages
 
 **Files:**
+
 - Create: `src/app/[locale]/[orgSlug]/account/loading.tsx`
 - Create: `src/app/[locale]/[orgSlug]/account/error.tsx`
 - Create: `src/app/[locale]/[orgSlug]/account/page.tsx`
@@ -451,6 +456,7 @@ git commit -m "feat(account): add loading, error, and redirect pages for account
 ### Task 6: Build profile card component
 
 **Files:**
+
 - Create: `src/features/account/profile/components/profile-card.tsx`
 
 - [ ] **Step 1: Create the profile card**
@@ -536,6 +542,7 @@ git commit -m "feat(account): add read-only profile card component"
 ### Task 7: Create profile page
 
 **Files:**
+
 - Create: `src/app/[locale]/[orgSlug]/account/profile/page.tsx`
 
 - [ ] **Step 1: Create the profile page**
@@ -584,6 +591,7 @@ git commit -m "feat(account): add profile page with read-only user card"
 ### Task 8: Build theme picker component
 
 **Files:**
+
 - Create: `src/features/account/preferences/components/theme-picker.tsx`
 
 - [ ] **Step 1: Create the theme picker**
@@ -685,6 +693,7 @@ git commit -m "feat(account): add visual theme picker component"
 ### Task 9: Build language selector component
 
 **Files:**
+
 - Create: `src/features/account/preferences/components/language-selector.tsx`
 
 - [ ] **Step 1: Create the language selector**
@@ -752,6 +761,7 @@ git commit -m "feat(account): add language selector with cookie persistence"
 ### Task 10: Create preferences page
 
 **Files:**
+
 - Create: `src/app/[locale]/[orgSlug]/account/preferences/page.tsx`
 
 - [ ] **Step 1: Create the preferences page**
@@ -818,6 +828,7 @@ git commit -m "feat(account): add preferences page with theme picker and languag
 ### Task 11: Simplify user menu dropdown
 
 **Files:**
+
 - Modify: `src/components/layout/user-menu.tsx`
 
 - [ ] **Step 1: Rewrite user menu**
@@ -909,6 +920,7 @@ export function UserMenu() {
 ```
 
 **What changed:**
+
 - Removed `openUserProfile` from `useClerk()` — only `signOut` remains
 - Removed `useTheme` import and theme toggle
 - Removed `DropdownMenuSub`, `DropdownMenuSubContent`, `DropdownMenuSubTrigger` imports
@@ -948,6 +960,7 @@ git commit -m "refactor(layout): simplify user menu — remove theme/language, l
 ### Task 12: Add account entries to command palette
 
 **Files:**
+
 - Modify: `src/components/layout/command-palette.tsx`
 
 - [ ] **Step 1: Add account group to command palette**
@@ -955,7 +968,14 @@ git commit -m "refactor(layout): simplify user menu — remove theme/language, l
 In `src/components/layout/command-palette.tsx`, add the account entries. Add the `UserCircle` and `Settings2` imports to the lucide-react import line:
 
 ```typescript
-import { Building2, LayoutDashboard, Settings2, Shield, UserCircle, Users } from 'lucide-react';
+import {
+  Building2,
+  LayoutDashboard,
+  Settings2,
+  Shield,
+  UserCircle,
+  Users,
+} from 'lucide-react';
 ```
 
 Add a new `CommandGroup` after the existing "Settings" group, before `</CommandList>`:
@@ -1017,6 +1037,7 @@ Expected: Build succeeds
 - [ ] **Step 4: Manual smoke test**
 
 Verify in the browser:
+
 1. Navigate to any org page → click user avatar → see simplified dropdown (Account + Log Out)
 2. Click "Account" → redirected to `/[orgSlug]/account/profile`
 3. Profile tab shows avatar, name, email, role badge, org name (all read-only)

@@ -128,10 +128,7 @@ export function useReactivateOrganization() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (publicId) =>
-      apiClient.patch<void>(
-        `/admin/organizations/${publicId}/reactivate`,
-        {}
-      ),
+      apiClient.patch<void>(`/admin/organizations/${publicId}/reactivate`, {}),
     onSuccess: (_data, publicId) => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.organizations.all(),

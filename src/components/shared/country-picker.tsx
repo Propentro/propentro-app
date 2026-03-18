@@ -59,12 +59,7 @@ export function CountryPicker({
           />
         }
       >
-        <span
-          className={cn(
-            'truncate',
-            !selected && 'text-muted-foreground'
-          )}
-        >
+        <span className={cn('truncate', !selected && 'text-muted-foreground')}>
           {selected ? `${selected.flag} ${selected.name}` : placeholderText}
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />

@@ -55,11 +55,7 @@ export function useAdminOrgInvites(orgPublicId: string) {
 export function useInviteUser(orgPublicId: string) {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    void,
-    ApiError,
-    { email: string; roleId: string }
-  >({
+  return useMutation<void, ApiError, { email: string; roleId: string }>({
     mutationFn: (payload) =>
       apiClient.post<void>(
         `/admin/organizations/${orgPublicId}/invites`,

@@ -206,9 +206,7 @@ export function UserDetail({ publicId }: UserDetailProps) {
       {/* Organization Memberships */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-medium">
-            {t('sectionOrganizations')}
-          </h2>
+          <h2 className="text-lg font-medium">{t('sectionOrganizations')}</h2>
         </CardHeader>
         <CardContent>
           {user.organizations.length === 0 ? (
@@ -244,9 +242,7 @@ export function UserDetail({ publicId }: UserDetailProps) {
                       toast.success(t('deleteSuccess'));
                     },
                     onError: (error) =>
-                      toast.error(
-                        getErrorMessage(error, t('deleteError'))
-                      ),
+                      toast.error(getErrorMessage(error, t('deleteError'))),
                   }
                 );
               }}
@@ -273,15 +269,10 @@ export function UserDetail({ publicId }: UserDetailProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>
-              {t('deactivateDescription')}
-            </DialogDescription>
+            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeactivateOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setDeactivateOpen(false)}>
               {t('cancel')}
             </Button>
             <Button

@@ -62,9 +62,7 @@ export function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/${orgSlug}${paths.account.profile}`)
-            }
+            onClick={() => router.push(`/${orgSlug}${paths.account.profile}`)}
           >
             <UserCircle />
             {t('account')}

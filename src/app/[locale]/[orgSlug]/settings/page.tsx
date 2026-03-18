@@ -11,7 +11,10 @@ export default async function SettingsPage({ params }: Props) {
   const { locale, orgSlug } = await params;
 
   const permissionToPath = [
-    { permission: PERMISSIONS.settings.read, path: paths.settings.organization },
+    {
+      permission: PERMISSIONS.settings.read,
+      path: paths.settings.organization,
+    },
     { permission: PERMISSIONS.members.read, path: paths.settings.members },
     { permission: PERMISSIONS.roles.read, path: paths.settings.roles },
   ];

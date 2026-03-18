@@ -141,7 +141,8 @@ export function MembersContent({ canManage }: MembersContentProps) {
         header: t('columnName'),
         cell: ({ row }) => {
           const { firstName, lastName, email } = row.original;
-          const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+          const initials =
+            `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
           return (
             <div className="flex items-center gap-3">
               <div className="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
@@ -172,9 +173,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
                   {role.name}
                 </Badge>
               ))}
-              {remaining > 0 && (
-                <Badge variant="outline">+{remaining}</Badge>
-              )}
+              {remaining > 0 && <Badge variant="outline">+{remaining}</Badge>}
             </div>
           );
         },
@@ -209,16 +208,12 @@ export function MembersContent({ canManage }: MembersContentProps) {
             return (
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  render={
-                    <Button variant="ghost" size="icon-sm" />
-                  }
+                  render={<Button variant="ghost" size="icon-sm" />}
                 >
                   <MoreHorizontalIcon className="size-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => handleEditRoles(member)}
-                  >
+                  <DropdownMenuItem onClick={() => handleEditRoles(member)}>
                     {t('actionEditRoles')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -230,9 +225,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
                       {t('actionDeactivate')}
                     </DropdownMenuItem>
                   ) : (
-                    <DropdownMenuItem
-                      onClick={() => handleReactivate(member)}
-                    >
+                    <DropdownMenuItem onClick={() => handleReactivate(member)}>
                       {t('actionReactivate')}
                     </DropdownMenuItem>
                   )}
@@ -275,7 +268,11 @@ export function MembersContent({ canManage }: MembersContentProps) {
     return <MembersSkeleton />;
   }
 
-  const isEmpty = !data?.items.length && !debouncedSearch && status === 'all' && roleId === 'all';
+  const isEmpty =
+    !data?.items.length &&
+    !debouncedSearch &&
+    status === 'all' &&
+    roleId === 'all';
 
   return (
     <div className="space-y-4">
@@ -324,9 +321,7 @@ export function MembersContent({ canManage }: MembersContentProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>
-              {t('deactivateDescription')}
-            </DialogDescription>
+            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button

@@ -59,15 +59,8 @@ export function CurrencyPicker({
           />
         }
       >
-        <span
-          className={cn(
-            'truncate',
-            !selected && 'text-muted-foreground'
-          )}
-        >
-          {selected
-            ? `${selected.name} (${selected.symbol})`
-            : placeholderText}
+        <span className={cn('truncate', !selected && 'text-muted-foreground')}>
+          {selected ? `${selected.name} (${selected.symbol})` : placeholderText}
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />
       </PopoverTrigger>

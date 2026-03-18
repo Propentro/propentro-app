@@ -39,9 +39,7 @@ export function FormField<T extends FieldValues>({
         />
       )}
       {error?.message && (
-        <p className="text-destructive mt-1 text-xs">
-          {String(error.message)}
-        </p>
+        <p className="text-destructive mt-1 text-xs">{String(error.message)}</p>
       )}
     </div>
   );
