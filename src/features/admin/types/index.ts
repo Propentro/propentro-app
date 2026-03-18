@@ -124,3 +124,24 @@ export type AdminMe = {
   adminRole: string;
   assignedAt: ISODateTimeString;
 };
+
+// ---------------------------------------------------------------------------
+// Invite status badge variant helper
+// ---------------------------------------------------------------------------
+
+export function inviteStatusVariant(
+  status: string
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'outline';
+    case 'accepted':
+      return 'default';
+    case 'canceled':
+      return 'destructive';
+    case 'expired':
+      return 'secondary';
+    default:
+      return 'secondary';
+  }
+}

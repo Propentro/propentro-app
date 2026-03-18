@@ -60,11 +60,12 @@ import {
   useReactivateOrganization,
   useUpdateOrganization,
 } from '../hooks/use-admin-organizations';
-import type {
-  AdminInvite,
-  AdminMember,
-  MemberRoleInfo,
-  UpdateOrganizationInput,
+import {
+  inviteStatusVariant,
+  type AdminInvite,
+  type AdminMember,
+  type MemberRoleInfo,
+  type UpdateOrganizationInput,
 } from '../types';
 import { updateOrganizationSchema } from '../validators/update-organization.schema';
 import { AdminFormattedDate } from './admin-formatted-date';
@@ -331,27 +332,6 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
       </Dialog>
     </div>
   );
-}
-
-// ---------------------------------------------------------------------------
-// Invite status badge variant helper
-// ---------------------------------------------------------------------------
-
-function inviteStatusVariant(
-  status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return 'outline';
-    case 'accepted':
-      return 'default';
-    case 'canceled':
-      return 'destructive';
-    case 'expired':
-      return 'secondary';
-    default:
-      return 'secondary';
-  }
 }
 
 // ---------------------------------------------------------------------------

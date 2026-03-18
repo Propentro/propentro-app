@@ -29,25 +29,8 @@ import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useAdminInvites, useCancelInvite } from '../hooks/use-admin-invites';
-import type { AdminInvite } from '../types';
+import { inviteStatusVariant, type AdminInvite } from '../types';
 import { AdminFormattedDate } from './admin-formatted-date';
-
-function inviteStatusVariant(
-  status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return 'outline';
-    case 'accepted':
-      return 'default';
-    case 'canceled':
-      return 'destructive';
-    case 'expired':
-      return 'secondary';
-    default:
-      return 'secondary';
-  }
-}
 
 const columnHelper = createColumnHelper<AdminInvite>();
 
