@@ -80,7 +80,9 @@ export function useUpdateMemberRoles() {
     { userId: string } & UpdateMemberRolesInput
   >({
     mutationFn: ({ userId, roleIds }) =>
-      apiClient.patch<void>(`/organizations/members/${userId}`, { roleIds }),
+      apiClient.patch<void>(`/organizations/members/${userId}/roles`, {
+        roleIds,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),
@@ -98,7 +100,7 @@ export function useDeactivateMember() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (userId) =>
-      apiClient.post<void>(`/organizations/members/${userId}/deactivate`, {}),
+      apiClient.patch<void>(`/organizations/members/${userId}/deactivate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),
@@ -113,7 +115,7 @@ export function useReactivateMember() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (userId) =>
-      apiClient.post<void>(`/organizations/members/${userId}/reactivate`, {}),
+      apiClient.patch<void>(`/organizations/members/${userId}/reactivate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),

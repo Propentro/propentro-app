@@ -1,9 +1,8 @@
 import { proxyRequest } from '@/lib/proxy-request';
 
-export const POST = (
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) =>
-  params.then(({ id }) =>
-    proxyRequest(req, `/organizations/members/${id}/deactivate`)
-  );
+type Ctx = { params: Promise<{ id: string }> };
+
+export const PATCH = async (req: Request, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  return proxyRequest(req, `/v1/organizations/members/${id}/deactivate`);
+};

@@ -81,7 +81,7 @@ export function useCancelInvite() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (invitePublicId) =>
-      apiClient.delete<void>(`/admin/invites/${invitePublicId}`),
+      apiClient.patch<void>(`/admin/invites/${invitePublicId}/cancel`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.invites.all(),

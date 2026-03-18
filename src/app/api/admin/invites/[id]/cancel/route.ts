@@ -2,7 +2,7 @@ import { adminProxyRequest } from '@/lib/admin-proxy-request';
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export const DELETE = async (req: Request, ctx: Ctx) => {
+export const PATCH = async (req: Request, ctx: Ctx) => {
   const { id } = await ctx.params;
-  return adminProxyRequest(req, `/v1/admin/invites/${id}`);
+  return adminProxyRequest(req, `/v1/admin/invites/${id}/cancel`);
 };
