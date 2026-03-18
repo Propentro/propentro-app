@@ -275,6 +275,7 @@
     "description": "Manage organizations, users, and invitations across the platform.",
     "sidebar": {
       "title": "Platform Admin",
+      "adminBadge": "Admin",
       "menu": {
         "dashboard": "Dashboard",
         "organizations": "Organizations",
@@ -464,6 +465,11 @@
     },
     "me": {
       "role": "Role: {role}"
+    },
+    "userMenu": {
+      "selectWorkspace": "Select workspace",
+      "language": "Language",
+      "theme": "Theme"
     }
   },
 
