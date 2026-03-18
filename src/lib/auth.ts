@@ -35,7 +35,7 @@ export async function getMe(): Promise<CurrentUser | null> {
   if (!token) return null;
 
   try {
-    const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/me`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/v1/me`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
