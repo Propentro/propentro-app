@@ -16,69 +16,69 @@
 
 ### Infrastructure (Phase 1)
 
-| Action | File | Responsibility |
-|--------|------|----------------|
-| Modify | `.env.example` | Remove `/v1` from `NEXT_PUBLIC_BASE_API_URL` |
-| Modify | `src/lib/auth.ts:38` | Change `/me` → `/v1/me` |
-| Modify | `src/lib/api-client.ts:70` | Add optional `headers` param to `delete` method |
-| Modify | `src/lib/proxy-request.ts:57-64` | Forward `X-Confirm-Delete` header |
-| Modify | `src/lib/admin-proxy-request.ts:49-56` | Forward `X-Confirm-Delete` header |
-| Modify | `src/app/[locale]/select-workspace/page.tsx:13-27,42` | Replace `checkSuperAdmin()` with JWT claim check |
-| Modify | `src/app/[locale]/admin/layout.tsx:17` | Replace `user.isSystemAdmin` with JWT claim check |
-| Modify | `src/types/user.types.ts:25` | Remove `isSystemAdmin` field from `CurrentUser` |
-| Modify | `src/hooks/use-session.ts:19` | Add `isSystemAdmin` from JWT `sessionClaims` |
-| Modify | `src/components/layout/app-sidebar.tsx:29,79` | Replace `useMe().isSystemAdmin` with `useSession().isSystemAdmin` |
-| Modify | `src/app/api/me/route.ts` | Add `/v1` prefix to path |
-| Modify | `src/app/api/organizations/settings/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/permissions/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/roles/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/roles/[id]/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/members/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/members/[id]/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/members/[id]/deactivate/route.ts` | `POST` → `PATCH` + add `/v1` prefix |
-| Modify | `src/app/api/organizations/members/[id]/reactivate/route.ts` | `POST` → `PATCH` + add `/v1` prefix |
-| Modify | `src/app/api/organizations/invites/route.ts` | Add `/v1` prefix |
-| Modify | `src/app/api/organizations/invites/[id]/route.ts` | Add `/v1` prefix |
-| Create | `src/app/api/organizations/members/[id]/roles/route.ts` | New proxy: `PATCH /v1/organizations/members/{id}/roles` |
-| Modify | `src/features/settings/members/hooks/use-members.ts:83` | Fix path to `/organizations/members/${userId}/roles` |
-| Modify | `src/features/settings/members/hooks/use-members.ts:101` | `apiClient.post` → `apiClient.patch` |
-| Modify | `src/features/settings/members/hooks/use-members.ts:114` | `apiClient.post` → `apiClient.patch` |
-| Modify | `src/features/admin/hooks/use-admin-invites.ts:84` | `apiClient.delete` → `apiClient.patch` with path `/admin/invites/${id}/cancel` |
-| Delete | `src/app/api/admin/invites/[id]/route.ts` | Remove orphaned DELETE route |
-| Create | `src/app/api/admin/invites/[id]/cancel/route.ts` | New proxy: `PATCH /v1/admin/invites/{id}/cancel` |
-| Modify | `src/features/admin/hooks/use-admin-organizations.ts:56` | `AdminMember[]` → `PagedResult<AdminMember>` |
-| Modify | `src/features/admin/hooks/use-admin-invites.ts:37` | `AdminInvite[]` → `PagedResult<AdminInvite>` |
-| Create | `src/app/api/admin/organizations/[id]/reactivate/route.ts` | New proxy: `PATCH /v1/admin/organizations/{id}/reactivate` |
-| Modify | `src/app/api/admin/organizations/[id]/route.ts` | Add `DELETE` export |
-| Modify | `src/app/api/admin/users/[id]/route.ts` | Add `DELETE` export |
-| Create | `src/app/api/admin/organizations/[id]/members/[userId]/deactivate/route.ts` | New proxy |
-| Create | `src/app/api/admin/organizations/[id]/members/[userId]/reactivate/route.ts` | New proxy |
-| Create | `src/app/api/admin/me/route.ts` | New proxy: `GET /v1/admin/me` |
-| Modify | `CLAUDE.md` | Fix spelling rule + add proxy path convention |
-| Modify | `messages/en.json` | British → American English corrections |
+| Action | File                                                                        | Responsibility                                                                 |
+| ------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Modify | `.env.example`                                                              | Remove `/v1` from `NEXT_PUBLIC_BASE_API_URL`                                   |
+| Modify | `src/lib/auth.ts:38`                                                        | Change `/me` → `/v1/me`                                                        |
+| Modify | `src/lib/api-client.ts:70`                                                  | Add optional `headers` param to `delete` method                                |
+| Modify | `src/lib/proxy-request.ts:57-64`                                            | Forward `X-Confirm-Delete` header                                              |
+| Modify | `src/lib/admin-proxy-request.ts:49-56`                                      | Forward `X-Confirm-Delete` header                                              |
+| Modify | `src/app/[locale]/select-workspace/page.tsx:13-27,42`                       | Replace `checkSuperAdmin()` with JWT claim check                               |
+| Modify | `src/app/[locale]/admin/layout.tsx:17`                                      | Replace `user.isSystemAdmin` with JWT claim check                              |
+| Modify | `src/types/user.types.ts:25`                                                | Remove `isSystemAdmin` field from `CurrentUser`                                |
+| Modify | `src/hooks/use-session.ts:19`                                               | Add `isSystemAdmin` from JWT `sessionClaims`                                   |
+| Modify | `src/components/layout/app-sidebar.tsx:29,79`                               | Replace `useMe().isSystemAdmin` with `useSession().isSystemAdmin`              |
+| Modify | `src/app/api/me/route.ts`                                                   | Add `/v1` prefix to path                                                       |
+| Modify | `src/app/api/organizations/settings/route.ts`                               | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/permissions/route.ts`                            | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/roles/route.ts`                                  | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/roles/[id]/route.ts`                             | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/members/route.ts`                                | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/members/[id]/route.ts`                           | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/members/[id]/deactivate/route.ts`                | `POST` → `PATCH` + add `/v1` prefix                                            |
+| Modify | `src/app/api/organizations/members/[id]/reactivate/route.ts`                | `POST` → `PATCH` + add `/v1` prefix                                            |
+| Modify | `src/app/api/organizations/invites/route.ts`                                | Add `/v1` prefix                                                               |
+| Modify | `src/app/api/organizations/invites/[id]/route.ts`                           | Add `/v1` prefix                                                               |
+| Create | `src/app/api/organizations/members/[id]/roles/route.ts`                     | New proxy: `PATCH /v1/organizations/members/{id}/roles`                        |
+| Modify | `src/features/settings/members/hooks/use-members.ts:83`                     | Fix path to `/organizations/members/${userId}/roles`                           |
+| Modify | `src/features/settings/members/hooks/use-members.ts:101`                    | `apiClient.post` → `apiClient.patch`                                           |
+| Modify | `src/features/settings/members/hooks/use-members.ts:114`                    | `apiClient.post` → `apiClient.patch`                                           |
+| Modify | `src/features/admin/hooks/use-admin-invites.ts:84`                          | `apiClient.delete` → `apiClient.patch` with path `/admin/invites/${id}/cancel` |
+| Delete | `src/app/api/admin/invites/[id]/route.ts`                                   | Remove orphaned DELETE route                                                   |
+| Create | `src/app/api/admin/invites/[id]/cancel/route.ts`                            | New proxy: `PATCH /v1/admin/invites/{id}/cancel`                               |
+| Modify | `src/features/admin/hooks/use-admin-organizations.ts:56`                    | `AdminMember[]` → `PagedResult<AdminMember>`                                   |
+| Modify | `src/features/admin/hooks/use-admin-invites.ts:37`                          | `AdminInvite[]` → `PagedResult<AdminInvite>`                                   |
+| Create | `src/app/api/admin/organizations/[id]/reactivate/route.ts`                  | New proxy: `PATCH /v1/admin/organizations/{id}/reactivate`                     |
+| Modify | `src/app/api/admin/organizations/[id]/route.ts`                             | Add `DELETE` export                                                            |
+| Modify | `src/app/api/admin/users/[id]/route.ts`                                     | Add `DELETE` export                                                            |
+| Create | `src/app/api/admin/organizations/[id]/members/[userId]/deactivate/route.ts` | New proxy                                                                      |
+| Create | `src/app/api/admin/organizations/[id]/members/[userId]/reactivate/route.ts` | New proxy                                                                      |
+| Create | `src/app/api/admin/me/route.ts`                                             | New proxy: `GET /v1/admin/me`                                                  |
+| Modify | `CLAUDE.md`                                                                 | Fix spelling rule + add proxy path convention                                  |
+| Modify | `messages/en.json`                                                          | British → American English corrections                                         |
 
 ### Phase 2 — Vertical Slices
 
-| Action | File | Responsibility |
-|--------|------|----------------|
-| Create | `src/components/shared/hard-delete-confirmation.tsx` | Two-stage delete dialog (Slice G) |
-| Create | `src/components/shared/danger-zone.tsx` | Red-bordered danger section (Slice G) |
-| Modify | `src/features/settings/members/hooks/use-members.ts` | Add `useMember` detail hook (Slice A) |
-| Modify | `src/features/admin/hooks/use-admin-organizations.ts` | Add `useReactivateOrganization`, `useDeleteOrganization` (Slice B) |
-| Create | `src/features/admin/validators/create-organization.schema.ts` | Zod schema (Slice B) |
-| Create | `src/features/admin/validators/update-organization.schema.ts` | Zod schema (Slice B) |
-| Modify | `src/features/admin/components/organization-detail.tsx` | Reactivate UI, DangerZone, invite sheet, Zod forms (Slice B) |
-| Modify | `src/features/admin/hooks/use-admin-users.ts` | Add `useDeleteUser` (Slice C) |
-| Modify | `src/features/admin/components/user-detail.tsx` | DangerZone, fix cancel button key (Slice C) |
-| Create | `src/features/admin/hooks/use-admin-members.ts` (extend) | Add deactivate/reactivate hooks (Slice D) |
-| Modify | `src/features/admin/components/organization-detail.tsx` | Row actions dropdown, user links (Slice D) |
-| Modify | `src/features/admin/hooks/use-admin-invites.ts` | Fix cancel method (done in Phase 1) (Slice E) |
-| Modify | `src/features/admin/components/invites-list.tsx` | Cancel button, status badge colors (Slice E) |
-| Modify | `src/features/admin/components/organization-detail.tsx` | Cancel button on invites tab (Slice E) |
-| Modify | `src/features/admin/types/admin.types.ts` | Add `AdminMe` type (Slice F) |
-| Create | `src/features/admin/hooks/use-admin-me.ts` | `useAdminMe` hook (Slice F) |
-| Modify | `src/features/admin/components/admin-sidebar.tsx` | Admin profile footer (Slice F) |
-| Modify | `messages/en.json` | New translation keys for all slices |
+| Action | File                                                          | Responsibility                                                     |
+| ------ | ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Create | `src/components/shared/hard-delete-confirmation.tsx`          | Two-stage delete dialog (Slice G)                                  |
+| Create | `src/components/shared/danger-zone.tsx`                       | Red-bordered danger section (Slice G)                              |
+| Modify | `src/features/settings/members/hooks/use-members.ts`          | Add `useMember` detail hook (Slice A)                              |
+| Modify | `src/features/admin/hooks/use-admin-organizations.ts`         | Add `useReactivateOrganization`, `useDeleteOrganization` (Slice B) |
+| Create | `src/features/admin/validators/create-organization.schema.ts` | Zod schema (Slice B)                                               |
+| Create | `src/features/admin/validators/update-organization.schema.ts` | Zod schema (Slice B)                                               |
+| Modify | `src/features/admin/components/organization-detail.tsx`       | Reactivate UI, DangerZone, invite sheet, Zod forms (Slice B)       |
+| Modify | `src/features/admin/hooks/use-admin-users.ts`                 | Add `useDeleteUser` (Slice C)                                      |
+| Modify | `src/features/admin/components/user-detail.tsx`               | DangerZone, fix cancel button key (Slice C)                        |
+| Create | `src/features/admin/hooks/use-admin-members.ts` (extend)      | Add deactivate/reactivate hooks (Slice D)                          |
+| Modify | `src/features/admin/components/organization-detail.tsx`       | Row actions dropdown, user links (Slice D)                         |
+| Modify | `src/features/admin/hooks/use-admin-invites.ts`               | Fix cancel method (done in Phase 1) (Slice E)                      |
+| Modify | `src/features/admin/components/invites-list.tsx`              | Cancel button, status badge colors (Slice E)                       |
+| Modify | `src/features/admin/components/organization-detail.tsx`       | Cancel button on invites tab (Slice E)                             |
+| Modify | `src/features/admin/types/admin.types.ts`                     | Add `AdminMe` type (Slice F)                                       |
+| Create | `src/features/admin/hooks/use-admin-me.ts`                    | `useAdminMe` hook (Slice F)                                        |
+| Modify | `src/features/admin/components/admin-sidebar.tsx`             | Admin profile footer (Slice F)                                     |
+| Modify | `messages/en.json`                                            | New translation keys for all slices                                |
 
 ---
 
@@ -89,6 +89,7 @@
 ### Task 1.1: Env + Proxy Path Standardization
 
 **Files:**
+
 - Modify: `.env.example`
 - Modify: `src/app/api/me/route.ts`
 - Modify: `src/app/api/organizations/settings/route.ts`
@@ -152,10 +153,13 @@ Expected: PASS (no type errors from path string changes)
 - [ ] **Step 6: Fix `getMe()` path in `src/lib/auth.ts`**
 
 This MUST be done in the same commit as the env change. In `src/lib/auth.ts`, line 38, change:
+
 ```ts
 const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/me`, {
 ```
+
 to:
+
 ```ts
 const res = await fetch(`${env.NEXT_PUBLIC_BASE_API_URL}/v1/me`, {
 ```
@@ -177,6 +181,7 @@ git commit -m "fix: standardize proxy paths with /v1 prefix, remove /v1 from env
 ### Task 1.2: `apiClient.delete` Headers Support
 
 **Files:**
+
 - Modify: `src/lib/api-client.ts:28-56,70`
 
 **Context:** `apiClient.delete` currently takes only a `path` parameter. Hard delete operations need to send `X-Confirm-Delete` header. Add optional `headers` param to `delete` only. The `apiFetch` function needs to accept and merge custom headers.
@@ -211,10 +216,13 @@ const res = await fetch(`${BASE}${buildUrl(path, params)}`, {
 - [ ] **Step 2: Update `delete` method signature**
 
 Change line 70 from:
+
 ```ts
 delete: <T>(path: string) => apiFetch<T>(path, { method: 'DELETE' }),
 ```
+
 to:
+
 ```ts
 // TODO: Consider adding headers support to all methods if needed in the future
 delete: <T>(path: string, headers?: Record<string, string>) =>
@@ -238,6 +246,7 @@ git commit -m "feat: add optional headers param to apiClient.delete for X-Confir
 ### Task 1.3: Proxy Request `X-Confirm-Delete` Header Forwarding
 
 **Files:**
+
 - Modify: `src/lib/proxy-request.ts:57-64`
 - Modify: `src/lib/admin-proxy-request.ts:49-56`
 
@@ -300,6 +309,7 @@ git commit -m "feat: forward X-Confirm-Delete header through proxy layer"
 ### Task 1.4: JWT Super Admin Check
 
 **Files:**
+
 - Modify: `src/app/[locale]/select-workspace/page.tsx:13-27,42`
 - Modify: `src/app/[locale]/admin/layout.tsx:12-19`
 - Modify: `src/types/user.types.ts:25`
@@ -469,16 +479,20 @@ Note: `useAuth()` from `@clerk/nextjs` v7 returns `sessionClaims` which includes
 In `src/components/layout/app-sidebar.tsx`:
 
 Line 29 — change:
+
 ```ts
 const { permissions, isSystemAdmin } = useMe();
 ```
+
 to:
+
 ```ts
 const { permissions } = useMe();
 const { isSystemAdmin } = useSession();
 ```
 
 Add import at top:
+
 ```ts
 import { useSession } from '@/hooks/use-session';
 ```
@@ -508,6 +522,7 @@ git commit -m "feat: replace checkSuperAdmin() backend call with JWT sessionClai
 ### Task 1.5: HTTP Method Fixes
 
 **Files:**
+
 - Modify: `src/features/settings/members/hooks/use-members.ts:83,101,114`
 - Modify: `src/app/api/organizations/members/[id]/deactivate/route.ts`
 - Modify: `src/app/api/organizations/members/[id]/reactivate/route.ts`
@@ -570,18 +585,21 @@ export const PATCH = async (req: Request, ctx: Ctx) => {
 In `src/features/settings/members/hooks/use-members.ts`:
 
 **`useUpdateMemberRoles`** (line 83) — fix path:
+
 ```ts
 mutationFn: ({ userId, roleIds }) =>
   apiClient.patch<void>(`/organizations/members/${userId}/roles`, { roleIds }),
 ```
 
 **`useDeactivateMember`** (line 101) — change `post` → `patch`:
+
 ```ts
 mutationFn: (userId) =>
   apiClient.patch<void>(`/organizations/members/${userId}/deactivate`, {}),
 ```
 
 **`useReactivateMember`** (line 114) — change `post` → `patch`:
+
 ```ts
 mutationFn: (userId) =>
   apiClient.patch<void>(`/organizations/members/${userId}/reactivate`, {}),
@@ -644,6 +662,7 @@ git commit -m "fix: correct HTTP methods (POST→PATCH, DELETE→PATCH) and add 
 ### Task 1.6: Return Type Fixes
 
 **Files:**
+
 - Modify: `src/features/admin/hooks/use-admin-organizations.ts:52-60`
 - Modify: `src/features/admin/hooks/use-admin-invites.ts:33-41`
 
@@ -690,6 +709,7 @@ Import `PagedResult` is already imported on line 9 — verify it's there.
 In `src/features/admin/components/organization-detail.tsx`, the data is now `PagedResult<T>` instead of `T[]`. Two exact changes:
 
 **Line 331** — `OrgMembersTable` useReactTable data prop:
+
 ```ts
 // Before:
 data: members ?? [],
@@ -698,6 +718,7 @@ data: members?.items ?? [],
 ```
 
 **Line 340** — Empty state check (currently `if (!members?.length)`):
+
 ```ts
 // Before:
 if (!members?.length) {
@@ -706,6 +727,7 @@ if (!members?.items?.length) {
 ```
 
 **Line 464** — `OrgInvitesTable` useReactTable data prop:
+
 ```ts
 // Before:
 data: invites ?? [],
@@ -714,6 +736,7 @@ data: invites?.items ?? [],
 ```
 
 **Line 473** — Empty state check (currently `if (!invites?.length)`):
+
 ```ts
 // Before:
 if (!invites?.length) {
@@ -738,6 +761,7 @@ git commit -m "fix: correct return types to PagedResult for admin org members an
 ### Task 1.7: Add Missing Proxy Routes
 
 **Files:**
+
 - Create: `src/app/api/admin/organizations/[id]/reactivate/route.ts`
 - Modify: `src/app/api/admin/organizations/[id]/route.ts` (add DELETE)
 - Modify: `src/app/api/admin/users/[id]/route.ts` (add DELETE)
@@ -827,8 +851,7 @@ Create `src/app/api/admin/me/route.ts`:
 ```ts
 import { adminProxyRequest } from '@/lib/admin-proxy-request';
 
-export const GET = (req: Request) =>
-  adminProxyRequest(req, '/v1/admin/me');
+export const GET = (req: Request) => adminProxyRequest(req, '/v1/admin/me');
 ```
 
 - [ ] **Step 7: Verify**
@@ -848,6 +871,7 @@ git commit -m "feat: add missing admin proxy routes (reactivate org, delete org/
 ### Task 1.8: CLAUDE.md Updates
 
 **Files:**
+
 - Modify: `CLAUDE.md`
 
 **Context:** Two changes: (1) Fix the "Code: American English; UI text: British English" rule to "American English everywhere". (2) Add proxy path convention rule.
@@ -900,6 +924,7 @@ git commit -m "docs: fix spelling rule to American English everywhere, add proxy
 ### Task 1.9: British → American English in `messages/en.json`
 
 **Files:**
+
 - Modify: `messages/en.json`
 
 **Context:** All British English spellings in UI text must be changed to American English. Key patterns: "Organisation" → "Organization", "Cancelled" → "Canceled", "organisation" → "organization".
@@ -908,14 +933,14 @@ git commit -m "docs: fix spelling rule to American English everywhere, add proxy
 
 Apply these replacements across the entire `messages/en.json`:
 
-| British | American |
-|---------|----------|
-| `Organisation` | `Organization` |
-| `organisation` | `organization` |
+| British         | American        |
+| --------------- | --------------- |
+| `Organisation`  | `Organization`  |
+| `organisation`  | `organization`  |
 | `Organisations` | `Organizations` |
 | `organisations` | `organizations` |
-| `Cancelled` | `Canceled` |
-| `cancelled` | `canceled` |
+| `Cancelled`     | `Canceled`      |
+| `cancelled`     | `canceled`      |
 
 Do NOT change JSON key names — only change JSON string values. Key names are code-layer and already use American English (e.g., the key `"settingsOrganization"` stays as-is, but its value `"Organisation"` → `"Organization"`).
 
@@ -955,6 +980,7 @@ Phase 1 ──→ Task F (admin me)               [parallel with G]
 ### Task G: Shared Components — HardDeleteConfirmation + DangerZone
 
 **Files:**
+
 - Create: `src/components/shared/hard-delete-confirmation.tsx`
 - Create: `src/components/shared/danger-zone.tsx`
 - Modify: `messages/en.json` (add `common.hardDelete.*` and `common.dangerZone.*` keys)
@@ -981,6 +1007,7 @@ Add under `common`:
 - [ ] **Step 2: Create `src/components/shared/hard-delete-confirmation.tsx`**
 
 Two-stage dialog component:
+
 - Stage 1 (warning): Shows `warningTitle` and `warningDescription`. "Continue" and "Cancel" buttons.
 - Stage 2 (typed confirmation): Shows `confirmTitle` and `confirmDescription`. Text input where user must type `entityName` exactly. Submit button (`confirmButtonLabel`) disabled until input matches. Submit calls `onConfirm()`.
 
@@ -1177,6 +1204,7 @@ git commit -m "feat: add HardDeleteConfirmation and DangerZone shared components
 ### Task A: Org Members Polish — Member Detail Hook
 
 **Files:**
+
 - Modify: `src/features/settings/members/hooks/use-members.ts`
 
 **Context:** Add `useMember` hook for fetching a single member's detail. API endpoint: `GET /v1/organizations/members/{id}`. The proxy route `src/app/api/organizations/members/[id]/route.ts` already exists (currently only exports PATCH) — need to add GET export.
@@ -1212,8 +1240,7 @@ export const memberQueryOptions = (
 ) =>
   queryOptions({
     queryKey: [...orgKeys.scope(orgId, 'members'), userId] as const,
-    queryFn: () =>
-      apiClient.get<OrgMember>(`/organizations/members/${userId}`),
+    queryFn: () => apiClient.get<OrgMember>(`/organizations/members/${userId}`),
     enabled: !!orgId && !!userId,
   });
 
@@ -1244,6 +1271,7 @@ git commit -m "feat: add useMember detail hook and GET proxy route"
 **Depends on:** Task G (HardDeleteConfirmation, DangerZone)
 
 **Files:**
+
 - Create: `src/features/admin/validators/create-organization.schema.ts`
 - Create: `src/features/admin/validators/update-organization.schema.ts`
 - Modify: `src/features/admin/hooks/use-admin-organizations.ts`
@@ -1351,10 +1379,7 @@ export function useReactivateOrganization() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (publicId) =>
-      apiClient.patch<void>(
-        `/admin/organizations/${publicId}/reactivate`,
-        {}
-      ),
+      apiClient.patch<void>(`/admin/organizations/${publicId}/reactivate`, {}),
     onSuccess: (_data, publicId) => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.organizations.all(),
@@ -1402,20 +1427,23 @@ This is a large component (~483 lines). The changes are:
 const reactivateOrg = useReactivateOrganization();
 
 // In the header area, alongside deactivate:
-{!org.isActive && (
-  <Button
-    variant="outline"
-    onClick={() => {
-      reactivateOrg.mutate(org.organizationId, {
-        onSuccess: () => toast.success(t('reactivateSuccess')),
-        onError: (error) => toast.error(getErrorMessage(error, t('reactivateError'))),
-      });
-    }}
-    disabled={reactivateOrg.isPending}
-  >
-    {t('reactivate')}
-  </Button>
-)}
+{
+  !org.isActive && (
+    <Button
+      variant="outline"
+      onClick={() => {
+        reactivateOrg.mutate(org.organizationId, {
+          onSuccess: () => toast.success(t('reactivateSuccess')),
+          onError: (error) =>
+            toast.error(getErrorMessage(error, t('reactivateError'))),
+        });
+      }}
+      disabled={reactivateOrg.isPending}
+    >
+      {t('reactivate')}
+    </Button>
+  );
+}
 ```
 
 **Info tab — DangerZone at bottom:**
@@ -1486,6 +1514,7 @@ git commit -m "feat: admin org — reactivate, hard delete, invite sheet, Zod va
 **Depends on:** Task G (HardDeleteConfirmation, DangerZone)
 
 **Files:**
+
 - Modify: `src/features/admin/hooks/use-admin-users.ts`
 - Modify: `src/features/admin/components/user-detail.tsx`
 - Modify: `messages/en.json`
@@ -1588,7 +1617,7 @@ const router = useRouter();
       />
     }
   />
-</DangerZone>
+</DangerZone>;
 ```
 
 **Fix cancel button bug:** On line 231, `t('allStatuses')` is used for the cancel button in the deactivate dialog. Change to `t('cancel')`.
@@ -1610,6 +1639,7 @@ git commit -m "feat: admin user — hard delete with DangerZone, fix cancel butt
 ### Task D: Admin Members Complete
 
 **Files:**
+
 - Modify: `src/features/admin/hooks/use-admin-members.ts`
 - Modify: `src/features/admin/components/organization-detail.tsx`
 - Modify: `messages/en.json`
@@ -1716,7 +1746,7 @@ import { MoreHorizontal } from 'lucide-react';
       {t('removeMember')}
     </DropdownMenuItem>
   </DropdownMenuContent>
-</DropdownMenu>
+</DropdownMenu>;
 ```
 
 **Member name links:** Make the member name column a `Link` to `/admin/users/[userId]`.
@@ -1740,6 +1770,7 @@ git commit -m "feat: admin members — deactivate/reactivate hooks, row actions 
 ### Task E: Admin Invites Fix
 
 **Files:**
+
 - Modify: `src/features/admin/components/invites-list.tsx`
 - Modify: `src/features/admin/components/organization-detail.tsx`
 - Modify: `messages/en.json`
@@ -1765,23 +1796,31 @@ The Badge component (`src/components/ui/badge.tsx`) has these variants: `default
 
 ```tsx
 // Status column cell renderer:
-const statusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
+const statusVariant = (
+  status: string
+): 'default' | 'secondary' | 'destructive' | 'outline' => {
   switch (status.toLowerCase()) {
-    case 'pending': return 'outline';       // neutral/attention
-    case 'accepted': return 'default';      // positive (primary color)
-    case 'canceled': return 'destructive';  // negative
-    case 'expired': return 'secondary';     // inactive/muted
-    default: return 'secondary';
+    case 'pending':
+      return 'outline'; // neutral/attention
+    case 'accepted':
+      return 'default'; // positive (primary color)
+    case 'canceled':
+      return 'destructive'; // negative
+    case 'expired':
+      return 'secondary'; // inactive/muted
+    default:
+      return 'secondary';
   }
 };
 
 // In column definition:
-<Badge variant={statusVariant(invite.status)}>{invite.status}</Badge>
+<Badge variant={statusVariant(invite.status)}>{invite.status}</Badge>;
 ```
 
 - [ ] **Step 3: Fix cancel dialog button labels in `invites-list.tsx`**
 
 Lines 247 and 256 both use `t('cancel')` — the dismiss button and confirm button have the same label. Change:
+
 - Dismiss button: `t('keepInvite')`
 - Confirm button: `t('confirmCancel')`
 
@@ -1806,6 +1845,7 @@ git commit -m "feat: admin invites — status badge colors, fix cancel dialog la
 ### Task F: Admin Me
 
 **Files:**
+
 - Modify: `src/features/admin/types/admin.types.ts`
 - Create: `src/features/admin/hooks/use-admin-me.ts`
 - Modify: `src/features/admin/hooks/admin-query-keys.ts`
@@ -1889,7 +1929,7 @@ import { useAdminMe } from '../hooks/use-admin-me';
 // Inside AdminSidebar, before </Sidebar>:
 <SidebarFooter>
   <AdminProfile />
-</SidebarFooter>
+</SidebarFooter>;
 
 // New sub-component (can be inline or extracted):
 function AdminProfile() {
@@ -1910,7 +1950,8 @@ function AdminProfile() {
 
   if (!me) return null;
 
-  const displayName = [me.firstName, me.lastName].filter(Boolean).join(' ') || me.email;
+  const displayName =
+    [me.firstName, me.lastName].filter(Boolean).join(' ') || me.email;
 
   return (
     <div className="flex items-center gap-2 px-2 py-1.5">

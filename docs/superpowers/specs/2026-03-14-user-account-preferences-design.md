@@ -94,10 +94,12 @@ src/features/account/
 ### Navigation & Access
 
 **User menu dropdown** (simplified):
+
 - "Account" item → navigates to `/[orgSlug]/account/profile`
 - "Sign Out" item → signs out via Clerk
 
 **Removed from dropdown:**
+
 - Theme toggle (moved to Preferences page)
 - Language submenu (moved to Preferences page)
 - "Account" Clerk modal trigger (replaced with page navigation)
@@ -105,6 +107,7 @@ src/features/account/
 **Sidebar:** Account is intentionally absent from the sidebar. The sidebar is for org-scoped navigation. Account is user-scoped and accessed only via the user menu dropdown and command palette.
 
 **Command palette:**
+
 - Add "Account" and "Preferences" entries to the navigation group
 
 ### Profile Tab
@@ -126,15 +129,18 @@ A single read-only card displaying user information sourced from the `useMe()` h
 ```
 
 **Data sources:**
+
 - `firstName`, `lastName`, `email`, `imageUrl` → `useMe()` (`CurrentUser` type already includes `imageUrl?: string`, injected server-side from Clerk in the `/api/me` route handler)
 - `role` → `useMe()` → displayed as badge(s)
 - `organization.name` → `useMe()`
 - Joined date → requires `createdAt` from backend; if not available in current `/me` response, omit until backend supports it
 
 **Omitted fields:**
+
 - Auth method (SSO vs email) — determining this requires Clerk API calls or backend support. Omit from v1; can be added as a future enhancement when backend exposes this data.
 
 **Display rules:**
+
 - Avatar shows initials (first letter of first + last name) when no `imageUrl`
 - Avatar uses a gradient background for the initials fallback
 - Role displayed as a styled badge
@@ -175,6 +181,7 @@ Two separate cards: Theme and Language.
 ### User Menu Dropdown Changes
 
 **Current state (`user-menu.tsx`):**
+
 ```
 Avatar + Name + Email
 ─────────────────────
@@ -186,6 +193,7 @@ Sign Out
 ```
 
 **New state:**
+
 ```
 Avatar + Name + Email
 ─────────────────────
@@ -195,6 +203,7 @@ Sign Out
 ```
 
 **Implementation notes:**
+
 - `user-menu.tsx` lives in `src/components/layout/` (not feature code), so Clerk imports are permitted
 - Replace `openUserProfile()` call with `router.push()` to account page
 - `signOut()` still comes from Clerk hooks — this is fine in layout code

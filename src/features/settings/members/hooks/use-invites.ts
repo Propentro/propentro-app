@@ -38,7 +38,10 @@ export function useCancelInvite() {
 
   return useMutation<void, ApiError, string>({
     mutationFn: (invitePublicId) =>
-      apiClient.patch<void>(`/organizations/invites/${invitePublicId}/cancel`, {}),
+      apiClient.patch<void>(
+        `/organizations/invites/${invitePublicId}/cancel`,
+        {}
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'invites'),

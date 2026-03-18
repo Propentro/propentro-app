@@ -90,6 +90,7 @@ Nav items remain: Dashboard, Organizations, Users, Invites. No workspace switche
 - **Theme** — dropdown menu sub-trigger showing current theme (e.g., "System"), opens submenu with Light / Dark / System options
 
 Implementation notes:
+
 - Language switching: use `useRouter()` and `usePathname()` from `@/i18n/routing` to navigate to the same path with a different locale
 - Theme switching: use `useTheme()` from `next-themes` (already in the provider stack)
 - Use `DropdownMenuSub` + `DropdownMenuSubTrigger` + `DropdownMenuSubContent` for submenus
@@ -116,16 +117,17 @@ Implementation notes:
 
 ## Component Changes Summary
 
-| Component | Action | Details |
-|---|---|---|
-| `admin-sidebar.tsx` | Modify | Replace header content (brand + badge), remove `SidebarFooter` / `AdminProfile` |
-| `admin-header.tsx` | No change | Structure stays the same |
-| `admin-user-menu.tsx` | Rewrite | Add workspace nav, language/theme submenus, role badge |
-| `AdminProfile` (in sidebar) | Delete | No longer rendered anywhere |
+| Component                   | Action    | Details                                                                         |
+| --------------------------- | --------- | ------------------------------------------------------------------------------- |
+| `admin-sidebar.tsx`         | Modify    | Replace header content (brand + badge), remove `SidebarFooter` / `AdminProfile` |
+| `admin-header.tsx`          | No change | Structure stays the same                                                        |
+| `admin-user-menu.tsx`       | Rewrite   | Add workspace nav, language/theme submenus, role badge                          |
+| `AdminProfile` (in sidebar) | Delete    | No longer rendered anywhere                                                     |
 
 ## New Dependencies
 
 None. All required components already exist:
+
 - `DropdownMenuSub`, `DropdownMenuSubTrigger`, `DropdownMenuSubContent` — shadcn/ui
 - `useTheme()` — next-themes (already in provider stack)
 - `useRouter()`, `usePathname()` — `@/i18n/routing`
@@ -136,16 +138,16 @@ None. All required components already exist:
 
 New keys needed under `admin.userMenu` (or similar namespace):
 
-| Key | Value |
-|---|---|
-| `selectWorkspace` | `"Select workspace"` |
-| `language` | `"Language"` |
-| `theme` | `"Theme"` |
-| `themeLight` | `"Light"` |
-| `themeDark` | `"Dark"` |
-| `themeSystem` | `"System"` |
-| `signOut` | `"Sign out"` |
-| `roleBadge` | `"{role}"` (or use raw value from API) |
+| Key               | Value                                  |
+| ----------------- | -------------------------------------- |
+| `selectWorkspace` | `"Select workspace"`                   |
+| `language`        | `"Language"`                           |
+| `theme`           | `"Theme"`                              |
+| `themeLight`      | `"Light"`                              |
+| `themeDark`       | `"Dark"`                               |
+| `themeSystem`     | `"System"`                             |
+| `signOut`         | `"Sign out"`                           |
+| `roleBadge`       | `"{role}"` (or use raw value from API) |
 
 Note: Some keys may already exist under `layout.profile` or `common` — reuse where possible instead of duplicating.
 

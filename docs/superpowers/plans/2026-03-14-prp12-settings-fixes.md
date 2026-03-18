@@ -17,6 +17,7 @@
 The `Form` component's `useEffect([resetValues, methods])` fires whenever `resetValues` is a new object reference. In `org-settings-form.tsx`, `toOrgSettingsInput(data)` creates a new object inline every render, so any React Query background refetch resets the form while the user is typing.
 
 **Files:**
+
 - Modify: `src/components/ui/form.tsx:43-47`
 
 - [ ] **Step 1: Add deep-equality guard to Form reset effect**
@@ -62,6 +63,7 @@ git commit -m "fix(form): prevent resetValues from resetting form on reference c
 `useUnsavedChanges` only hooks `beforeunload` (hard nav). Next.js soft navigations (Link clicks, sidebar clicks) are not intercepted. The form also appears to "self-clear" due to the Task 1 bug — once Task 1 is fixed, the clearing stops. But we still need soft nav interception.
 
 **Files:**
+
 - Modify: `src/hooks/use-unsaved-changes.ts`
 
 - [ ] **Step 1: Add router.beforePopState or window confirm on soft navigation**
@@ -84,6 +86,7 @@ Navigate to org settings, type something, try closing the tab → browser should
 `members-content.tsx` hardcodes `pageSize: 10` in three places. The `DataTablePagination` component calls `table.setPageSize()` which updates TanStack Table's internal state, but the `onPaginationChange` handler always reads `pageSize: 10` from the hardcoded literal.
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/members-content.tsx:65,96,261,265`
 
 - [ ] **Step 1: Add pageSize state and thread it through**
@@ -135,6 +138,7 @@ git commit -m "fix(members): make rows-per-page selector functional"
 In `edit-member-roles-sheet.tsx`, `resetValues` maps `member?.roles.map((r) => r.id)` — these are `OrgRole.id` values. The checkboxes check against `role.roleId` from `OrgRoleItem`. If the API returns the same IDs, the issue is that the `Form` component's `useForm()` starts with empty `defaultValues` and relies on the `useEffect` to call `methods.reset()`. Between mount and effect, `watch('roleIds')` returns `undefined`.
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/edit-member-roles-sheet.tsx:81-85`
 
 - [ ] **Step 1: Pass defaultValues through useFormProps**
@@ -171,6 +175,7 @@ git commit -m "fix(members): pre-select roles when opening edit member sheet"
 In shadcn/ui v4 (Base UI), the `Select` component may render the `value` attribute in the trigger instead of the children text of the selected item. The `SelectValue` component needs to receive the display text explicitly.
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/invite-member-sheet.tsx:96-112`
 
 - [ ] **Step 1: Debug the actual behavior**
@@ -234,6 +239,7 @@ git commit -m "fix(members): show role name instead of ID in invite select"
 The backend wraps Clerk errors in a Problem Details response where `detail` contains a JSON string (not parsed). The toast blindly shows `error.detail` which renders raw JSON. We need to parse `detail` when it contains JSON and extract the human-readable message.
 
 **Files:**
+
 - Create: `src/lib/parse-api-error.ts`
 - Modify: All components that show `error.detail` in toasts (6 files)
 
@@ -289,6 +295,7 @@ Replace `error.detail ?? t('fallback')` with `getErrorMessage(error, t('fallback
 6. `src/features/settings/roles/components/role-form-sheet.tsx:69,80`
 
 Each change is the same pattern:
+
 ```tsx
 // Before:
 toast.error(error.detail ?? t('saveError'));
@@ -297,6 +304,7 @@ toast.error(getErrorMessage(error, t('saveError')));
 ```
 
 Add the import to each file:
+
 ```tsx
 import { getErrorMessage } from '@/lib/parse-api-error';
 ```
@@ -320,6 +328,7 @@ git commit -m "fix(errors): parse JSON detail in API errors for readable toast m
 `sidebar-nav.tsx` navigates via `Link` but doesn't close the mobile Sheet. Need to call `setOpenMobile(false)` after navigation on mobile.
 
 **Files:**
+
 - Modify: `src/components/layout/sidebar-nav.tsx`
 
 - [ ] **Step 1: Add useSidebar and close on mobile click**
@@ -361,6 +370,7 @@ git commit -m "fix(sidebar): close mobile sidebar on navigation"
 `hasFilters` at `members-toolbar.tsx:42` only checks `status !== 'all' || roleId !== 'all'`. When search has text but dropdowns are "all", the Clear button is hidden.
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/members-toolbar.tsx:42`
 
 - [ ] **Step 1: Include search in hasFilters check**
@@ -393,6 +403,7 @@ The filter select items use translation keys. In `en.json`, `statusActive` is "A
 The issue the user reports is about the status filter displaying "activated" (lowercase) after selection. This is likely because the `Select` component in Base UI renders the `value` prop ("active") instead of the children text ("Active").
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/members-toolbar.tsx:62-73`
 
 - [ ] **Step 1: Fix the status Select to properly display labels**
@@ -440,6 +451,7 @@ git commit -m "fix(members): show proper labels in filter select triggers"
 `revalidateTag` from `next/cache` takes a single string argument. The current call passes two args.
 
 **Files:**
+
 - Modify: `src/lib/auth.ts:127`
 
 - [ ] **Step 1: Fix the call signature**
@@ -465,6 +477,7 @@ git commit -m "fix(auth): remove invalid second arg from revalidateTag call"
 `app-sidebar.tsx` line 31 uses `href: '/'` instead of `paths.home`.
 
 **Files:**
+
 - Modify: `src/components/layout/app-sidebar.tsx:31`
 
 - [ ] **Step 1: Replace hardcoded href with paths.home**
@@ -492,6 +505,7 @@ git commit -m "fix(sidebar): use paths.home constant for dashboard href"
 Remove the "Overview" group (redundant label for a single item). Move Dashboard to top without group label. Move Settings to bottom with a separator.
 
 **Files:**
+
 - Modify: `src/components/layout/app-sidebar.tsx`
 - Modify: `messages/en.json` (remove `layout.sidebar.labels.overview` if no longer used)
 
@@ -579,6 +593,7 @@ git commit -m "fix(sidebar): move dashboard to top, settings to bottom"
 Header is nearly empty. Add: (1) breadcrumb derived from `usePathname()`, (2) Cmd+K search trigger button.
 
 **Files:**
+
 - Modify: `src/components/layout/app-header.tsx`
 - Modify: `messages/en.json` (add `layout.header.search` key)
 
@@ -734,6 +749,7 @@ git commit -m "feat(header): add breadcrumb navigation and Cmd+K search trigger"
 System roles can't be edited/deleted but users should see what permissions they contain. Add a "View permissions" action that opens a read-only sheet.
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/view-permissions-sheet.tsx`
 - Modify: `src/features/settings/roles/components/role-card.tsx`
 - Modify: `src/features/settings/roles/components/roles-content.tsx`
@@ -799,7 +815,10 @@ export function ViewPermissionsSheet({
                 </span>
                 <div className="space-y-1 pl-1">
                   {groupPerms.map((permission) => (
-                    <div key={permission.code} className="flex items-start gap-2">
+                    <div
+                      key={permission.code}
+                      className="flex items-start gap-2"
+                    >
                       <Badge variant="secondary" className="text-xs">
                         {permission.code}
                       </Badge>
@@ -836,6 +855,7 @@ interface RoleCardProps {
 ```
 
 Replace the system role's `LockIcon` section:
+
 ```tsx
 {role.isSystem ? (
   <Button
@@ -880,6 +900,7 @@ const [viewingRole, setViewingRole] = useState<OrgRoleItem | null>(null);
 - [ ] **Step 4: Add translation keys**
 
 Add to `messages/en.json` under `roles`:
+
 ```json
 "viewPermissions": "View Permissions",
 "viewPermissionsDescription": "Permissions assigned to this system role"
@@ -904,18 +925,21 @@ git commit -m "feat(roles): add read-only permissions view for system roles"
 The filter selects show "Filter by status" and "Filter by role" as both placeholder AND the "all" option. After selecting "all", it still reads like an unset placeholder. Better: use shorter labels when "all" is selected and clear placeholder text.
 
 **Files:**
+
 - Modify: `src/features/settings/members/components/members-toolbar.tsx`
 - Modify: `messages/en.json`
 
 - [ ] **Step 1: Add proper "all" option labels**
 
 Add to `messages/en.json` under `members`:
+
 ```json
 "allStatuses": "All Statuses",
 "allRoles": "All Roles"
 ```
 
 Update the Select items in `members-toolbar.tsx`:
+
 ```tsx
 // Status select — "all" option:
 <SelectItem value="all">{t('allStatuses')}</SelectItem>
@@ -940,12 +964,14 @@ git commit -m "fix(members): use proper labels for 'all' filter options"
 A searchable combobox for selecting a country. Uses ISO 3166-1 alpha-2 codes. Shows flag emoji + country name in dropdown, stores the 2-letter code.
 
 **Files:**
+
 - Create: `src/components/shared/country-picker.tsx`
 - Create: `src/lib/data/countries.ts`
 
 - [ ] **Step 1: Research best approach for country data**
 
 Options:
+
 1. **Static data file** with ~250 countries — simple, no dependency, ~10KB
 2. **`i18n-iso-countries` package** — full i18n support but adds dependency
 
@@ -964,7 +990,10 @@ export type Country = {
 
 function codeToFlag(code: string): string {
   return String.fromCodePoint(
-    ...code.toUpperCase().split('').map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
+    ...code
+      .toUpperCase()
+      .split('')
+      .map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
   );
 }
 
@@ -1089,6 +1118,7 @@ export function CountryPicker({
 - [ ] **Step 4: Add translation keys**
 
 Add to `messages/en.json` under `common`:
+
 ```json
 "selectCountry": "Select country",
 "searchCountry": "Search countries..."
@@ -1108,6 +1138,7 @@ git commit -m "feat(ui): add reusable CountryPicker combobox component"
 Same pattern as CountryPicker. Shows currency code + name + symbol. Stores ISO 4217 code.
 
 **Files:**
+
 - Create: `src/components/shared/currency-picker.tsx`
 - Create: `src/lib/data/currencies.ts`
 
@@ -1140,6 +1171,7 @@ Create `src/components/shared/currency-picker.tsx` — same Popover + Command pa
 - [ ] **Step 3: Add translation keys**
 
 Add to `messages/en.json` under `common`:
+
 ```json
 "selectCurrency": "Select currency",
 "searchCurrency": "Search currencies..."
@@ -1159,6 +1191,7 @@ git commit -m "feat(ui): add reusable CurrencyPicker combobox component"
 Uses `Intl.supportedValuesOf('timeZone')` to get the browser's supported IANA timezones. No static data needed.
 
 **Files:**
+
 - Create: `src/components/shared/timezone-picker.tsx`
 
 - [ ] **Step 1: Create TimezonePicker component**
@@ -1272,6 +1305,7 @@ export function TimezonePicker({
 - [ ] **Step 2: Add translation keys**
 
 Add to `messages/en.json` under `common`:
+
 ```json
 "selectTimezone": "Select timezone",
 "searchTimezone": "Search timezones..."
@@ -1291,6 +1325,7 @@ git commit -m "feat(ui): add reusable TimezonePicker combobox component"
 A phone input with a country code dropdown (flag + dial code) and formatted number field. Uses `libphonenumber-js` (already a dependency) for validation and formatting.
 
 **Files:**
+
 - Create: `src/components/shared/phone-input.tsx`
 - Create: `src/lib/data/phone-codes.ts`
 
@@ -1300,7 +1335,7 @@ Create `src/lib/data/phone-codes.ts` — derive from the countries data, adding 
 
 ```tsx
 export type PhoneCountry = {
-  code: string;  // ISO alpha-2
+  code: string; // ISO alpha-2
   name: string;
   flag: string;
   dialCode: string;
@@ -1344,7 +1379,7 @@ import {
 import { phoneCountries, type PhoneCountry } from '@/lib/data/phone-codes';
 
 interface PhoneInputProps {
-  value: string;  // E.164 format or empty
+  value: string; // E.164 format or empty
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -1420,7 +1455,9 @@ export function PhoneInput({
             />
           }
         >
-          <span>{country.flag} {country.dialCode}</span>
+          <span>
+            {country.flag} {country.dialCode}
+          </span>
           <ChevronsUpDownIcon className="ml-1 size-3 opacity-50" />
         </PopoverTrigger>
         <PopoverContent className="w-[280px] p-0" align="start">
@@ -1475,6 +1512,7 @@ git commit -m "feat(ui): add reusable PhoneInput with country code picker"
 Extract the `FormField` pattern used in `org-settings-form.tsx` into a shared component. Make it generic so it works with any form schema, not just `OrgSettingsInput`.
 
 **Files:**
+
 - Create: `src/components/shared/form-field.tsx`
 - Modify: `src/features/settings/organization/components/org-settings-form.tsx` (use shared component)
 
@@ -1522,9 +1560,7 @@ export function FormField<T extends FieldValues>({
         />
       )}
       {error?.message && (
-        <p className="text-destructive mt-1 text-xs">
-          {String(error.message)}
-        </p>
+        <p className="text-destructive mt-1 text-xs">{String(error.message)}</p>
       )}
     </div>
   );
@@ -1560,6 +1596,7 @@ git commit -m "refactor(ui): extract shared FormField component"
 Replace plain text inputs for country, currency, timezone, and phone fields with the new picker components.
 
 **Files:**
+
 - Modify: `src/features/settings/organization/components/org-settings-form.tsx`
 
 - [ ] **Step 1: Replace countryCode field with CountryPicker**
@@ -1576,7 +1613,12 @@ Replace the `<FormField>` for `countryCode` with a `FormField` that uses the `ch
   <CountryPicker
     id="countryCode"
     value={methods.watch('countryCode')}
-    onChange={(val) => methods.setValue('countryCode', val, { shouldValidate: true, shouldDirty: true })}
+    onChange={(val) =>
+      methods.setValue('countryCode', val, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+    }
     placeholder={t('countryCodePlaceholder')}
     disabled={disabled}
   />
@@ -1597,7 +1639,12 @@ Do the same for `taxCountry`.
   <CurrencyPicker
     id="currencyCode"
     value={methods.watch('currencyCode')}
-    onChange={(val) => methods.setValue('currencyCode', val, { shouldValidate: true, shouldDirty: true })}
+    onChange={(val) =>
+      methods.setValue('currencyCode', val, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+    }
     placeholder={t('currencyCodePlaceholder')}
     disabled={disabled}
   />
@@ -1616,7 +1663,12 @@ Do the same for `taxCountry`.
   <TimezonePicker
     id="timezone"
     value={methods.watch('timezone')}
-    onChange={(val) => methods.setValue('timezone', val, { shouldValidate: true, shouldDirty: true })}
+    onChange={(val) =>
+      methods.setValue('timezone', val, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+    }
     placeholder={t('timezonePlaceholder')}
     disabled={disabled}
   />
@@ -1635,7 +1687,12 @@ Do the same for `taxCountry`.
   <PhoneInput
     id="contactPhone"
     value={methods.watch('contactPhone')}
-    onChange={(val) => methods.setValue('contactPhone', val, { shouldValidate: true, shouldDirty: true })}
+    onChange={(val) =>
+      methods.setValue('contactPhone', val, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+    }
     placeholder={t('contactPhonePlaceholder')}
     disabled={disabled}
   />
@@ -1655,6 +1712,7 @@ import { TimezonePicker } from '@/components/shared/timezone-picker';
 
 Run: `pnpm dev`
 Navigate to org settings:
+
 - Country fields → should show searchable dropdown with flags
 - Currency → searchable dropdown with code + name + symbol
 - Timezone → searchable dropdown with all IANA timezones
@@ -1709,6 +1767,7 @@ git commit -m "fix: lint and type-check fixes"
 ## Summary of All Changes
 
 ### Files Created (7)
+
 - `src/lib/parse-api-error.ts` — error message parser
 - `src/features/settings/roles/components/view-permissions-sheet.tsx` — read-only permissions view
 - `src/components/shared/country-picker.tsx` — country combobox
@@ -1721,6 +1780,7 @@ git commit -m "fix: lint and type-check fixes"
 - `src/lib/data/phone-codes.ts` — phone dial codes
 
 ### Files Modified (14)
+
 - `src/components/ui/form.tsx` — deep equality guard for resetValues
 - `src/features/settings/members/components/members-content.tsx` — pageSize state
 - `src/features/settings/members/components/members-toolbar.tsx` — filter fixes

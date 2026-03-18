@@ -71,12 +71,7 @@ export function TimezonePicker({
           />
         }
       >
-        <span
-          className={cn(
-            'truncate',
-            !value && 'text-muted-foreground'
-          )}
-        >
+        <span className={cn('truncate', !value && 'text-muted-foreground')}>
           {value ? formatTimezone(value) : placeholderText}
         </span>
         <ChevronsUpDownIcon className="text-muted-foreground ml-auto size-4 shrink-0" />

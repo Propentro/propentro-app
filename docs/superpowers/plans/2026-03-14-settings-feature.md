@@ -19,6 +19,7 @@
 ### Task 1: Add missing shadcn/ui components
 
 **Files:**
+
 - Create: `src/components/ui/checkbox.tsx` (via shadcn CLI)
 
 The roles permission form needs checkboxes. No checkbox component exists yet.
@@ -53,6 +54,7 @@ git commit -m "chore: add shadcn checkbox component"
 ### Task 2: Create permission constants
 
 **Files:**
+
 - Create: `src/config/permissions.ts`
 
 **Reference:** `src/types/user.types.ts` (Permission type)
@@ -111,6 +113,7 @@ git commit -m "feat: add centralised permission constants"
 ### Task 3: Add Settings link to sidebar
 
 **Files:**
+
 - Modify: `src/components/layout/app-sidebar.tsx`
 
 **Reference:** Existing sidebar structure uses `SidebarGroup` + `SidebarGroupLabel` + `SidebarNav` for each nav item. Permission check via `useHasPermission()` from `src/hooks/use-me.ts`.
@@ -135,6 +138,7 @@ The group label should use `t('layout.sidebar.settings')` — add this i18n key.
 - [ ] **Step 2: Add missing i18n keys**
 
 In `messages/en.json`, add under `layout.sidebar`:
+
 ```json
 "settings": "Settings"
 ```
@@ -161,6 +165,7 @@ git commit -m "feat: add settings link to sidebar with permission gating"
 ### Task 4: Enhance settings-nav with permission filtering
 
 **Files:**
+
 - Modify: `src/features/settings/components/settings-nav.tsx`
 
 **Reference:** Current settings-nav renders all 3 tabs unconditionally. Needs to filter based on permissions.
@@ -174,9 +179,21 @@ In `settings-nav.tsx`:
 - Define tab items as an array with permission requirement:
   ```typescript
   const tabs = [
-    { key: 'settingsOrganization', href: paths.settings.organization, permission: PERMISSIONS.settings.read },
-    { key: 'settingsMembers', href: paths.settings.members, permission: PERMISSIONS.members.read },
-    { key: 'settingsRoles', href: paths.settings.roles, permission: PERMISSIONS.roles.read },
+    {
+      key: 'settingsOrganization',
+      href: paths.settings.organization,
+      permission: PERMISSIONS.settings.read,
+    },
+    {
+      key: 'settingsMembers',
+      href: paths.settings.members,
+      permission: PERMISSIONS.members.read,
+    },
+    {
+      key: 'settingsRoles',
+      href: paths.settings.roles,
+      permission: PERMISSIONS.roles.read,
+    },
   ];
   ```
 - Get permissions: `const { permissions } = useMe()`
@@ -201,6 +218,7 @@ git commit -m "feat: permission-gate settings navigation tabs"
 ### Task 5: Add /settings redirect page
 
 **Files:**
+
 - Create: `src/app/[locale]/[orgSlug]/settings/page.tsx`
 
 When user navigates to `/settings`, redirect to the first accessible tab.
@@ -225,7 +243,10 @@ export default async function SettingsPage({ params }: Props) {
 
   // Redirect to first accessible settings tab
   const permissionToPath = [
-    { permission: PERMISSIONS.settings.read, path: paths.settings.organization },
+    {
+      permission: PERMISSIONS.settings.read,
+      path: paths.settings.organization,
+    },
     { permission: PERMISSIONS.members.read, path: paths.settings.members },
     { permission: PERMISSIONS.roles.read, path: paths.settings.roles },
   ];
@@ -259,6 +280,7 @@ git commit -m "feat: add /settings redirect to first accessible tab"
 ### Task 6: Create useUnsavedChanges hook
 
 **Files:**
+
 - Create: `src/hooks/use-unsaved-changes.ts`
 
 Tracks form dirty state and warns on page leave / tab navigation.
@@ -310,6 +332,7 @@ git commit -m "feat: add useUnsavedChanges hook for form dirty state guard"
 ### Task 7: Create organisation settings skeleton
 
 **Files:**
+
 - Create: `src/features/settings/organization/components/org-settings-skeleton.tsx`
 
 - [ ] **Step 1: Create skeleton component**
@@ -355,9 +378,11 @@ git commit -m "feat: add organisation settings skeleton"
 ### Task 8: Build organisation settings form
 
 **Files:**
+
 - Create: `src/features/settings/organization/components/org-settings-form.tsx`
 
 **Reference:**
+
 - Schema: `src/features/settings/organization/validators/org-settings.schema.ts`
 - Hooks: `src/features/settings/organization/hooks/use-org-settings.ts` — `useOrgSettings()`, `useUpdateOrgSettings()`, `toOrgSettingsInput()`
 - i18n: `settings.organization.*` in `messages/en.json`
@@ -686,6 +711,7 @@ export function OrgSettingsForm({ canEdit }: OrgSettingsFormProps) {
 ```
 
 **Important notes:**
+
 - Country, Currency, Timezone fields start as plain `Input` for now. A searchable combobox can be added as an enhancement in a follow-up task — plain input is functional and matches the schema.
 - The `useUnsavedChanges` call is inside the render prop. To avoid hooks-in-callback issues, **extract the form body into a separate `OrgSettingsFormFields` component** that receives `methods`, `canEdit`, `isPending` as props and calls `useUnsavedChanges` at its top level. This avoids the eslint-disable workaround.
 - The `orgSettingsSchema.parse(values)` call in handleSubmit ensures the zod transforms are applied and the mutation receives the correct `OrgSettingsOutput` type.
@@ -693,6 +719,7 @@ export function OrgSettingsForm({ canEdit }: OrgSettingsFormProps) {
 - [ ] **Step 1b: Add missing i18n keys for card descriptions**
 
 In `messages/en.json` under `settings.organization`, add:
+
 ```json
 "sectionProfileDescription": "Basic information about your organisation",
 "sectionContactDescription": "Main point of contact for this organisation",
@@ -728,6 +755,7 @@ git commit -m "feat: build organisation settings form with 5 card sections"
 ### Task 9: Create members skeleton
 
 **Files:**
+
 - Create: `src/features/settings/members/components/members-skeleton.tsx`
 
 - [ ] **Step 1: Create skeleton component**
@@ -794,6 +822,7 @@ git commit -m "feat: add members table skeleton"
 ### Task 10: Create members empty state
 
 **Files:**
+
 - Create: `src/features/settings/members/components/members-empty-state.tsx`
 
 - [ ] **Step 1: Create empty state component**
@@ -842,6 +871,7 @@ export function MembersEmptyState({
 - [ ] **Step 2: Add missing i18n keys**
 
 In `messages/en.json` under `members`, add:
+
 ```json
 "emptyTitle": "No members yet",
 "emptyDescription": "Invite team members to collaborate on managing your properties"
@@ -859,9 +889,11 @@ git commit -m "feat: add members empty state component"
 ### Task 11: Create invite member sheet
 
 **Files:**
+
 - Create: `src/features/settings/members/components/invite-member-sheet.tsx`
 
 **Reference:**
+
 - Schema: `inviteMemberSchema`, `inviteMemberDefaults` from `../validators/create-user.schema`
 - Hook: `useInviteMember()` from `../hooks/use-members`
 - Roles: `useRoles()` from `../../roles/hooks/use-roles` (populates role select)
@@ -1017,6 +1049,7 @@ export function InviteMemberSheet({
 - [ ] **Step 2: Add missing i18n key**
 
 In `messages/en.json` under `members`, add:
+
 ```json
 "inviteDescription": "Send an email invitation to join this organisation"
 ```
@@ -1033,9 +1066,11 @@ git commit -m "feat: add invite member sheet"
 ### Task 12: Create edit member roles sheet
 
 **Files:**
+
 - Create: `src/features/settings/members/components/edit-member-roles-sheet.tsx`
 
 **Reference:**
+
 - Schema: `updateMemberRolesSchema` from `../validators/create-user.schema`
 - Hook: `useUpdateMemberRoles()` from `../hooks/use-members`
 - Types: `OrgMember` from `../types`
@@ -1193,6 +1228,7 @@ git commit -m "feat: add edit member roles sheet"
 ### Task 13: Create members toolbar
 
 **Files:**
+
 - Create: `src/features/settings/members/components/members-toolbar.tsx`
 
 - [ ] **Step 1: Create toolbar component**
@@ -1319,11 +1355,13 @@ git commit -m "feat: add members toolbar with search and filters"
 ### Task 14: Create members content (main orchestrator)
 
 **Files:**
+
 - Create: `src/features/settings/members/components/members-content.tsx`
 
 This is the main component that wires together: toolbar, table, sheets, empty state, skeleton. It manages local state for filters, sheet open/close, and selected member.
 
 **Reference:**
+
 - `useMembers(params)` from `../hooks/use-members`
 - `useDeactivateMember()`, `useReactivateMember()` from `../hooks/use-members`
 - `useRoles()` from `../../roles/hooks/use-roles`
@@ -1339,12 +1377,14 @@ Create `src/features/settings/members/components/members-content.tsx`. This is t
 Key implementation details:
 
 **State:**
+
 - `search`, `debouncedSearch` (use `useEffect` with 300ms timeout for debounce)
 - `status` (default: `'all'`), `roleId` (default: `'all'`), `page` (default: 1)
 - `inviteOpen` (boolean), `editRolesOpen` (boolean), `editRolesMember` (`OrgMember | null`)
 - `deactivatingMember` (`OrgMember | null`) — for deactivation confirmation dialog
 
 **Queries/Mutations:**
+
 - `useMembers({ search: debouncedSearch, status: status === 'all' ? undefined : status, roleId: roleId === 'all' ? undefined : roleId, page })`
 - `useRoles()` for filter + invite role options
 - `useDeactivateMember()` and `useReactivateMember()` for row actions
@@ -1456,6 +1496,7 @@ function FormattedDate({ value }: { value: string }) {
 ```
 
 **Deactivation confirmation:** Use `ConfirmPopover` is NOT suitable here (popover needs an anchor and the dropdown closes). Instead, use a controlled confirmation pattern:
+
 - Set `deactivatingMember` state when user clicks "Deactivate" in dropdown
 - Render a `Dialog` (AlertDialog) that opens when `deactivatingMember` is set:
 
@@ -1480,6 +1521,7 @@ function FormattedDate({ value }: { value: string }) {
 ```
 
 **Reactivate handler:** Direct mutation, no confirmation needed:
+
 ```typescript
 const handleReactivate = (userId: string) => {
   reactivateMutation.mutate(userId, {
@@ -1490,9 +1532,11 @@ const handleReactivate = (userId: string) => {
 ```
 
 **Deactivated rows:** Use TanStack Table's `meta` or row className to dim:
+
 ```typescript
 <TableRow className={cn(row.original.status === 'deactivated' && 'opacity-60')}>
 ```
+
 Note: This requires either modifying `DataTable` to accept a `rowClassName` prop, or using the table's row model to add conditional styling. Simplest approach: pass a `rowClassName` callback to `DataTable`.
 
 **Render order:** `MembersToolbar` → (`MembersEmptyState` if no data, else `DataTable` + `DataTablePagination`) → `InviteMemberSheet` → `EditMemberRolesSheet` → Deactivation `Dialog`
@@ -1500,6 +1544,7 @@ Note: This requires either modifying `DataTable` to accept a `rowClassName` prop
 - [ ] **Step 2: Wire into the page**
 
 Update `src/app/[locale]/[orgSlug]/settings/members/page.tsx`:
+
 - Import `MembersContent`
 - Replace placeholder with `<MembersContent canManage={canManage} />`
 
@@ -1523,6 +1568,7 @@ git commit -m "feat: build members table with toolbar, actions, and sheets"
 ### Task 15: Create roles skeleton
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/roles-skeleton.tsx`
 
 - [ ] **Step 1: Create skeleton component**
@@ -1571,6 +1617,7 @@ git commit -m "feat: add roles card grid skeleton"
 ### Task 16: Create roles empty state
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/roles-empty-state.tsx`
 
 - [ ] **Step 1: Create empty state component**
@@ -1616,6 +1663,7 @@ export function RolesEmptyState({ canManage, onCreate }: RolesEmptyStateProps) {
 - [ ] **Step 2: Add missing i18n keys**
 
 In `messages/en.json` under `roles`, add:
+
 ```json
 "emptyTitle": "No custom roles",
 "emptyDescription": "Create custom roles to define specific permissions for your team members"
@@ -1633,6 +1681,7 @@ git commit -m "feat: add roles empty state component"
 ### Task 17: Create role card component
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/role-card.tsx`
 
 - [ ] **Step 1: Create role card**
@@ -1738,9 +1787,11 @@ git commit -m "feat: add role card component with system/custom distinction"
 ### Task 18: Create role form sheet with grouped permissions
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/role-form-sheet.tsx`
 
 **Reference:**
+
 - Schema: `createRoleSchema`, `createRoleDefaults` from `../validators/role.schema`
 - Hooks: `useCreateRole()`, `useUpdateRole()`, `usePermissions()` from `../hooks/use-roles`
 - Types: `OrgRoleItem`, `PermissionGroup` from `../types`
@@ -2002,6 +2053,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
 - [ ] **Step 2: Add missing i18n keys**
 
 In `messages/en.json` under `roles`, add:
+
 ```json
 "createDescription": "Define the role name and select permissions",
 "editDescription": "Update the role name and permissions",
@@ -2022,11 +2074,13 @@ git commit -m "feat: add role form sheet with grouped permissions"
 ### Task 19: Create roles content (main orchestrator)
 
 **Files:**
+
 - Create: `src/features/settings/roles/components/roles-content.tsx`
 
 This wires together: role cards, form sheet, delete dialog, empty state, skeleton.
 
 **Reference:**
+
 - `useRoles()` from `../hooks/use-roles`
 - `useDeleteRole()` from `../hooks/use-roles`
 
@@ -2037,10 +2091,12 @@ Create `src/features/settings/roles/components/roles-content.tsx`:
 Key implementation details:
 
 **State:**
+
 - `formOpen` (boolean), `editingRole` (`OrgRoleItem | null`) — null = create mode, non-null = edit mode
 - `deletingRole` (`OrgRoleItem | null`) — for delete confirmation dialog
 
 **Queries/Mutations:**
+
 - `useRoles()` for role list
 - `useDeleteRole()` for delete
 
@@ -2194,6 +2250,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
 - [ ] **Step 2: Wire into the page**
 
 Update `src/app/[locale]/[orgSlug]/settings/roles/page.tsx`:
+
 - Import `RolesContent`
 - Replace placeholder with `<RolesContent canManage={canManage} />`
 
@@ -2237,6 +2294,7 @@ Fix any build errors.
 - [ ] **Step 4: Manual smoke test**
 
 Start dev server (`pnpm dev`) and verify:
+
 - [ ] Settings link appears in sidebar (with correct permission)
 - [ ] Clicking Settings goes to Organisation tab
 - [ ] Tab navigation works between all 3 sections

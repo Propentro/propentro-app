@@ -80,9 +80,7 @@ export function PendingInvitesSection({
       }),
       columnHelper.accessor('roleName', {
         header: t('inviteColumnRole'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
-        ),
+        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
       }),
       columnHelper.accessor('expiresAt', {
         header: t('inviteColumnExpires'),
@@ -112,7 +110,7 @@ export function PendingInvitesSection({
     }
 
     return cols;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [canManage, t]);
 
   // ---------------------------------------------------------------------------
@@ -160,10 +158,7 @@ export function PendingInvitesSection({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setCancellingInvite(null)}
-            >
+            <Button variant="outline" onClick={() => setCancellingInvite(null)}>
               {t('cancel')}
             </Button>
             <Button

@@ -4,7 +4,9 @@ import { PERMISSIONS } from '@/config/permissions';
 import { OrgSettingsForm } from '@/features/settings/organization/components/org-settings-form';
 import { hasPermission, requirePermission } from '@/lib/auth';
 
-export const metadata: Metadata = { title: 'Organisation Settings | Propentro' };
+export const metadata: Metadata = {
+  title: 'Organisation Settings | Propentro',
+};
 
 interface Props {
   params: Promise<{ locale: string }>;

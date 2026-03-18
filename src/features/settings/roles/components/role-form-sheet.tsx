@@ -22,7 +22,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import { useCreateRole, usePermissions, useUpdateRole } from '../hooks/use-roles';
+import {
+  useCreateRole,
+  usePermissions,
+  useUpdateRole,
+} from '../hooks/use-roles';
 import type { OrgRoleItem } from '../types';
 import {
   createRoleDefaults,
@@ -36,7 +40,11 @@ interface RoleFormSheetProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) {
+export function RoleFormSheet({
+  role,
+  open,
+  onOpenChange,
+}: RoleFormSheetProps) {
   const t = useTranslations('roles');
   const { data: permissionGroups } = usePermissions();
   const createRole = useCreateRole();
@@ -162,9 +170,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
 
                   {/* Description */}
                   <div className="space-y-2">
-                    <Label htmlFor="description">
-                      {t('labelDescription')}
-                    </Label>
+                    <Label htmlFor="description">{t('labelDescription')}</Label>
                     <Textarea
                       id="description"
                       placeholder={t('placeholderDescription')}
@@ -205,9 +211,7 @@ export function RoleFormSheet({ role, open, onOpenChange }: RoleFormSheetProps) 
                               className="h-auto p-0 text-xs"
                               onClick={() => toggleGroup(groupCodes)}
                             >
-                              {allSelected
-                                ? t('deselectAll')
-                                : t('selectAll')}
+                              {allSelected ? t('deselectAll') : t('selectAll')}
                             </Button>
                           </div>
 

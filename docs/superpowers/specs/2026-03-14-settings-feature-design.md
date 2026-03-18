@@ -48,8 +48,8 @@ Centralise permission strings to avoid repetition across pages, sidebar, and set
 // src/config/permissions.ts
 export const PERMISSIONS = {
   settings: { read: 'org:settings:read', update: 'org:settings:update' },
-  members:  { read: 'org:members:read',  manage: 'org:members:manage' },
-  roles:    { read: 'org:roles:read',     manage: 'org:roles:manage' },
+  members: { read: 'org:members:read', manage: 'org:members:manage' },
+  roles: { read: 'org:roles:read', manage: 'org:roles:manage' },
 } as const satisfies Record<string, Record<string, Permission>>;
 ```
 
@@ -84,13 +84,13 @@ org:reports:read
 
 Single-page form with 5 card sections, max-width 720px:
 
-| Section | Fields | Grid |
-|---------|--------|------|
-| **Organisation Profile** | name* | 1-col |
-| **Primary Contact** | contactName, contactEmail, contactPhone | 2-col (phone full-width) |
-| **Address** | addressLine1, addressLine2, city, region, postalCode, countryCode | 2-col (address lines full-width) |
-| **Legal & Tax** | legalName, taxNumber, taxCountry | 2-col (legalName full-width) |
-| **Regional Settings** | currencyCode, timezone | 2-col |
+| Section                  | Fields                                                            | Grid                             |
+| ------------------------ | ----------------------------------------------------------------- | -------------------------------- |
+| **Organisation Profile** | name\*                                                            | 1-col                            |
+| **Primary Contact**      | contactName, contactEmail, contactPhone                           | 2-col (phone full-width)         |
+| **Address**              | addressLine1, addressLine2, city, region, postalCode, countryCode | 2-col (address lines full-width) |
+| **Legal & Tax**          | legalName, taxNumber, taxCountry                                  | 2-col (legalName full-width)     |
+| **Regional Settings**    | currencyCode, timezone                                            | 2-col                            |
 
 Each card has a title and a one-line description.
 
@@ -106,22 +106,23 @@ Each card has a title and a one-line description.
 ### Read-Only Mode
 
 When user lacks `org:settings:update`:
+
 - All inputs rendered as disabled
 - Banner at top: "You do not have permission to edit these settings..."
 - Save and Cancel buttons hidden
 
 ### UX States
 
-| State | Behaviour |
-|-------|-----------|
-| Loading | Skeleton UI: 5 card skeletons matching section layout |
-| Idle | Form populated with current data, Save disabled |
-| Dirty | Save enabled, Cancel visible |
-| Saving | Save button spinner + disabled, form disabled |
-| Success | Toast: "Organisation settings saved." Form reset to new values |
-| Error | Toast: API error message. Form stays editable |
-| Validation | Inline field errors under each field |
-| Read-only | All inputs disabled + banner, no Save/Cancel |
+| State      | Behaviour                                                      |
+| ---------- | -------------------------------------------------------------- |
+| Loading    | Skeleton UI: 5 card skeletons matching section layout          |
+| Idle       | Form populated with current data, Save disabled                |
+| Dirty      | Save enabled, Cancel visible                                   |
+| Saving     | Save button spinner + disabled, form disabled                  |
+| Success    | Toast: "Organisation settings saved." Form reset to new values |
+| Error      | Toast: API error message. Form stays editable                  |
+| Validation | Inline field errors under each field                           |
+| Read-only  | All inputs disabled + banner, no Save/Cancel                   |
 
 ### Existing Assets
 
@@ -155,13 +156,13 @@ DataTable with toolbar, using existing `data-table.tsx` and `data-table-paginati
 
 ### Table Columns
 
-| Column | Content |
-|--------|---------|
-| **Name** | Avatar (initials, colour from name hash) + full name + email |
-| **Role** | Badge(s). If 3+ roles, show first 2 + "+N more" tooltip |
-| **Joined** | Formatted date via `useFormatter()` from next-intl |
-| **Status** | Badge: green "Active" / red "Deactivated" |
-| **Actions** | ⋯ dropdown menu (only when `canManage`) |
+| Column      | Content                                                      |
+| ----------- | ------------------------------------------------------------ |
+| **Name**    | Avatar (initials, colour from name hash) + full name + email |
+| **Role**    | Badge(s). If 3+ roles, show first 2 + "+N more" tooltip      |
+| **Joined**  | Formatted date via `useFormatter()` from next-intl           |
+| **Status**  | Badge: green "Active" / red "Deactivated"                    |
+| **Actions** | ⋯ dropdown menu (only when `canManage`)                      |
 
 ### Row Actions (⋯ menu)
 
@@ -174,6 +175,7 @@ Deactivated rows render at reduced opacity (0.6).
 ### Invite Member — Sheet
 
 Side panel with:
+
 - Email field (required)
 - Role select dropdown (required, populated from roles query)
 - Cancel + "Invite Member" buttons
@@ -181,6 +183,7 @@ Side panel with:
 ### Edit Member Roles — Sheet
 
 Side panel with:
+
 - Member name + email display
 - Checkbox list of all available roles (min 1 required)
 - Cancel + "Save Roles" buttons
@@ -188,6 +191,7 @@ Side panel with:
 ### Empty State
 
 When no members exist:
+
 - Users icon (lucide-react)
 - Title: "No members yet"
 - Description: "Invite team members to collaborate on managing your properties"
@@ -195,18 +199,18 @@ When no members exist:
 
 ### UX States
 
-| State | Behaviour |
-|-------|-----------|
-| Loading | Table skeleton (header + 5 shimmer rows) |
-| Empty | Rich empty state with invite CTA |
-| Invite pending | Sheet submit button → spinner + disabled |
-| Invite success | Toast + sheet closes + table refreshes |
-| Invite error | Toast with API error, sheet stays open |
-| Edit roles pending | Sheet submit button → spinner + disabled |
-| Edit roles success | Toast + sheet closes + table refreshes |
-| Deactivate | ConfirmPopover → toast → table refreshes |
-| Reactivate | Direct action → toast → table refreshes |
-| Read-only | Invite button hidden, ⋯ menus hidden, table viewable |
+| State              | Behaviour                                            |
+| ------------------ | ---------------------------------------------------- |
+| Loading            | Table skeleton (header + 5 shimmer rows)             |
+| Empty              | Rich empty state with invite CTA                     |
+| Invite pending     | Sheet submit button → spinner + disabled             |
+| Invite success     | Toast + sheet closes + table refreshes               |
+| Invite error       | Toast with API error, sheet stays open               |
+| Edit roles pending | Sheet submit button → spinner + disabled             |
+| Edit roles success | Toast + sheet closes + table refreshes               |
+| Deactivate         | ConfirmPopover → toast → table refreshes             |
+| Reactivate         | Direct action → toast → table refreshes              |
+| Read-only          | Invite button hidden, ⋯ menus hidden, table viewable |
 
 ### Existing Assets
 
@@ -234,14 +238,14 @@ Card grid (2 columns, responsive to 1 on mobile). Not a table — roles are few 
 
 ### Role Card Content
 
-| Element | Detail |
-|---------|--------|
-| **Name** | Role name (e.g., "Property Manager") |
-| **System badge** | "System" badge for system roles (Owner, Admin) |
-| **Description** | One-line role description |
-| **Member count** | "N members" (pluralised via ICU) |
-| **Permission count** | "N permissions" (pluralised via ICU) |
-| **Actions** | System roles: lock icon, no menu. Custom roles: ⋯ menu |
+| Element              | Detail                                                 |
+| -------------------- | ------------------------------------------------------ |
+| **Name**             | Role name (e.g., "Property Manager")                   |
+| **System badge**     | "System" badge for system roles (Owner, Admin)         |
+| **Description**      | One-line role description                              |
+| **Member count**     | "N members" (pluralised via ICU)                       |
+| **Permission count** | "N permissions" (pluralised via ICU)                   |
+| **Actions**          | System roles: lock icon, no menu. Custom roles: ⋯ menu |
 
 ### Row Actions (⋯ menu — custom roles only)
 
@@ -270,6 +274,7 @@ Same sheet component for create and edit — pre-filled with existing data for e
 ### Empty State
 
 When no custom roles exist (system roles always exist):
+
 - Shield icon (lucide-react)
 - Title: "No custom roles"
 - Description: "Create custom roles to define specific permissions for your team members"
@@ -282,16 +287,16 @@ When no custom roles exist (system roles always exist):
 
 ### UX States
 
-| State | Behaviour |
-|-------|-----------|
-| Loading | 4 skeleton cards in 2x2 grid |
-| Empty | Rich empty state with "Add New Role" CTA |
-| Create/Edit pending | Submit button → spinner + disabled, form disabled |
-| Create success | Toast + sheet closes + card grid refreshes |
-| Edit success | Toast + sheet closes + card grid refreshes |
-| Delete success | Toast + card removed + members query invalidated |
-| Error | Toast with API error message |
-| Read-only | "Add New Role" hidden, ⋯ menus hidden, cards viewable |
+| State               | Behaviour                                             |
+| ------------------- | ----------------------------------------------------- |
+| Loading             | 4 skeleton cards in 2x2 grid                          |
+| Empty               | Rich empty state with "Add New Role" CTA              |
+| Create/Edit pending | Submit button → spinner + disabled, form disabled     |
+| Create success      | Toast + sheet closes + card grid refreshes            |
+| Edit success        | Toast + sheet closes + card grid refreshes            |
+| Delete success      | Toast + card removed + members query invalidated      |
+| Error               | Toast with API error message                          |
+| Read-only           | "Add New Role" hidden, ⋯ menus hidden, cards viewable |
 
 ### Existing Assets
 
@@ -308,10 +313,10 @@ When no custom roles exist (system roles always exist):
 
 All toast calls go in **components**, never in hooks. Hooks handle cache invalidation only.
 
-| Scenario | Feedback |
-|----------|----------|
-| Mutation success | Sonner toast — short confirmation |
-| Mutation error | Sonner toast with `ApiError` message |
+| Scenario         | Feedback                             |
+| ---------------- | ------------------------------------ |
+| Mutation success | Sonner toast — short confirmation    |
+| Mutation error   | Sonner toast with `ApiError` message |
 | Validation error | Inline under field (react-hook-form) |
 
 ### Loading States

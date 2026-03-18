@@ -110,9 +110,7 @@ export function EditMemberRolesSheet({
                           toggleRole(role.roleId, !!checked)
                         }
                       />
-                      <Label htmlFor={`role-${role.roleId}`}>
-                        {role.name}
-                      </Label>
+                      <Label htmlFor={`role-${role.roleId}`}>{role.name}</Label>
                     </div>
                   ))}
                   {errors.roleIds && (

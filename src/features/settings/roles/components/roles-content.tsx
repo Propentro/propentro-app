@@ -85,9 +85,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm">
-          {t('pageDescription')}
-        </p>
+        <p className="text-muted-foreground text-sm">{t('pageDescription')}</p>
         {canManage && (
           <Button size="sm" onClick={handleCreate}>
             <PlusIcon />
@@ -138,10 +136,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
             <DialogDescription>{t('deleteDescription')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeletingRole(null)}
-            >
+            <Button variant="outline" onClick={() => setDeletingRole(null)}>
               {t('cancel')}
             </Button>
             <Button
@@ -149,9 +144,7 @@ export function RolesContent({ canManage }: RolesContentProps) {
               onClick={handleDelete}
               disabled={deleteRole.isPending}
             >
-              {deleteRole.isPending && (
-                <LoaderIcon className="animate-spin" />
-              )}
+              {deleteRole.isPending && <LoaderIcon className="animate-spin" />}
               {t('confirm')}
             </Button>
           </DialogFooter>

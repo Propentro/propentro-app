@@ -136,12 +136,12 @@ export function AppHeader() {
       <Button
         variant="outline"
         size="sm"
-        className="text-muted-foreground hidden sm:flex items-center gap-2 text-sm font-normal"
+        className="text-muted-foreground hidden items-center gap-2 text-sm font-normal sm:flex"
         onClick={handleSearchClick}
       >
         <SearchIcon className="size-4" />
         <span>{t('search')}</span>
-        <kbd className="bg-muted pointer-events-none ml-1 hidden select-none items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-xs opacity-100 sm:flex">
+        <kbd className="bg-muted pointer-events-none ml-1 hidden items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-xs opacity-100 select-none sm:flex">
           <span className="text-xs">⌘K</span>
         </kbd>
       </Button>

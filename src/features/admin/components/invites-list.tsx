@@ -110,9 +110,7 @@ export function InvitesList() {
       }),
       columnHelper.accessor('roleName', {
         header: t('columnRole'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
-        ),
+        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
       }),
       columnHelper.accessor('status', {
         header: t('columnStatus'),
@@ -183,9 +181,7 @@ export function InvitesList() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {t('title')}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">{t('description')}</p>
       </div>
 
@@ -203,11 +199,7 @@ export function InvitesList() {
           </div>
 
           {search && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSearch('')}
-            >
+            <Button variant="ghost" size="sm" onClick={() => setSearch('')}>
               <XIcon />
             </Button>
           )}
@@ -250,10 +242,7 @@ export function InvitesList() {
             <DialogDescription>{t('cancelDescription')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setCancellingInvite(null)}
-            >
+            <Button variant="outline" onClick={() => setCancellingInvite(null)}>
               {t('keepInvite')}
             </Button>
             <Button

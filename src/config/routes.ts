@@ -51,8 +51,7 @@ export const routes = {
   },
   admin: {
     root: (locale: string) => `/${locale}${paths.admin.root}`,
-    organizations: (locale: string) =>
-      `/${locale}${paths.admin.organizations}`,
+    organizations: (locale: string) => `/${locale}${paths.admin.organizations}`,
     users: (locale: string) => `/${locale}${paths.admin.users}`,
     invites: (locale: string) => `/${locale}${paths.admin.invites}`,
   },

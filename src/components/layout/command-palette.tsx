@@ -1,6 +1,13 @@
 'use client';
 
-import { Building2, LayoutDashboard, Settings2, Shield, UserCircle, Users } from 'lucide-react';
+import {
+  Building2,
+  LayoutDashboard,
+  Settings2,
+  Shield,
+  UserCircle,
+  Users,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 

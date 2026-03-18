@@ -178,9 +178,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
               <Form<UpdateOrganizationInput>
                 validationSchema={updateOrganizationSchema}
                 onSubmit={
-                  handleUpdate as (
-                    values: UpdateOrganizationInput
-                  ) => void
+                  handleUpdate as (values: UpdateOrganizationInput) => void
                 }
                 resetValues={{
                   name: org.name,
@@ -237,9 +235,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
                     >
                       <TimezonePicker
                         value={methods.watch('timezone')}
-                        onChange={(val) =>
-                          methods.setValue('timezone', val)
-                        }
+                        onChange={(val) => methods.setValue('timezone', val)}
                       />
                     </FormField>
                     <Button type="submit" disabled={updateOrg.isPending}>
@@ -277,9 +273,7 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
                           // Redirect handled by the caller or layout
                         },
                         onError: (error) =>
-                          toast.error(
-                            getErrorMessage(error, t('deleteError'))
-                          ),
+                          toast.error(getErrorMessage(error, t('deleteError'))),
                       }
                     );
                   }}
@@ -316,15 +310,10 @@ export function OrganizationDetail({ publicId }: OrganizationDetailProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>
-              {t('deactivateDescription')}
-            </DialogDescription>
+            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeactivateOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setDeactivateOpen(false)}>
               {tCommon('cancel')}
             </Button>
             <Button
@@ -475,9 +464,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 render={
-                  <Link
-                    href={`${paths.admin.users}/${row.original.userId}`}
-                  />
+                  <Link href={`${paths.admin.users}/${row.original.userId}`} />
                 }
               >
                 {t('viewUser')}
@@ -546,10 +533,7 @@ function OrgMembersTable({ publicId }: { publicId: string }) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setRemovingMember(null)}
-            >
+            <Button variant="outline" onClick={() => setRemovingMember(null)}>
               {tCommon('cancel')}
             </Button>
             <Button
@@ -668,9 +652,7 @@ function OrgInvitesTable({ publicId }: { publicId: string }) {
       }),
       inviteColumnHelper.accessor('roleName', {
         header: t('inviteColumnRole'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
-        ),
+        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
       }),
       inviteColumnHelper.accessor('status', {
         header: t('inviteColumnStatus'),

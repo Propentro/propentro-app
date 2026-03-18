@@ -6,7 +6,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Building2, LoaderIcon, PlusIcon, SearchIcon, XIcon } from 'lucide-react';
+import {
+  Building2,
+  LoaderIcon,
+  PlusIcon,
+  SearchIcon,
+  XIcon,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -134,9 +140,7 @@ export function OrganizationsList() {
       }),
       columnHelper.accessor('subscriptionPlan', {
         header: t('columnPlan'),
-        cell: ({ getValue }) => (
-          <Badge variant="secondary">{getValue()}</Badge>
-        ),
+        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
       }),
       columnHelper.accessor('memberCount', {
         header: t('columnMembers'),
@@ -181,8 +185,7 @@ export function OrganizationsList() {
 
   const hasFilters = search !== '' || status !== 'all';
 
-  const isEmpty =
-    !data?.items.length && !debouncedSearch && status === 'all';
+  const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
 
   // ---------------------------------------------------------------------------
   // Render
@@ -190,9 +193,7 @@ export function OrganizationsList() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {t('title')}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">{t('description')}</p>
       </div>
 
