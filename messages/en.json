@@ -29,6 +29,16 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
+    },
+    "hardDelete": {
+      "continueButton": "Continue",
+      "cancelButton": "Cancel",
+      "confirmLabel": "Type \"{name}\" to confirm",
+      "inputPlaceholder": "Type the name to confirm",
+      "deleting": "Deleting..."
+    },
+    "dangerZone": {
+      "title": "Danger Zone"
     }
   },
 
