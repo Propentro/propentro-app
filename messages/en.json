@@ -313,7 +313,6 @@
       "placeholderSlug": "organization-slug",
       "labelCurrency": "Currency",
       "labelTimezone": "Timezone",
-      "labelPlan": "Subscription Plan",
       "planFree": "Free",
       "planStarter": "Starter",
       "planProfessional": "Professional",

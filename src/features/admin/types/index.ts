@@ -32,11 +32,8 @@ export type AdminOrganizationListItem = {
 export type CreateOrganizationInput = {
   name: string;
   slug: string;
-  contactName?: string;
-  contactEmail?: string;
   currencyCode: string;
   timezone: string;
-  subscriptionPlan: string;
 };
 
 export type UpdateOrganizationInput = {

@@ -80,6 +80,7 @@ const eslintConfig = defineConfig([
       'src/components/providers/**',
       'src/components/layout/**',
       'src/features/select-workspace/**',
+      'src/features/admin/components/**',
       'src/app/**/layout.tsx',
       'src/app/**/page.tsx',
       'src/app/api/**',
