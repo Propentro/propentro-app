@@ -188,19 +188,42 @@ When adding a new feature, add its permissions to `PERMISSIONS` in `config/permi
 | **Shared within a domain**            | `src/features/{domain}/components/`           | SettingsNav (shared across org, members, roles)    |
 | **Specific to one feature**           | `src/features/{domain}/{feature}/components/` | MembersList, RoleForm                              |
 
+#### Component File Separation
+
+Any dialog, sheet, or modal that contains a form MUST be in its own file. Display-only helper components (<30 lines, stateless) may remain in the same file.
+
+**Naming convention:**
+- `create-{entity}-dialog.tsx` — create form in a dialog
+- `edit-{entity}-sheet.tsx` — edit form in a sheet/side panel
+- `{entity}-danger-zone.tsx` — destructive actions section
+- `{entity}-{section}-table.tsx` — data table section within a detail page
+
+**Guideline:** A component file exceeding 250 lines is a signal it should be split.
+
 #### Feature Folder Structure (Vertical Slice)
+
+All features — admin and dashboard — follow the same vertical slice structure:
 
 ```
 src/features/{domain}/
-  components/                     → Shared across features in this domain
+  components/                        → Domain-level shared (layout, nav)
+  types/index.ts                     → Domain-level shared types (when shared across sub-features)
+  hooks/{domain}-query-keys.ts       → Domain-level shared query key factory (when shared across sub-features)
   {feature}/
-    types/index.ts                → Feature-specific types
-    validators/{feature}.schema.ts → Zod schemas + inferred types + defaults
-    hooks/use-{feature}.ts        → queryOptions factory + React Query hooks
-    components/                   → Feature-specific UI components
+    types/index.ts                   → Feature-specific types
+    validators/{name}.schema.ts      → Zod schemas + inferred types + defaults
+    hooks/use-{feature}.ts           → queryOptions factory + React Query hooks
+    components/
+      {feature}-list.tsx             → List page component
+      {feature}-list-skeleton.tsx    → List loading skeleton
+      {feature}-detail.tsx           → Detail page wrapper (compose sections)
+      {feature}-detail-skeleton.tsx  → Detail loading skeleton
+      create-{entity}-dialog.tsx     → Create form (dialog/sheet) — always separate file
+      edit-{entity}-form.tsx         → Edit form — always separate file
+      {entity}-danger-zone.tsx       → Destructive actions section
 ```
 
-Each feature is self-contained. Domain-level `components/` holds components used by multiple features within that domain (e.g., `settings/components/settings-nav.tsx` is used by all settings pages).
+Domain-level `types/` and `hooks/` are for types and utilities shared across sub-features within the same domain. Feature-specific code lives inside the feature folder.
 
 ### Standard Page Template
 
@@ -213,6 +236,18 @@ Every authenticated page follows this pattern:
 5. No data fetching in pages — hooks in feature components handle data via React Query
 
 **Read vs write permission:** `requirePermission('org:resource:read')` is a **gate** — blocks the entire page. `hasPermission('org:resource:manage')` is a **prop** — passed to components to show/hide write actions (edit buttons, delete, create). Both happen in the server component `page.tsx`.
+
+**Admin page.tsx pattern:**
+- Metadata format: `"Page Name | Platform Admin | Propentro"`
+- Static pages use `export const metadata`
+- Dynamic pages use `export async function generateMetadata`
+- Admin hub page: redirect to first sub-page (same as settings hub pattern)
+
+### Server vs Client Components
+
+- `page.tsx`, `layout.tsx`, `loading.tsx` → always server component
+- `error.tsx` → always client component (Next.js requirement)
+- Feature components → pragmatic: `'use client'` only when interactive (state, hooks, event handlers)
 
 ### Hub Page Redirect
 
@@ -229,6 +264,12 @@ export const metadata: Metadata = { title: 'Members | Propentro' };
 ### Loading States (`loading.tsx`)
 
 Every route group needs a `loading.tsx` that renders skeleton UI matching the page layout. Use the `Skeleton` component. The skeleton should mirror the page structure: `PageHeader` skeleton + content area skeleton. Never show a blank page while data loads.
+
+### Skeleton File Pattern
+
+- Skeleton component lives in feature's `components/`: `{feature}-skeleton.tsx` or `{feature}-list-skeleton.tsx`
+- Route-level `loading.tsx` only imports and renders the skeleton component — never writes inline skeleton markup
+- Skeleton must mirror page structure: PageHeader area + content area
 
 ### Error Boundaries (`error.tsx`)
 
@@ -443,6 +484,8 @@ Money is stored as minor units (cents/pence) in `BIGINT`. For display:
 - Use `format.dateTime()` from `next-intl` in server components
 - Never use `toLocaleDateString()`, `moment()`, or hardcoded format strings like `DD/MM/YYYY`
 - Relative time (e.g., "3 days ago") via `format.relativeTime()`
+- No separate `FormattedDate` components — use `useFormatter().dateTime()` directly
+- Consistent format presets defined in `src/lib/format-date.ts` as `DATE_PRESETS`
 
 ---
 
@@ -542,3 +585,5 @@ Use `lucide-react` for all icons.
 - Divide minor units by 100 inline — use the shared money formatter
 - Use inconsistent status colours — green means active everywhere, red means destructive everywhere
 - Put components, hooks, or utilities inside `src/app/` route folders — route folders are for routing files only (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`)
+- Render `<h1>` or page titles inside feature components — use `PageHeader` in `page.tsx` or `layout.tsx` only
+- Use the `breadcrumb` prop on `PageHeader` — breadcrumbs are auto-generated in `AppHeader`/`AdminHeader`
