@@ -44,6 +44,7 @@ const columnHelper = createColumnHelper<AdminOrganizationListItem>();
 
 export function OrganizationsList() {
   const t = useTranslations('admin.organizations');
+  const tc = useTranslations('common');
   const format = useFormatter();
 
   // ---------------------------------------------------------------------------
@@ -212,7 +213,7 @@ export function OrganizationsList() {
               }}
             >
               <XIcon />
-              {t('allStatuses')}
+              {tc('table.clearFilters')}
             </Button>
           )}
 

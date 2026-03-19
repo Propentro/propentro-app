@@ -34,6 +34,7 @@ const columnHelper = createColumnHelper<AdminUserListItem>();
 
 export function UsersList() {
   const t = useTranslations('admin.users');
+  const tc = useTranslations('common');
   const format = useFormatter();
 
   // ---------------------------------------------------------------------------
@@ -181,7 +182,7 @@ export function UsersList() {
               }}
             >
               <XIcon />
-              {t('allStatuses')}
+              {tc('table.clearFilters')}
             </Button>
           )}
         </div>
