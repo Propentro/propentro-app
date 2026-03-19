@@ -13,6 +13,15 @@ export type AdminOrganization = {
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  countryCode?: string;
+  legalName?: string;
+  taxNumber?: string;
+  taxCountry?: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;
@@ -36,11 +45,21 @@ export type CreateOrganizationInput = {
 
 export type UpdateOrganizationInput = {
   name: string;
+  slug: string;
   contactName?: string;
   contactEmail?: string;
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  countryCode?: string;
+  legalName?: string;
+  taxNumber?: string;
+  taxCountry?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -75,6 +94,8 @@ export type MemberRoleInfo = {
 export type UserOrganizationInfo = {
   organizationId: string;
   name: string;
+  status: string;
+  joinedAt: ISODateTimeString;
   roles: MemberRoleInfo[];
 };
 
@@ -133,17 +154,16 @@ export type AdminMe = {
 
 export function inviteStatusVariant(
   status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' {
+): 'default' | 'warning' | 'outline' {
   switch (status.toLowerCase()) {
-    case 'pending':
-      return 'outline';
     case 'accepted':
       return 'default';
+    case 'pending':
+      return 'warning';
     case 'canceled':
-      return 'destructive';
     case 'expired':
-      return 'secondary';
+      return 'outline';
     default:
-      return 'secondary';
+      return 'outline';
   }
 }

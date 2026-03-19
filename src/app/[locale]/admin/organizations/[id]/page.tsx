@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 
-import { PageHeader } from '@/components/page-header';
 import { OrganizationDetail } from '@/features/admin/organizations/components/organization-detail';
 
 interface Props {
@@ -15,12 +14,6 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AdminOrganizationDetailPage({ params }: Props) {
   const { id } = await params;
-  const t = await getTranslations('admin.organizations');
 
-  return (
-    <>
-      <PageHeader title={t('detailTitle')} />
-      <OrganizationDetail organizationId={id} />
-    </>
-  );
+  return <OrganizationDetail organizationId={id} />;
 }

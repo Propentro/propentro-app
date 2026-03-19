@@ -10,7 +10,6 @@ import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
 import { adminKeys } from '../../hooks/admin-query-keys';
 import type { AdminUser, AdminUserListItem } from '../../types';
-import type { UpdateUserOutput } from '../validators/update-user.schema';
 
 // ---------------------------------------------------------------------------
 // Params
@@ -48,21 +47,6 @@ export function useAdminUsers(params: AdminUsersParams = {}) {
 
 export function useAdminUser(publicId: string) {
   return useQuery(adminUserQueryOptions(publicId));
-}
-
-export function useUpdateUser(publicId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<void, ApiError, UpdateUserOutput>({
-    mutationFn: (payload) =>
-      apiClient.patch<void>(`/admin/users/${publicId}`, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adminKeys.users.all() });
-      queryClient.invalidateQueries({
-        queryKey: adminKeys.users.detail(publicId),
-      });
-    },
-  });
 }
 
 export function useDeactivateUser() {

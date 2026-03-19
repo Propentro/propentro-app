@@ -146,7 +146,7 @@ export function OrganizationMembersTable({
       memberColumnHelper.accessor('status', {
         header: t('memberColumnStatus'),
         cell: ({ getValue }) => (
-          <Badge variant={getValue() === 'active' ? 'default' : 'secondary'}>
+          <Badge variant={getValue() === 'active' ? 'default' : 'outline'}>
             {getValue() === 'active' ? t('statusActive') : t('statusDeactivated')}
           </Badge>
         ),
