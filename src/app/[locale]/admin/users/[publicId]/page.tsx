@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 
-import { PageHeader } from '@/components/page-header';
 import { UserDetail } from '@/features/admin/users/components/user-detail';
 
 interface Props {
@@ -17,12 +16,6 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AdminUserDetailPage({ params }: Props) {
   const { publicId } = await params;
-  const t = await getTranslations('admin.users');
 
-  return (
-    <>
-      <PageHeader title={t('detailTitle')} />
-      <UserDetail id={publicId} />
-    </>
-  );
+  return <UserDetail id={publicId} />;
 }
