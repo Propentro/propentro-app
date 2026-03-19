@@ -8,6 +8,10 @@
     "delete": "Delete",
     "noResultFound": "No results found.",
     "phoneNumber": "Phone number",
+    "noSearchResults": {
+      "title": "No results found",
+      "description": "Try adjusting your search or filters to find what you're looking for."
+    },
     "table": {
       "rowsPerPage": "Rows per page",
       "pageOf": "Page {page} of {total}",

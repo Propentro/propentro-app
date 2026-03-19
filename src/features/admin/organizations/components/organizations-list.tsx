@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { NoSearchResults } from '@/components/shared/no-search-results';
 import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
@@ -164,7 +165,8 @@ export function OrganizationsList() {
     },
   });
 
-  const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
+  const isEmpty = !data?.items.length && !hasFilters;
+  const noResults = !data?.items.length && hasFilters;
 
   // ---------------------------------------------------------------------------
   // Render
@@ -239,6 +241,8 @@ export function OrganizationsList() {
               {t('createOrganization')}
             </Button>
           </div>
+        ) : noResults ? (
+          <NoSearchResults onClearFilters={clearFilters} />
         ) : (
           <>
             <DataTable table={table} />
