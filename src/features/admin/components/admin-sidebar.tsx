@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, LayoutDashboard, Mail, Users } from 'lucide-react';
+import { Building2, Mail, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ComponentProps } from 'react';
 
@@ -38,13 +38,6 @@ export function AdminSidebar(props: ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <AdminSidebarNav
-                item={{
-                  title: t('menu.dashboard'),
-                  href: '/admin',
-                  icon: LayoutDashboard,
-                }}
-              />
               <AdminSidebarNav
                 item={{
                   title: t('menu.organizations'),
