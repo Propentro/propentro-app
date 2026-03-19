@@ -300,7 +300,6 @@
       "statusInactive": "Inactive",
       "columnName": "Name",
       "columnSlug": "Slug",
-      "columnPlan": "Plan",
       "columnMembers": "Members",
       "columnStatus": "Status",
       "columnCreated": "Created",

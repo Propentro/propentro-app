@@ -13,7 +13,6 @@ export type AdminOrganization = {
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
-  subscriptionPlan: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;
@@ -23,7 +22,6 @@ export type AdminOrganizationListItem = {
   organizationId: string;
   name: string;
   slug: string;
-  subscriptionPlan: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;

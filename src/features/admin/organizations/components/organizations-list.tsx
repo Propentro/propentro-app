@@ -115,10 +115,6 @@ export function OrganizationsList() {
           </span>
         ),
       }),
-      columnHelper.accessor('subscriptionPlan', {
-        header: t('columnPlan'),
-        cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
-      }),
       columnHelper.accessor('memberCount', {
         header: t('columnMembers'),
         cell: ({ getValue }) => getValue(),
