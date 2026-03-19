@@ -6,15 +6,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -32,7 +32,6 @@ export function OrganizationInvitesTable({
   organizationId,
 }: OrganizationInvitesTableProps) {
   const t = useTranslations('admin.organizations');
-  const format = useFormatter();
   const { data: invites, isPending } = useAdminOrgInvites(organizationId);
   const cancelInvite = useCancelInvite();
 
@@ -68,13 +67,7 @@ export function OrganizationInvitesTable({
         header: t('inviteColumnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? (
-            <time dateTime={val}>
-              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
-            </time>
-          ) : (
-            '-'
-          );
+          return val ? <RelativeTime date={val} /> : '-';
         },
       }),
       inviteColumnHelper.display({

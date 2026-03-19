@@ -7,10 +7,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, MoreHorizontal } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { paths } from '@/config/routes';
 import { Link } from '@/i18n/routing';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -55,7 +55,6 @@ export function OrganizationMembersTable({
 }: OrganizationMembersTableProps) {
   const t = useTranslations('admin.organizations');
   const tCommon = useTranslations('common');
-  const format = useFormatter();
   const { data: members, isPending } = useAdminOrgMembers(organizationId);
   const removeMember = useRemoveMember(organizationId);
   const deactivateMember = useAdminDeactivateMember(organizationId);
@@ -144,11 +143,7 @@ export function OrganizationMembersTable({
       }),
       memberColumnHelper.accessor('joinedAt', {
         header: t('memberColumnJoined'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       memberColumnHelper.display({
         id: 'actions',

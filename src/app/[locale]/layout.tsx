@@ -27,7 +27,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} now={new Date()}>
       <NuqsAdapter>
         <QueryProvider>
           <ThemeProvider>

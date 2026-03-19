@@ -7,9 +7,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { SearchIcon, Users, XIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +27,6 @@ import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useListParams } from '@/hooks/use-list-params';
 import { Link } from '@/i18n/routing';
-import { DATE_PRESETS } from '@/lib/format-date';
 
 import type { AdminUserListItem } from '../../types';
 import { useAdminUsers } from '../hooks/use-admin-users';
@@ -36,8 +36,6 @@ const columnHelper = createColumnHelper<AdminUserListItem>();
 export function UsersList() {
   const t = useTranslations('admin.users');
   const tc = useTranslations('common');
-  const format = useFormatter();
-
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
@@ -106,11 +104,7 @@ export function UsersList() {
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
     ];
     return cols;

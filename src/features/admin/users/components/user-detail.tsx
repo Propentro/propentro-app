@@ -7,12 +7,13 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { DangerZone, DangerZoneItem } from '@/components/shared/danger-zone';
 import { HardDeleteConfirmation } from '@/components/shared/hard-delete-confirmation';
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -47,7 +47,6 @@ interface UserDetailProps {
 export function UserDetail({ id }: UserDetailProps) {
   const t = useTranslations('admin.users');
   const tCommon = useTranslations('common');
-  const format = useFormatter();
   const { data: user, isPending } = useAdminUser(id);
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
@@ -191,12 +190,7 @@ export function UserDetail({ id }: UserDetailProps) {
                 {t('labelCreated')}
               </dt>
               <dd>
-                <time dateTime={user.createdAt}>
-                  {format.dateTime(
-                    new Date(user.createdAt),
-                    DATE_PRESETS.medium
-                  )}
-                </time>
+                <RelativeTime date={user.createdAt} />
               </dd>
             </div>
           </dl>

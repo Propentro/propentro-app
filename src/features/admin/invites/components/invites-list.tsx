@@ -7,10 +7,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, Mail, SearchIcon, XIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +27,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useListParams } from '@/hooks/use-list-params';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -38,8 +38,6 @@ const columnHelper = createColumnHelper<AdminInvite>();
 export function InvitesList() {
   const t = useTranslations('admin.invites');
   const tc = useTranslations('common');
-  const format = useFormatter();
-
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
@@ -116,22 +114,12 @@ export function InvitesList() {
         header: t('columnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? (
-            <time dateTime={val}>
-              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
-            </time>
-          ) : (
-            '-'
-          );
+          return val ? <RelativeTime date={val} /> : '-';
         },
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       columnHelper.display({
         id: 'actions',
