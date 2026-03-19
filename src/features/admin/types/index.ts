@@ -94,6 +94,12 @@ export type AdminInvite = {
   createdAt: ISODateTimeString;
 };
 
+export type InviteResult = {
+  isDirectAdd: boolean;
+  memberId?: string;
+  inviteId?: string;
+};
+
 // ---------------------------------------------------------------------------
 // Members (org-scoped in admin context)
 // ---------------------------------------------------------------------------

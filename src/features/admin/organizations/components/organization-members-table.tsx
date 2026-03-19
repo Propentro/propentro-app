@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { LoaderIcon, MoreHorizontal } from 'lucide-react';
+import { LoaderIcon, MoreHorizontal, PlusIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -43,6 +43,7 @@ import {
   useRemoveMember,
 } from '../hooks/use-admin-members';
 import { useAdminOrgMembers } from '../hooks/use-admin-organizations';
+import { CreateInviteDialog } from './create-invite-dialog';
 
 const memberColumnHelper = createColumnHelper<AdminMember>();
 
@@ -59,6 +60,7 @@ export function OrganizationMembersTable({
   const removeMember = useRemoveMember(organizationId);
   const deactivateMember = useAdminDeactivateMember(organizationId);
   const reactivateMember = useAdminReactivateMember(organizationId);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [removingMember, setRemovingMember] = useState<AdminMember | null>(
     null
   );
@@ -206,21 +208,24 @@ export function OrganizationMembersTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isPending) {
-    return <Skeleton className="h-48 w-full" />;
-  }
-
-  if (!members?.items?.length) {
-    return (
-      <p className="text-muted-foreground py-8 text-center text-sm">
-        {t('noMembers')}
-      </p>
-    );
-  }
-
   return (
-    <>
-      <DataTable table={table} />
+    <div className="space-y-4">
+      <div className="flex items-center justify-end">
+        <Button size="sm" onClick={() => setInviteOpen(true)}>
+          <PlusIcon />
+          {t('inviteUser')}
+        </Button>
+      </div>
+
+      {isPending ? (
+        <Skeleton className="h-48 w-full" />
+      ) : !members?.items?.length ? (
+        <p className="text-muted-foreground py-8 text-center text-sm">
+          {t('noMembers')}
+        </p>
+      ) : (
+        <DataTable table={table} />
+      )}
 
       {/* Remove member dialog */}
       <Dialog
@@ -337,6 +342,12 @@ export function OrganizationMembersTable({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+
+      <CreateInviteDialog
+        organizationId={organizationId}
+        open={inviteOpen}
+        onOpenChange={setInviteOpen}
+      />
+    </div>
   );
 }

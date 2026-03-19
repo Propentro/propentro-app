@@ -6,8 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { PlusIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { RelativeTime } from '@/components/shared/relative-time';
@@ -21,6 +22,7 @@ import type { ApiError } from '@/types/api.types';
 import { useCancelInvite } from '../../invites/hooks/use-admin-invites';
 import { type AdminInvite, inviteStatusVariant } from '../../types';
 import { useAdminOrgInvites } from '../hooks/use-admin-org-invites';
+import { CreateInviteDialog } from './create-invite-dialog';
 
 const inviteColumnHelper = createColumnHelper<AdminInvite>();
 
@@ -34,6 +36,7 @@ export function OrganizationInvitesTable({
   const t = useTranslations('admin.organizations');
   const { data: invites, isPending } = useAdminOrgInvites(organizationId);
   const cancelInvite = useCancelInvite();
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   function handleCancel(inviteId: string) {
     cancelInvite.mutate(inviteId, {
@@ -97,17 +100,33 @@ export function OrganizationInvitesTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isPending) {
-    return <Skeleton className="h-48 w-full" />;
-  }
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-muted-foreground text-sm font-medium">
+          {t('invitesTabDescription')}
+        </h3>
+        <Button size="sm" onClick={() => setInviteOpen(true)}>
+          <PlusIcon />
+          {t('inviteUser')}
+        </Button>
+      </div>
 
-  if (!invites?.items?.length) {
-    return (
-      <p className="text-muted-foreground py-8 text-center text-sm">
-        {t('noInvites')}
-      </p>
-    );
-  }
+      {isPending ? (
+        <Skeleton className="h-48 w-full" />
+      ) : !invites?.items?.length ? (
+        <p className="text-muted-foreground py-8 text-center text-sm">
+          {t('noInvites')}
+        </p>
+      ) : (
+        <DataTable table={table} />
+      )}
 
-  return <DataTable table={table} />;
+      <CreateInviteDialog
+        organizationId={organizationId}
+        open={inviteOpen}
+        onOpenChange={setInviteOpen}
+      />
+    </div>
+  );
 }
