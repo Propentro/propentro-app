@@ -34,6 +34,7 @@ export function OrganizationInvitesTable({
   organizationId,
 }: OrganizationInvitesTableProps) {
   const t = useTranslations('admin.organizations');
+  const tInvites = useTranslations('admin.invites');
   const { data: invites, isPending } = useAdminOrgInvites(organizationId);
   const cancelInvite = useCancelInvite();
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -63,7 +64,8 @@ export function OrganizationInvitesTable({
         header: t('inviteColumnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
+          const statusKey = `status${s.charAt(0).toUpperCase()}${s.slice(1)}` as Parameters<typeof tInvites>[0];
+          return <Badge variant={inviteStatusVariant(s)}>{tInvites(statusKey)}</Badge>;
         },
       }),
       inviteColumnHelper.accessor('expiresAt', {
@@ -92,7 +94,7 @@ export function OrganizationInvitesTable({
     ];
     return cols;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t]);
+  }, [t, tInvites]);
 
   const table = useReactTable({
     data: invites?.items ?? [],

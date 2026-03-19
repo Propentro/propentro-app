@@ -4,6 +4,7 @@ import { LoaderIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
+import { FormField } from '@/components/shared/form-field';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,8 +15,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -82,36 +81,35 @@ export function CreateInviteDialog({
           resetValues={inviteMemberDefaults}
           onSubmit={handleSubmit}
         >
-          {({ register, formState: { errors }, setValue, watch }) => (
+          {(methods) => (
             <>
               <div className="space-y-4 py-2">
-                <div className="space-y-1.5">
-                  <Label htmlFor="email">{t('labelEmail')}</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder={t('placeholderEmail')}
-                    {...register('email')}
-                  />
-                  {errors.email && (
-                    <p className="text-destructive mt-1 text-xs">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+                <FormField<InviteMemberInput>
+                  label={t('labelEmail')}
+                  name="email"
+                  type="email"
+                  placeholder={t('placeholderEmail')}
+                  methods={methods}
+                />
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="roleId">{t('labelRole')}</Label>
+                <FormField<InviteMemberInput>
+                  label={t('labelRole')}
+                  name="roleId"
+                  methods={methods}
+                >
                   <Select
-                    value={watch('roleId') ?? ''}
+                    value={methods.watch('roleId') ?? ''}
                     onValueChange={(value) =>
-                      setValue('roleId', value ?? '', { shouldValidate: true })
+                      methods.setValue('roleId', value ?? '', {
+                        shouldValidate: true,
+                      })
                     }
                   >
                     <SelectTrigger id="roleId" className="w-full">
                       <SelectValue placeholder={t('inviteRolePlaceholder')}>
-                        {roles?.find((r) => r.roleId === watch('roleId'))
-                          ?.name}
+                        {roles?.find(
+                          (r) => r.roleId === methods.watch('roleId')
+                        )?.name}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -122,12 +120,7 @@ export function CreateInviteDialog({
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.roleId && (
-                    <p className="text-destructive mt-1 text-xs">
-                      {errors.roleId.message}
-                    </p>
-                  )}
-                </div>
+                </FormField>
               </div>
 
               <DialogFooter>

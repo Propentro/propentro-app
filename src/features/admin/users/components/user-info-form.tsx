@@ -19,6 +19,7 @@ import type { AdminUser } from '../../types';
 import { useUpdateUser } from '../hooks/use-admin-users';
 import {
   type UpdateUserInput,
+  type UpdateUserOutput,
   updateUserSchema,
 } from '../validators/update-user.schema';
 
@@ -101,8 +102,8 @@ export function UserInfoForm({ user }: UserInfoFormProps) {
   const t = useTranslations('admin.users');
   const updateUser = useUpdateUser(user.userId);
 
-  function handleUpdate(values: Record<string, unknown>) {
-    updateUser.mutate(values as unknown as UpdateUserInput, {
+  function handleUpdate(values: UpdateUserInput) {
+    updateUser.mutate(values as unknown as UpdateUserOutput, {
       onSuccess: () => {
         toast.success(t('updateSuccess'));
       },
@@ -117,7 +118,7 @@ export function UserInfoForm({ user }: UserInfoFormProps) {
       <CardContent className="pt-6">
         <Form<UpdateUserInput>
           validationSchema={updateUserSchema}
-          onSubmit={handleUpdate as (values: UpdateUserInput) => void}
+          onSubmit={handleUpdate}
           resetValues={{
             firstName: user.firstName ?? '',
             lastName: user.lastName ?? '',

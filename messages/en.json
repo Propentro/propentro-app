@@ -477,7 +477,8 @@
       "allStatuses": "All Statuses",
       "statusPending": "Pending",
       "statusAccepted": "Accepted",
-      "statusCanceled": "Canceled"
+      "statusCanceled": "Canceled",
+      "statusExpired": "Expired"
     },
     "me": {
       "role": "Role: {role}"

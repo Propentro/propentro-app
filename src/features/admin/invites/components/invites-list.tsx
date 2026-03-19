@@ -120,7 +120,8 @@ export function InvitesList() {
         header: t('columnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
+          const statusKey = `status${s.charAt(0).toUpperCase()}${s.slice(1)}` as Parameters<typeof t>[0];
+          return <Badge variant={inviteStatusVariant(s)}>{t(statusKey)}</Badge>;
         },
       }),
       columnHelper.accessor('invitedBy', {
