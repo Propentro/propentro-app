@@ -464,7 +464,12 @@
       "cancelSuccess": "Invitation canceled.",
       "cancelError": "Failed to cancel invitation.",
       "emptyTitle": "No invitations",
-      "emptyDescription": "No invitations found matching your criteria."
+      "emptyDescription": "No invitations found matching your criteria.",
+      "filterStatus": "Filter by status",
+      "allStatuses": "All Statuses",
+      "statusPending": "Pending",
+      "statusAccepted": "Accepted",
+      "statusCanceled": "Canceled"
     },
     "me": {
       "role": "Role: {role}"

@@ -26,6 +26,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useListParams } from '@/hooks/use-list-params';
 import { getErrorMessage } from '@/lib/parse-api-error';
@@ -44,10 +51,12 @@ export function InvitesList() {
   // ---------------------------------------------------------------------------
   const {
     search,
+    status,
     page,
     pageSize,
     hasFilters,
     setSearch,
+    setStatus,
     setPage,
     setPageSize,
     clearFilters,
@@ -62,6 +71,7 @@ export function InvitesList() {
   // ---------------------------------------------------------------------------
   const { data, isPending } = useAdminInvites({
     search: debouncedSearch || undefined,
+    status: status === 'all' ? undefined : status,
     page,
     pageSize,
   });
@@ -185,6 +195,29 @@ export function InvitesList() {
               className="w-56 pl-8"
             />
           </div>
+
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value ?? 'all')}
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder={t('filterStatus')}>
+                {status === 'all'
+                  ? t('allStatuses')
+                  : status === 'pending'
+                    ? t('statusPending')
+                    : status === 'accepted'
+                      ? t('statusAccepted')
+                      : t('statusCanceled')}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allStatuses')}</SelectItem>
+              <SelectItem value="pending">{t('statusPending')}</SelectItem>
+              <SelectItem value="accepted">{t('statusAccepted')}</SelectItem>
+              <SelectItem value="canceled">{t('statusCanceled')}</SelectItem>
+            </SelectContent>
+          </Select>
 
           {hasFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters}>
