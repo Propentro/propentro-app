@@ -7,10 +7,12 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Building2, PlusIcon, SearchIcon, XIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { NoSearchResults } from '@/components/shared/no-search-results';
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +27,8 @@ import {
 } from '@/components/ui/select';
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useListParams } from '@/hooks/use-list-params';
 import { Link } from '@/i18n/routing';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -45,21 +47,26 @@ const columnHelper = createColumnHelper<AdminOrganizationListItem>();
 export function OrganizationsList() {
   const t = useTranslations('admin.organizations');
   const tc = useTranslations('common');
-  const format = useFormatter();
-
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
-  const [search, setSearch] = useState('');
+  const {
+    search,
+    status,
+    page,
+    pageSize,
+    sortBy,
+    sortDir,
+    hasFilters,
+    setSearch,
+    setStatus,
+    setPage,
+    setPageSize,
+    setSort,
+    clearFilters,
+  } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
-  const [status, setStatus] = useState('all');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [createOpen, setCreateOpen] = useState(false);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, status, pageSize]);
 
   // ---------------------------------------------------------------------------
   // Queries & mutations
@@ -69,6 +76,8 @@ export function OrganizationsList() {
     status: status === 'all' ? undefined : status,
     page,
     pageSize,
+    sortBy: sortBy || undefined,
+    sortDir: (sortDir as 'asc' | 'desc') || undefined,
   });
 
   const createOrganization = useCreateOrganization();
@@ -110,6 +119,7 @@ export function OrganizationsList() {
       }),
       columnHelper.accessor('slug', {
         header: t('columnSlug'),
+        enableSorting: false,
         cell: ({ getValue }) => (
           <span className="text-muted-foreground font-mono text-xs">
             {getValue()}
@@ -130,11 +140,7 @@ export function OrganizationsList() {
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
     ];
 
@@ -150,20 +156,38 @@ export function OrganizationsList() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-    state: { pagination: { pageIndex: page - 1, pageSize } },
+    rowCount: data?.total ?? 0,
+    manualSorting: true,
+    state: {
+      pagination: { pageIndex: page - 1, pageSize },
+      sorting: sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [],
+    },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
           ? updater({ pageIndex: page - 1, pageSize })
           : updater;
-      setPage(next.pageIndex + 1);
-      setPageSize(next.pageSize);
+      if (next.pageSize !== pageSize) {
+        setPageSize(next.pageSize);
+      } else {
+        setPage(next.pageIndex + 1);
+      }
+    },
+    onSortingChange: (updater) => {
+      const next =
+        typeof updater === 'function'
+          ? updater(sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [])
+          : updater;
+      if (next.length > 0) {
+        setSort(next[0].id, next[0].desc ? 'desc' : 'asc');
+      } else {
+        setSort('', '');
+      }
     },
   });
 
-  const hasFilters = search !== '' || status !== 'all';
-
-  const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
+  const isEmpty = !data?.items.length && !hasFilters;
+  const noResults = !data?.items.length && hasFilters;
 
   // ---------------------------------------------------------------------------
   // Render
@@ -178,7 +202,7 @@ export function OrganizationsList() {
             <Input
               placeholder={t('searchPlaceholder')}
               value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-56 pl-8"
             />
           </div>
@@ -207,10 +231,7 @@ export function OrganizationsList() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setSearch('');
-                setStatus('all');
-              }}
+              onClick={clearFilters}
             >
               <XIcon />
               {tc('table.clearFilters')}
@@ -241,6 +262,8 @@ export function OrganizationsList() {
               {t('createOrganization')}
             </Button>
           </div>
+        ) : noResults ? (
+          <NoSearchResults onClearFilters={clearFilters} />
         ) : (
           <>
             <DataTable table={table} />
@@ -259,7 +282,4 @@ export function OrganizationsList() {
     </div>
   );
 
-  function onSearchChange(value: string) {
-    setSearch(value);
-  }
 }

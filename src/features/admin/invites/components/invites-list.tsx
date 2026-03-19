@@ -7,10 +7,12 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon, Mail, SearchIcon, XIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { NoSearchResults } from '@/components/shared/no-search-results';
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +26,15 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DATE_PRESETS } from '@/lib/format-date';
+import { useListParams } from '@/hooks/use-list-params';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -36,30 +45,40 @@ const columnHelper = createColumnHelper<AdminInvite>();
 
 export function InvitesList() {
   const t = useTranslations('admin.invites');
-  const format = useFormatter();
-
+  const tc = useTranslations('common');
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
-  const [search, setSearch] = useState('');
+  const {
+    search,
+    status,
+    page,
+    pageSize,
+    sortBy,
+    sortDir,
+    hasFilters,
+    setSearch,
+    setStatus,
+    setPage,
+    setPageSize,
+    setSort,
+    clearFilters,
+  } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [cancellingInvite, setCancellingInvite] = useState<AdminInvite | null>(
     null
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, pageSize]);
 
   // ---------------------------------------------------------------------------
   // Query & mutations
   // ---------------------------------------------------------------------------
   const { data, isPending } = useAdminInvites({
     search: debouncedSearch || undefined,
+    status: status === 'all' ? undefined : status,
     page,
     pageSize,
+    sortBy: sortBy || undefined,
+    sortDir: (sortDir as 'asc' | 'desc') || undefined,
   });
 
   const cancelInvite = useCancelInvite();
@@ -94,39 +113,32 @@ export function InvitesList() {
       }),
       columnHelper.accessor('roleName', {
         header: t('columnRole'),
+        enableSorting: false,
         cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
       }),
       columnHelper.accessor('status', {
         header: t('columnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
+          const statusKey = `status${s.charAt(0).toUpperCase()}${s.slice(1)}` as Parameters<typeof t>[0];
+          return <Badge variant={inviteStatusVariant(s)}>{t(statusKey)}</Badge>;
         },
       }),
       columnHelper.accessor('invitedBy', {
         header: t('columnInvitedBy'),
+        enableSorting: false,
         cell: ({ getValue }) => getValue() ?? '-',
       }),
       columnHelper.accessor('expiresAt', {
         header: t('columnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? (
-            <time dateTime={val}>
-              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
-            </time>
-          ) : (
-            '-'
-          );
+          return val ? <RelativeTime date={val} /> : '-';
         },
       }),
       columnHelper.accessor('createdAt', {
         header: t('columnCreated'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       columnHelper.display({
         id: 'actions',
@@ -156,18 +168,38 @@ export function InvitesList() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-    state: { pagination: { pageIndex: page - 1, pageSize } },
+    rowCount: data?.total ?? 0,
+    manualSorting: true,
+    state: {
+      pagination: { pageIndex: page - 1, pageSize },
+      sorting: sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [],
+    },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
           ? updater({ pageIndex: page - 1, pageSize })
           : updater;
-      setPage(next.pageIndex + 1);
-      setPageSize(next.pageSize);
+      if (next.pageSize !== pageSize) {
+        setPageSize(next.pageSize);
+      } else {
+        setPage(next.pageIndex + 1);
+      }
+    },
+    onSortingChange: (updater) => {
+      const next =
+        typeof updater === 'function'
+          ? updater(sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [])
+          : updater;
+      if (next.length > 0) {
+        setSort(next[0].id, next[0].desc ? 'desc' : 'asc');
+      } else {
+        setSort('', '');
+      }
     },
   });
 
-  const isEmpty = !data?.items.length && !debouncedSearch;
+  const isEmpty = !data?.items.length && !hasFilters;
+  const noResults = !data?.items.length && hasFilters;
 
   // ---------------------------------------------------------------------------
   // Render
@@ -187,9 +219,33 @@ export function InvitesList() {
             />
           </div>
 
-          {search && (
-            <Button variant="ghost" size="sm" onClick={() => setSearch('')}>
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value ?? 'all')}
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder={t('filterStatus')}>
+                {status === 'all'
+                  ? t('allStatuses')
+                  : status === 'pending'
+                    ? t('statusPending')
+                    : status === 'accepted'
+                      ? t('statusAccepted')
+                      : t('statusCanceled')}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allStatuses')}</SelectItem>
+              <SelectItem value="pending">{t('statusPending')}</SelectItem>
+              <SelectItem value="accepted">{t('statusAccepted')}</SelectItem>
+              <SelectItem value="canceled">{t('statusCanceled')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {hasFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
               <XIcon />
+              {tc('table.clearFilters')}
             </Button>
           )}
         </div>
@@ -209,6 +265,8 @@ export function InvitesList() {
               {t('emptyDescription')}
             </p>
           </div>
+        ) : noResults ? (
+          <NoSearchResults onClearFilters={clearFilters} />
         ) : (
           <>
             <DataTable table={table} />
@@ -228,7 +286,9 @@ export function InvitesList() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('cancelTitle')}</DialogTitle>
-            <DialogDescription>{t('cancelDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('cancelDescription', { email: cancellingInvite!.email })}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancellingInvite(null)}>

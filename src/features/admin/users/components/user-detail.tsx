@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { LoaderIcon } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,7 +26,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -37,6 +36,7 @@ import {
   useDeleteUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
+import { UserInfoForm } from './user-info-form';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
 
@@ -47,7 +47,6 @@ interface UserDetailProps {
 export function UserDetail({ id }: UserDetailProps) {
   const t = useTranslations('admin.users');
   const tCommon = useTranslations('common');
-  const format = useFormatter();
   const { data: user, isPending } = useAdminUser(id);
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
@@ -151,57 +150,8 @@ export function UserDetail({ id }: UserDetailProps) {
         )}
       </div>
 
-      {/* User Info Card */}
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-medium">{t('sectionInfo')}</h2>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelEmail')}
-              </dt>
-              <dd className="font-medium">{user.email}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelFirstName')}
-              </dt>
-              <dd className="font-medium">{user.firstName ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelLastName')}
-              </dt>
-              <dd className="font-medium">{user.lastName ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelStatus')}
-              </dt>
-              <dd>
-                <Badge variant={user.isActive ? 'default' : 'destructive'}>
-                  {user.isActive ? t('statusActive') : t('statusInactive')}
-                </Badge>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelCreated')}
-              </dt>
-              <dd>
-                <time dateTime={user.createdAt}>
-                  {format.dateTime(
-                    new Date(user.createdAt),
-                    DATE_PRESETS.medium
-                  )}
-                </time>
-              </dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
+      {/* User Info Form */}
+      <UserInfoForm user={user} />
 
       {/* Organization Memberships */}
       <Card>
@@ -269,7 +219,9 @@ export function UserDetail({ id }: UserDetailProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('deactivateDescription', { name: displayName })}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeactivateOpen(false)}>

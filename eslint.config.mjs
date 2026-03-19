@@ -74,6 +74,7 @@ const eslintConfig = defineConfig([
       'src/hooks/use-session.ts',
       'src/hooks/use-organizations.ts',
       'src/middleware.ts',
+      'src/proxy.ts',
       'src/lib/auth.ts',
       'src/lib/proxy-request.ts',
       'src/lib/admin-proxy-request.ts',

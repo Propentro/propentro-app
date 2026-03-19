@@ -6,21 +6,23 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useFormatter, useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
 import { useCancelInvite } from '../../invites/hooks/use-admin-invites';
 import { type AdminInvite, inviteStatusVariant } from '../../types';
 import { useAdminOrgInvites } from '../hooks/use-admin-org-invites';
+import { CreateInviteDialog } from './create-invite-dialog';
 
 const inviteColumnHelper = createColumnHelper<AdminInvite>();
 
@@ -32,9 +34,10 @@ export function OrganizationInvitesTable({
   organizationId,
 }: OrganizationInvitesTableProps) {
   const t = useTranslations('admin.organizations');
-  const format = useFormatter();
+  const tInvites = useTranslations('admin.invites');
   const { data: invites, isPending } = useAdminOrgInvites(organizationId);
   const cancelInvite = useCancelInvite();
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   function handleCancel(inviteId: string) {
     cancelInvite.mutate(inviteId, {
@@ -61,20 +64,15 @@ export function OrganizationInvitesTable({
         header: t('inviteColumnStatus'),
         cell: ({ getValue }) => {
           const s = getValue();
-          return <Badge variant={inviteStatusVariant(s)}>{s}</Badge>;
+          const statusKey = `status${s.charAt(0).toUpperCase()}${s.slice(1)}` as Parameters<typeof tInvites>[0];
+          return <Badge variant={inviteStatusVariant(s)}>{tInvites(statusKey)}</Badge>;
         },
       }),
       inviteColumnHelper.accessor('expiresAt', {
         header: t('inviteColumnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
-          return val ? (
-            <time dateTime={val}>
-              {format.dateTime(new Date(val), DATE_PRESETS.medium)}
-            </time>
-          ) : (
-            '-'
-          );
+          return val ? <RelativeTime date={val} /> : '-';
         },
       }),
       inviteColumnHelper.display({
@@ -103,17 +101,33 @@ export function OrganizationInvitesTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isPending) {
-    return <Skeleton className="h-48 w-full" />;
-  }
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-muted-foreground text-sm font-medium">
+          {t('invitesTabDescription')}
+        </h3>
+        <Button size="sm" onClick={() => setInviteOpen(true)}>
+          <PlusIcon />
+          {t('inviteUser')}
+        </Button>
+      </div>
 
-  if (!invites?.items?.length) {
-    return (
-      <p className="text-muted-foreground py-8 text-center text-sm">
-        {t('noInvites')}
-      </p>
-    );
-  }
+      {isPending ? (
+        <Skeleton className="h-48 w-full" />
+      ) : !invites?.items?.length ? (
+        <p className="text-muted-foreground py-8 text-center text-sm">
+          {t('noInvites')}
+        </p>
+      ) : (
+        <DataTable table={table} />
+      )}
 
-  return <DataTable table={table} />;
+      <CreateInviteDialog
+        organizationId={organizationId}
+        open={inviteOpen}
+        onOpenChange={setInviteOpen}
+      />
+    </div>
+  );
 }

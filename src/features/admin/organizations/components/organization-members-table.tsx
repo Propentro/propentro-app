@@ -6,11 +6,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { LoaderIcon, MoreHorizontal } from 'lucide-react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { LoaderIcon, MoreHorizontal, PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { paths } from '@/config/routes';
 import { Link } from '@/i18n/routing';
-import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -43,6 +43,7 @@ import {
   useRemoveMember,
 } from '../hooks/use-admin-members';
 import { useAdminOrgMembers } from '../hooks/use-admin-organizations';
+import { CreateInviteDialog } from './create-invite-dialog';
 
 const memberColumnHelper = createColumnHelper<AdminMember>();
 
@@ -55,11 +56,11 @@ export function OrganizationMembersTable({
 }: OrganizationMembersTableProps) {
   const t = useTranslations('admin.organizations');
   const tCommon = useTranslations('common');
-  const format = useFormatter();
   const { data: members, isPending } = useAdminOrgMembers(organizationId);
   const removeMember = useRemoveMember(organizationId);
   const deactivateMember = useAdminDeactivateMember(organizationId);
   const reactivateMember = useAdminReactivateMember(organizationId);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [removingMember, setRemovingMember] = useState<AdminMember | null>(
     null
   );
@@ -142,13 +143,17 @@ export function OrganizationMembersTable({
           </div>
         ),
       }),
+      memberColumnHelper.accessor('status', {
+        header: t('memberColumnStatus'),
+        cell: ({ getValue }) => (
+          <Badge variant={getValue() === 'active' ? 'default' : 'secondary'}>
+            {getValue() === 'active' ? t('statusActive') : t('statusDeactivated')}
+          </Badge>
+        ),
+      }),
       memberColumnHelper.accessor('joinedAt', {
         header: t('memberColumnJoined'),
-        cell: ({ getValue }) => (
-          <time dateTime={getValue()}>
-            {format.dateTime(new Date(getValue()), DATE_PRESETS.medium)}
-          </time>
-        ),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       memberColumnHelper.display({
         id: 'actions',
@@ -169,16 +174,19 @@ export function OrganizationMembersTable({
                 {t('viewUser')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setDeactivatingMember(row.original)}
-              >
-                {t('deactivateMember')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setReactivatingMember(row.original)}
-              >
-                {t('reactivateMember')}
-              </DropdownMenuItem>
+              {row.original.status === 'active' ? (
+                <DropdownMenuItem
+                  onClick={() => setDeactivatingMember(row.original)}
+                >
+                  {t('deactivateMember')}
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => setReactivatingMember(row.original)}
+                >
+                  {t('reactivateMember')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
@@ -200,21 +208,24 @@ export function OrganizationMembersTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isPending) {
-    return <Skeleton className="h-48 w-full" />;
-  }
-
-  if (!members?.items?.length) {
-    return (
-      <p className="text-muted-foreground py-8 text-center text-sm">
-        {t('noMembers')}
-      </p>
-    );
-  }
-
   return (
-    <>
-      <DataTable table={table} />
+    <div className="space-y-4">
+      <div className="flex items-center justify-end">
+        <Button size="sm" onClick={() => setInviteOpen(true)}>
+          <PlusIcon />
+          {t('inviteUser')}
+        </Button>
+      </div>
+
+      {isPending ? (
+        <Skeleton className="h-48 w-full" />
+      ) : !members?.items?.length ? (
+        <p className="text-muted-foreground py-8 text-center text-sm">
+          {t('noMembers')}
+        </p>
+      ) : (
+        <DataTable table={table} />
+      )}
 
       {/* Remove member dialog */}
       <Dialog
@@ -228,7 +239,11 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('removeMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('removeMemberDescription')}
+              {t('removeMemberDescription', {
+                name:
+                  `${removingMember?.firstName ?? ''} ${removingMember?.lastName ?? ''}`.trim() ||
+                  removingMember!.email,
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -261,7 +276,11 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('deactivateMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('deactivateMemberDescription')}
+              {t('deactivateMemberDescription', {
+                name:
+                  `${deactivatingMember?.firstName ?? ''} ${deactivatingMember?.lastName ?? ''}`.trim() ||
+                  deactivatingMember!.email,
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -297,7 +316,11 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('reactivateMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('reactivateMemberDescription')}
+              {t('reactivateMemberDescription', {
+                name:
+                  `${reactivatingMember?.firstName ?? ''} ${reactivatingMember?.lastName ?? ''}`.trim() ||
+                  reactivatingMember!.email,
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -319,6 +342,12 @@ export function OrganizationMembersTable({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+
+      <CreateInviteDialog
+        organizationId={organizationId}
+        open={inviteOpen}
+        onOpenChange={setInviteOpen}
+      />
+    </div>
   );
 }
