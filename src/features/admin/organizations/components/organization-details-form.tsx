@@ -2,6 +2,7 @@
 
 import { LoaderIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import type { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { CurrencyPicker } from '@/components/shared/currency-picker';
@@ -39,6 +40,139 @@ function SectionHeader({
   );
 }
 
+interface FormInnerProps {
+  methods: UseFormReturn<UpdateOrganizationInput>;
+  isPending: boolean;
+}
+
+function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
+  const t = useTranslations('admin.organizations');
+  useUnsavedChanges(methods.formState.isDirty);
+
+  return (
+    <div className="space-y-6">
+      {/* Section: General */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+        <SectionHeader
+          title={t('sectionGeneral')}
+          description={t('sectionGeneralDescription')}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelName')}
+                  name="name"
+                  placeholder={t('placeholderName')}
+                  methods={methods}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Separator />
+
+      {/* Section: Contact */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+        <SectionHeader
+          title={t('sectionContact')}
+          description={t('sectionContactDescription')}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelContactName')}
+                  name="contactName"
+                  placeholder={t('placeholderContactName')}
+                  methods={methods}
+                />
+              </div>
+              <FormField<UpdateOrganizationInput>
+                label={t('labelContactEmail')}
+                name="contactEmail"
+                placeholder={t('placeholderContactEmail')}
+                methods={methods}
+                type="email"
+              />
+              <FormField<UpdateOrganizationInput>
+                label={t('labelContactPhone')}
+                name="contactPhone"
+                methods={methods}
+              >
+                <PhoneInput
+                  value={methods.watch('contactPhone') ?? ''}
+                  onChange={(val) =>
+                    methods.setValue('contactPhone', val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </FormField>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Separator />
+
+      {/* Section: Regional Settings */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+        <SectionHeader
+          title={t('sectionRegional')}
+          description={t('sectionRegionalDescription')}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField<UpdateOrganizationInput>
+                label={t('labelCurrency')}
+                name="currencyCode"
+                methods={methods}
+              >
+                <CurrencyPicker
+                  value={methods.watch('currencyCode')}
+                  onChange={(val) =>
+                    methods.setValue('currencyCode', val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </FormField>
+              <FormField<UpdateOrganizationInput>
+                label={t('labelTimezone')}
+                name="timezone"
+                methods={methods}
+              >
+                <TimezonePicker
+                  value={methods.watch('timezone')}
+                  onChange={(val) =>
+                    methods.setValue('timezone', val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </FormField>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Save button */}
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isPending}>
+          {isPending && <LoaderIcon className="animate-spin" />}
+          {t('saveChanges')}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function OrganizationDetailsForm({
   organization,
 }: OrganizationDetailsFormProps) {
@@ -70,134 +204,12 @@ export function OrganizationDetailsForm({
           timezone: organization.timezone,
         }}
       >
-        {(methods) => {
-          useUnsavedChanges(methods.formState.isDirty);
-
-          return (
-            <div className="space-y-6">
-              {/* Section: General */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
-                <SectionHeader
-                  title={t('sectionGeneral')}
-                  description={t('sectionGeneralDescription')}
-                />
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div className="sm:col-span-2">
-                        <FormField<UpdateOrganizationInput>
-                          label={t('labelName')}
-                          name="name"
-                          placeholder={t('placeholderName')}
-                          methods={methods}
-                        />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Separator />
-
-              {/* Section: Contact */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
-                <SectionHeader
-                  title={t('sectionContact')}
-                  description={t('sectionContactDescription')}
-                />
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div className="sm:col-span-2">
-                        <FormField<UpdateOrganizationInput>
-                          label={t('labelContactName')}
-                          name="contactName"
-                          placeholder={t('placeholderContactName')}
-                          methods={methods}
-                        />
-                      </div>
-                      <FormField<UpdateOrganizationInput>
-                        label={t('labelContactEmail')}
-                        name="contactEmail"
-                        placeholder={t('placeholderContactEmail')}
-                        methods={methods}
-                        type="email"
-                      />
-                      <FormField<UpdateOrganizationInput>
-                        label={t('labelContactPhone')}
-                        name="contactPhone"
-                        methods={methods}
-                      >
-                        <PhoneInput
-                          value={methods.watch('contactPhone') ?? ''}
-                          onChange={(val) =>
-                            methods.setValue('contactPhone', val, {
-                              shouldDirty: true,
-                            })
-                          }
-                        />
-                      </FormField>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Separator />
-
-              {/* Section: Regional Settings */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
-                <SectionHeader
-                  title={t('sectionRegional')}
-                  description={t('sectionRegionalDescription')}
-                />
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <FormField<UpdateOrganizationInput>
-                        label={t('labelCurrency')}
-                        name="currencyCode"
-                        methods={methods}
-                      >
-                        <CurrencyPicker
-                          value={methods.watch('currencyCode')}
-                          onChange={(val) =>
-                            methods.setValue('currencyCode', val, {
-                              shouldDirty: true,
-                            })
-                          }
-                        />
-                      </FormField>
-                      <FormField<UpdateOrganizationInput>
-                        label={t('labelTimezone')}
-                        name="timezone"
-                        methods={methods}
-                      >
-                        <TimezonePicker
-                          value={methods.watch('timezone')}
-                          onChange={(val) =>
-                            methods.setValue('timezone', val, {
-                              shouldDirty: true,
-                            })
-                          }
-                        />
-                      </FormField>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Save button */}
-              <div className="flex justify-end">
-                <Button type="submit" disabled={updateOrg.isPending}>
-                  {updateOrg.isPending && (
-                    <LoaderIcon className="animate-spin" />
-                  )}
-                  {t('saveChanges')}
-                </Button>
-              </div>
-            </div>
-          );
-        }}
+        {(methods) => (
+          <OrganizationDetailsFormInner
+            methods={methods}
+            isPending={updateOrg.isPending}
+          />
+        )}
       </Form>
     </div>
   );

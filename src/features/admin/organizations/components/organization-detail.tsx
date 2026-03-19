@@ -27,8 +27,8 @@ import {
   useReactivateOrganization,
 } from '../hooks/use-admin-organizations';
 import { OrganizationDangerZone } from './organization-danger-zone';
-import { OrganizationDetailsForm } from './organization-details-form';
 import { OrganizationDetailSkeleton } from './organization-detail-skeleton';
+import { OrganizationDetailsForm } from './organization-details-form';
 import { OrganizationInvitesTable } from './organization-invites-table';
 import { OrganizationMembersTable } from './organization-members-table';
 
