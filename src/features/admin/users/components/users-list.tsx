@@ -45,11 +45,14 @@ export function UsersList() {
     status,
     page,
     pageSize,
+    sortBy,
+    sortDir,
     hasFilters,
     setSearch,
     setStatus,
     setPage,
     setPageSize,
+    setSort,
     clearFilters,
   } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
@@ -62,6 +65,8 @@ export function UsersList() {
     status: status === 'all' ? undefined : status,
     page,
     pageSize,
+    sortBy: sortBy || undefined,
+    sortDir: (sortDir as 'asc' | 'desc') || undefined,
   });
 
   // ---------------------------------------------------------------------------
@@ -121,7 +126,11 @@ export function UsersList() {
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
     rowCount: data?.total ?? 0,
-    state: { pagination: { pageIndex: page - 1, pageSize } },
+    manualSorting: true,
+    state: {
+      pagination: { pageIndex: page - 1, pageSize },
+      sorting: sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [],
+    },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
@@ -131,6 +140,17 @@ export function UsersList() {
         setPageSize(next.pageSize);
       } else {
         setPage(next.pageIndex + 1);
+      }
+    },
+    onSortingChange: (updater) => {
+      const next =
+        typeof updater === 'function'
+          ? updater(sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [])
+          : updater;
+      if (next.length > 0) {
+        setSort(next[0].id, next[0].desc ? 'desc' : 'asc');
+      } else {
+        setSort('', '');
       }
     },
   });

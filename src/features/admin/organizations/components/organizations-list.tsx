@@ -55,11 +55,14 @@ export function OrganizationsList() {
     status,
     page,
     pageSize,
+    sortBy,
+    sortDir,
     hasFilters,
     setSearch,
     setStatus,
     setPage,
     setPageSize,
+    setSort,
     clearFilters,
   } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
@@ -73,6 +76,8 @@ export function OrganizationsList() {
     status: status === 'all' ? undefined : status,
     page,
     pageSize,
+    sortBy: sortBy || undefined,
+    sortDir: (sortDir as 'asc' | 'desc') || undefined,
   });
 
   const createOrganization = useCreateOrganization();
@@ -114,6 +119,7 @@ export function OrganizationsList() {
       }),
       columnHelper.accessor('slug', {
         header: t('columnSlug'),
+        enableSorting: false,
         cell: ({ getValue }) => (
           <span className="text-muted-foreground font-mono text-xs">
             {getValue()}
@@ -151,7 +157,11 @@ export function OrganizationsList() {
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
     rowCount: data?.total ?? 0,
-    state: { pagination: { pageIndex: page - 1, pageSize } },
+    manualSorting: true,
+    state: {
+      pagination: { pageIndex: page - 1, pageSize },
+      sorting: sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [],
+    },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
@@ -161,6 +171,17 @@ export function OrganizationsList() {
         setPageSize(next.pageSize);
       } else {
         setPage(next.pageIndex + 1);
+      }
+    },
+    onSortingChange: (updater) => {
+      const next =
+        typeof updater === 'function'
+          ? updater(sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : [])
+          : updater;
+      if (next.length > 0) {
+        setSort(next[0].id, next[0].desc ? 'desc' : 'asc');
+      } else {
+        setSort('', '');
       }
     },
   });
