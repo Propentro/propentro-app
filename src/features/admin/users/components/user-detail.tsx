@@ -263,7 +263,9 @@ export function UserDetail({ id }: UserDetailProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('deactivateDescription', { name: displayName })}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeactivateOpen(false)}>

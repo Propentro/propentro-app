@@ -263,7 +263,9 @@ export function InvitesList() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('cancelTitle')}</DialogTitle>
-            <DialogDescription>{t('cancelDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('cancelDescription', { email: cancellingInvite!.email })}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancellingInvite(null)}>

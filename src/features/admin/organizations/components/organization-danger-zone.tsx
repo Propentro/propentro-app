@@ -69,7 +69,7 @@ export function OrganizationDangerZone({
         {organization.isActive ? (
           <DangerZoneItem
             title={t('deactivateTitle')}
-            description={t('deactivateDescription')}
+            description={t('deactivateDescription', { name: organization.name })}
             action={
               <Button
                 variant="destructive"
@@ -146,7 +146,9 @@ export function OrganizationDangerZone({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('deactivateTitle')}</DialogTitle>
-            <DialogDescription>{t('deactivateDescription')}</DialogDescription>
+            <DialogDescription>
+            {t('deactivateDescription', { name: organization.name })}
+          </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeactivateOpen(false)}>
