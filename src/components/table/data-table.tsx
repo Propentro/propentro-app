@@ -2,6 +2,7 @@
 
 import {
   flexRender,
+  type Row,
   type Table as ReactTableType,
 } from '@tanstack/react-table';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
@@ -22,6 +23,7 @@ interface DataTableProps<TData> {
   isLoading?: boolean;
   emptyMessage?: string;
   className?: string;
+  onRowClick?: (row: Row<TData>) => void;
 }
 
 export function DataTable<TData>({
@@ -29,6 +31,7 @@ export function DataTable<TData>({
   isLoading = false,
   emptyMessage,
   className,
+  onRowClick,
 }: DataTableProps<TData>) {
   const t = useTranslations('common');
 
@@ -83,6 +86,8 @@ export function DataTable<TData>({
             <TableRow
               key={row.id}
               data-state={row.getIsSelected() ? 'selected' : undefined}
+              onClick={() => onRowClick?.(row)}
+              className={cn(onRowClick && 'cursor-pointer')}
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>

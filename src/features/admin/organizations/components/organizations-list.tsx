@@ -28,7 +28,7 @@ import {
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useListParams } from '@/hooks/use-list-params';
-import { Link } from '@/i18n/routing';
+import { useRouter } from '@/i18n/routing';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
@@ -47,6 +47,7 @@ const columnHelper = createColumnHelper<AdminOrganizationListItem>();
 export function OrganizationsList() {
   const t = useTranslations('admin.organizations');
   const tc = useTranslations('common');
+  const router = useRouter();
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
@@ -64,7 +65,7 @@ export function OrganizationsList() {
     setPageSize,
     setSort,
     clearFilters,
-  } = useListParams({ defaultPageSize: 10 });
+  } = useListParams({ defaultPageSize: 25 });
   const debouncedSearch = useDebounce(search, 300);
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -105,17 +106,9 @@ export function OrganizationsList() {
     const cols: ColumnDef<AdminOrganizationListItem, any>[] = [
       columnHelper.accessor('name', {
         header: t('columnName'),
-        cell: ({ row }) => {
-          const { name, organizationId } = row.original;
-          return (
-            <Link
-              href={`${paths.admin.organizations}/${organizationId}`}
-              className="font-medium hover:underline"
-            >
-              {name}
-            </Link>
-          );
-        },
+        cell: ({ getValue }) => (
+          <span className="font-medium">{getValue()}</span>
+        ),
       }),
       columnHelper.accessor('slug', {
         header: t('columnSlug'),
@@ -133,7 +126,7 @@ export function OrganizationsList() {
       columnHelper.accessor('isActive', {
         header: t('columnStatus'),
         cell: ({ getValue }) => (
-          <Badge variant={getValue() ? 'default' : 'destructive'}>
+          <Badge variant={getValue() ? 'default' : 'outline'}>
             {getValue() ? t('statusActive') : t('statusInactive')}
           </Badge>
         ),
@@ -266,7 +259,14 @@ export function OrganizationsList() {
           <NoSearchResults onClearFilters={clearFilters} />
         ) : (
           <>
-            <DataTable table={table} />
+            <DataTable
+              table={table}
+              onRowClick={(row) => {
+                router.push(
+                  `${paths.admin.organizations}/${row.original.organizationId}`
+                );
+              }}
+            />
             <DataTablePagination table={table} />
           </>
         )}
