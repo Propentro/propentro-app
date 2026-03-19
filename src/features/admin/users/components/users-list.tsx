@@ -27,7 +27,7 @@ import {
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useListParams } from '@/hooks/use-list-params';
-import { Link } from '@/i18n/routing';
+import { useRouter } from '@/i18n/routing';
 
 import type { AdminUserListItem } from '../../types';
 import { useAdminUsers } from '../hooks/use-admin-users';
@@ -37,6 +37,7 @@ const columnHelper = createColumnHelper<AdminUserListItem>();
 export function UsersList() {
   const t = useTranslations('admin.users');
   const tc = useTranslations('common');
+  const router = useRouter();
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
@@ -54,7 +55,7 @@ export function UsersList() {
     setPageSize,
     setSort,
     clearFilters,
-  } = useListParams({ defaultPageSize: 10 });
+  } = useListParams({ defaultPageSize: 25 });
   const debouncedSearch = useDebounce(search, 300);
 
   // ---------------------------------------------------------------------------
@@ -75,31 +76,24 @@ export function UsersList() {
   const columns = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cols: ColumnDef<AdminUserListItem, any>[] = [
-      columnHelper.accessor('email', {
-        header: t('columnEmail'),
-        cell: ({ row }) => {
-          const { email, userId } = row.original;
-          return (
-            <Link
-              href={`${paths.admin.users}/${userId}`}
-              className="font-medium hover:underline"
-            >
-              {email}
-            </Link>
-          );
-        },
-      }),
       columnHelper.accessor('firstName', {
         header: t('columnName'),
         cell: ({ row }) => {
           const { firstName, lastName } = row.original;
-          return `${firstName ?? ''} ${lastName ?? ''}`.trim() || '-';
+          return (
+            <span className="font-medium">
+              {`${firstName ?? ''} ${lastName ?? ''}`.trim() || '-'}
+            </span>
+          );
         },
+      }),
+      columnHelper.accessor('email', {
+        header: t('columnEmail'),
       }),
       columnHelper.accessor('isActive', {
         header: t('columnStatus'),
         cell: ({ getValue }) => (
-          <Badge variant={getValue() ? 'default' : 'destructive'}>
+          <Badge variant={getValue() ? 'default' : 'outline'}>
             {getValue() ? t('statusActive') : t('statusInactive')}
           </Badge>
         ),
@@ -226,7 +220,12 @@ export function UsersList() {
           <NoSearchResults onClearFilters={clearFilters} />
         ) : (
           <>
-            <DataTable table={table} />
+            <DataTable
+              table={table}
+              onRowClick={(row) => {
+                router.push(`${paths.admin.users}/${row.original.userId}`);
+              }}
+            />
             <DataTablePagination table={table} />
           </>
         )}
