@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { LoaderIcon, Mail, SearchIcon, XIcon } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { DataTable } from '@/components/table/data-table';
@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useListParams } from '@/hooks/use-list-params';
 import { DATE_PRESETS } from '@/lib/format-date';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
@@ -36,22 +37,26 @@ const columnHelper = createColumnHelper<AdminInvite>();
 
 export function InvitesList() {
   const t = useTranslations('admin.invites');
+  const tc = useTranslations('common');
   const format = useFormatter();
 
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
-  const [search, setSearch] = useState('');
+  const {
+    search,
+    page,
+    pageSize,
+    hasFilters,
+    setSearch,
+    setPage,
+    setPageSize,
+    clearFilters,
+  } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [cancellingInvite, setCancellingInvite] = useState<AdminInvite | null>(
     null
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, pageSize]);
 
   // ---------------------------------------------------------------------------
   // Query & mutations
@@ -162,8 +167,11 @@ export function InvitesList() {
         typeof updater === 'function'
           ? updater({ pageIndex: page - 1, pageSize })
           : updater;
-      setPage(next.pageIndex + 1);
-      setPageSize(next.pageSize);
+      if (next.pageSize !== pageSize) {
+        setPageSize(next.pageSize);
+      } else {
+        setPage(next.pageIndex + 1);
+      }
     },
   });
 
@@ -187,9 +195,10 @@ export function InvitesList() {
             />
           </div>
 
-          {search && (
-            <Button variant="ghost" size="sm" onClick={() => setSearch('')}>
+          {hasFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
               <XIcon />
+              {tc('table.clearFilters')}
             </Button>
           )}
         </div>

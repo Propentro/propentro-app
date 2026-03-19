@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { SearchIcon, Users, XIcon } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { DataTable } from '@/components/table/data-table';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { paths } from '@/config/routes';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useListParams } from '@/hooks/use-list-params';
 import { Link } from '@/i18n/routing';
 import { DATE_PRESETS } from '@/lib/format-date';
 
@@ -40,15 +41,19 @@ export function UsersList() {
   // ---------------------------------------------------------------------------
   // Filter state
   // ---------------------------------------------------------------------------
-  const [search, setSearch] = useState('');
+  const {
+    search,
+    status,
+    page,
+    pageSize,
+    hasFilters,
+    setSearch,
+    setStatus,
+    setPage,
+    setPageSize,
+    clearFilters,
+  } = useListParams({ defaultPageSize: 10 });
   const debouncedSearch = useDebounce(search, 300);
-  const [status, setStatus] = useState('all');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, status, pageSize]);
 
   // ---------------------------------------------------------------------------
   // Query
@@ -126,12 +131,13 @@ export function UsersList() {
         typeof updater === 'function'
           ? updater({ pageIndex: page - 1, pageSize })
           : updater;
-      setPage(next.pageIndex + 1);
-      setPageSize(next.pageSize);
+      if (next.pageSize !== pageSize) {
+        setPageSize(next.pageSize);
+      } else {
+        setPage(next.pageIndex + 1);
+      }
     },
   });
-
-  const hasFilters = search !== '' || status !== 'all';
   const isEmpty = !data?.items.length && !debouncedSearch && status === 'all';
 
   // ---------------------------------------------------------------------------
@@ -176,10 +182,7 @@ export function UsersList() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setSearch('');
-                setStatus('all');
-              }}
+              onClick={clearFilters}
             >
               <XIcon />
               {tc('table.clearFilters')}
