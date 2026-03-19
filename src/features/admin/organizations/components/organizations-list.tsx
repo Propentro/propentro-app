@@ -149,6 +149,7 @@ export function OrganizationsList() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
+    rowCount: data?.total ?? 0,
     state: { pagination: { pageIndex: page - 1, pageSize } },
     onPaginationChange: (updater) => {
       const next =

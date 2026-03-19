@@ -17,7 +17,8 @@
       "firstPage": "Go to first page",
       "previousPage": "Go to previous page",
       "nextPage": "Go to next page",
-      "lastPage": "Go to last page"
+      "lastPage": "Go to last page",
+      "showingResults": "Showing {from}-{to} of {total}"
     },
     "selectCountry": "Select country",
     "searchCountry": "Search countries...",

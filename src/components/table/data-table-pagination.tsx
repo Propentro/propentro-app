@@ -33,8 +33,17 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const t = useTranslations('common.table');
 
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalRows = table.getRowCount();
+  const from = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
+  const to = Math.min((pageIndex + 1) * pageSize, totalRows);
+
   return (
     <div className={cn('flex items-center justify-between gap-4', className)}>
+      <div className="text-muted-foreground text-sm">
+        {t('showingResults', { from, to, total: totalRows })}
+      </div>
+
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground hidden text-sm sm:block">
           {t('rowsPerPage')}
