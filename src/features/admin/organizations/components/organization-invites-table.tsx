@@ -68,12 +68,20 @@ export function OrganizationInvitesTable({
           return <Badge variant={inviteStatusVariant(s)}>{tInvites(statusKey)}</Badge>;
         },
       }),
+      inviteColumnHelper.accessor('invitedBy', {
+        header: t('inviteColumnInvitedBy'),
+        cell: ({ getValue }) => getValue() ?? '-',
+      }),
       inviteColumnHelper.accessor('expiresAt', {
         header: t('inviteColumnExpires'),
         cell: ({ getValue }) => {
           const val = getValue();
           return val ? <RelativeTime date={val} /> : '-';
         },
+      }),
+      inviteColumnHelper.accessor('createdAt', {
+        header: t('inviteColumnCreated'),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       inviteColumnHelper.display({
         id: 'actions',
