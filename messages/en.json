@@ -448,7 +448,10 @@
       "deleteError": "Failed to delete user.",
       "dangerZoneTitle": "Delete this user",
       "dangerZoneDescription": "Permanently delete this user and all their data. This action cannot be undone.",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "updateSuccess": "User updated successfully.",
+      "updateError": "Failed to update user."
     },
     "invites": {
       "title": "Invitations",

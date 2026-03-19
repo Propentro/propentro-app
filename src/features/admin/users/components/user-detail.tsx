@@ -13,7 +13,6 @@ import { toast } from 'sonner';
 
 import { DangerZone, DangerZoneItem } from '@/components/shared/danger-zone';
 import { HardDeleteConfirmation } from '@/components/shared/hard-delete-confirmation';
-import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,6 +36,7 @@ import {
   useDeleteUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
+import { UserInfoForm } from './user-info-form';
 
 const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
 
@@ -150,52 +150,8 @@ export function UserDetail({ id }: UserDetailProps) {
         )}
       </div>
 
-      {/* User Info Card */}
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-medium">{t('sectionInfo')}</h2>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelEmail')}
-              </dt>
-              <dd className="font-medium">{user.email}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelFirstName')}
-              </dt>
-              <dd className="font-medium">{user.firstName ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelLastName')}
-              </dt>
-              <dd className="font-medium">{user.lastName ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelStatus')}
-              </dt>
-              <dd>
-                <Badge variant={user.isActive ? 'default' : 'destructive'}>
-                  {user.isActive ? t('statusActive') : t('statusInactive')}
-                </Badge>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {t('labelCreated')}
-              </dt>
-              <dd>
-                <RelativeTime date={user.createdAt} />
-              </dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
+      {/* User Info Form */}
+      <UserInfoForm user={user} />
 
       {/* Organization Memberships */}
       <Card>
