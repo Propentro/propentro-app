@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { parseAsString, useQueryState } from 'nuqs';
 
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,6 +22,7 @@ export function OrganizationDetail({
 }: OrganizationDetailProps) {
   const t = useTranslations('admin.organizations');
   const { data: org, isPending } = useAdminOrganization(organizationId);
+  const [tab, setTab] = useQueryState('tab', parseAsString.withDefault('info'));
 
   if (isPending) {
     return <OrganizationDetailSkeleton />;
@@ -37,7 +39,7 @@ export function OrganizationDetail({
         </Badge>
       </div>
 
-      <Tabs defaultValue="info">
+      <Tabs value={tab} onValueChange={(val) => void setTab(val)}>
         <TabsList>
           <TabsTrigger value="info">{t('tabInfo')}</TabsTrigger>
           <TabsTrigger value="members">{t('tabMembers')}</TabsTrigger>
