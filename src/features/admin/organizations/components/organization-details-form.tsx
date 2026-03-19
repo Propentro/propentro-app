@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { CountryPicker } from '@/components/shared/country-picker';
 import { CurrencyPicker } from '@/components/shared/currency-picker';
 import { FormField } from '@/components/shared/form-field';
 import { PhoneInput } from '@/components/shared/phone-input';
@@ -68,6 +69,14 @@ function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
                   methods={methods}
                 />
               </div>
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelSlug')}
+                  name="slug"
+                  placeholder={t('placeholderSlug')}
+                  methods={methods}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -108,6 +117,67 @@ function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
                   value={methods.watch('contactPhone') ?? ''}
                   onChange={(val) =>
                     methods.setValue('contactPhone', val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </FormField>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Separator />
+
+      {/* Section: Address */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+        <SectionHeader
+          title={t('sectionAddress')}
+          description={t('sectionAddressDescription')}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelAddressLine1')}
+                  name="addressLine1"
+                  placeholder={t('placeholderAddressLine1')}
+                  methods={methods}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelAddressLine2')}
+                  name="addressLine2"
+                  placeholder={t('placeholderAddressLine2')}
+                  methods={methods}
+                />
+              </div>
+              <FormField<UpdateOrganizationInput>
+                label={t('labelCity')}
+                name="city"
+                methods={methods}
+              />
+              <FormField<UpdateOrganizationInput>
+                label={t('labelRegion')}
+                name="region"
+                methods={methods}
+              />
+              <FormField<UpdateOrganizationInput>
+                label={t('labelPostalCode')}
+                name="postalCode"
+                methods={methods}
+              />
+              <FormField<UpdateOrganizationInput>
+                label={t('labelCountryCode')}
+                name="countryCode"
+                methods={methods}
+              >
+                <CountryPicker
+                  value={methods.watch('countryCode') ?? ''}
+                  onChange={(val) =>
+                    methods.setValue('countryCode', val, {
                       shouldDirty: true,
                     })
                   }
@@ -162,6 +232,50 @@ function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
         </Card>
       </div>
 
+      <Separator />
+
+      {/* Section: Legal & Tax */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+        <SectionHeader
+          title={t('sectionLegalTax')}
+          description={t('sectionLegalTaxDescription')}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <FormField<UpdateOrganizationInput>
+                  label={t('labelLegalName')}
+                  name="legalName"
+                  placeholder={t('placeholderLegalName')}
+                  methods={methods}
+                />
+              </div>
+              <FormField<UpdateOrganizationInput>
+                label={t('labelTaxNumber')}
+                name="taxNumber"
+                placeholder={t('placeholderTaxNumber')}
+                methods={methods}
+              />
+              <FormField<UpdateOrganizationInput>
+                label={t('labelTaxCountry')}
+                name="taxCountry"
+                methods={methods}
+              >
+                <CountryPicker
+                  value={methods.watch('taxCountry') ?? ''}
+                  onChange={(val) =>
+                    methods.setValue('taxCountry', val, {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              </FormField>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Save button */}
       <div className="flex justify-end">
         <Button type="submit" disabled={isPending}>
@@ -197,11 +311,21 @@ export function OrganizationDetailsForm({
         onSubmit={handleUpdate}
         resetValues={{
           name: organization.name,
+          slug: organization.slug,
           contactName: organization.contactName ?? '',
           contactEmail: organization.contactEmail ?? '',
           contactPhone: organization.contactPhone ?? '',
           currencyCode: organization.currencyCode,
           timezone: organization.timezone,
+          addressLine1: organization.addressLine1 ?? '',
+          addressLine2: organization.addressLine2 ?? '',
+          city: organization.city ?? '',
+          region: organization.region ?? '',
+          postalCode: organization.postalCode ?? '',
+          countryCode: organization.countryCode ?? '',
+          legalName: organization.legalName ?? '',
+          taxNumber: organization.taxNumber ?? '',
+          taxCountry: organization.taxCountry ?? '',
         }}
       >
         {(methods) => (

@@ -9,6 +9,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
+import { RelativeTime } from '@/components/shared/relative-time';
 import { DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { paths } from '@/config/routes';
@@ -36,6 +37,21 @@ export function UserOrganizationsTable({
         cell: ({ getValue }) => (
           <span className="font-medium">{getValue()}</span>
         ),
+      }),
+      columnHelper.accessor('status', {
+        header: t('columnMembershipStatus'),
+        cell: ({ getValue }) => {
+          const status = getValue();
+          return (
+            <Badge variant={status === 'active' ? 'default' : 'outline'}>
+              {status === 'active' ? t('statusActive') : t('statusDeactivated')}
+            </Badge>
+          );
+        },
+      }),
+      columnHelper.accessor('joinedAt', {
+        header: t('columnJoinedAt'),
+        cell: ({ getValue }) => <RelativeTime date={getValue()} />,
       }),
       columnHelper.display({
         id: 'roles',

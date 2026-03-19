@@ -13,6 +13,15 @@ export type AdminOrganization = {
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  countryCode?: string;
+  legalName?: string;
+  taxNumber?: string;
+  taxCountry?: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;
@@ -36,11 +45,21 @@ export type CreateOrganizationInput = {
 
 export type UpdateOrganizationInput = {
   name: string;
+  slug: string;
   contactName?: string;
   contactEmail?: string;
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  countryCode?: string;
+  legalName?: string;
+  taxNumber?: string;
+  taxCountry?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -75,6 +94,8 @@ export type MemberRoleInfo = {
 export type UserOrganizationInfo = {
   organizationId: string;
   name: string;
+  status: string;
+  joinedAt: ISODateTimeString;
   roles: MemberRoleInfo[];
 };
 

@@ -492,8 +492,8 @@
       "sectionUserInfo": "User Information",
       "sectionUserInfoDescription": "Read-only user details from the authentication provider",
       "labelCreatedAt": "Created At",
-      "columnMembershipStatus": "Membership Status",
-      "columnJoinedAt": "Joined At",
+      "columnMembershipStatus": "Status",
+      "columnJoinedAt": "Joined",
       "statusDeactivated": "Deactivated",
       "deleteDisabledTooltip": "User must be deactivated before they can be deleted"
     },
