@@ -1,22 +1,12 @@
 'use client';
 
-import {
-  type ColumnDef,
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
 import { LoaderIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { parseAsString, useQueryState } from 'nuqs';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { DangerZone, DangerZoneItem } from '@/components/shared/danger-zone';
-import { HardDeleteConfirmation } from '@/components/shared/hard-delete-confirmation';
-import { DataTable } from '@/components/table/data-table';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -25,20 +15,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { paths } from '@/config/routes';
 import { getErrorMessage } from '@/lib/parse-api-error';
 import type { ApiError } from '@/types/api.types';
 
-import type { MemberRoleInfo, UserOrganizationInfo } from '../../types';
+import { EntityHeader } from '../../components/entity-header';
 import {
   useAdminUser,
   useDeactivateUser,
-  useDeleteUser,
   useReactivateUser,
 } from '../hooks/use-admin-users';
-import { UserInfoForm } from './user-info-form';
-
-const orgColumnHelper = createColumnHelper<UserOrganizationInfo>();
+import { UserDetailSkeleton } from './user-detail-skeleton';
+import { UserDetailsTab } from './user-details-tab';
+import { UserOrganizationsTable } from './user-organizations-table';
 
 interface UserDetailProps {
   id: string;
@@ -50,8 +40,20 @@ export function UserDetail({ id }: UserDetailProps) {
   const { data: user, isPending } = useAdminUser(id);
   const deactivateUser = useDeactivateUser();
   const reactivateUser = useReactivateUser();
-  const deleteUser = useDeleteUser();
+  const [tab, setTab] = useQueryState(
+    'tab',
+    parseAsString.withDefault('details')
+  );
   const [deactivateOpen, setDeactivateOpen] = useState(false);
+
+  if (isPending) {
+    return <UserDetailSkeleton />;
+  }
+
+  if (!user) return null;
+
+  const displayName =
+    `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.email;
 
   function handleDeactivate() {
     deactivateUser.mutate(id, {
@@ -76,137 +78,49 @@ export function UserDetail({ id }: UserDetailProps) {
     });
   }
 
-  // ---------------------------------------------------------------------------
-  // Org memberships columns
-  // ---------------------------------------------------------------------------
-  const orgColumns = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cols: ColumnDef<UserOrganizationInfo, any>[] = [
-      orgColumnHelper.accessor('name', {
-        header: t('columnOrgName'),
-        cell: ({ getValue }) => (
-          <span className="font-medium">{getValue()}</span>
-        ),
-      }),
-      orgColumnHelper.display({
-        id: 'roles',
-        header: t('columnRole'),
-        cell: ({ row }) => (
-          <div className="flex flex-wrap gap-1">
-            {row.original.roles.map((role: MemberRoleInfo) => (
-              <Badge key={role.id} variant="secondary">
-                {role.name}
-              </Badge>
-            ))}
-          </div>
-        ),
-      }),
-    ];
-    return cols;
-  }, [t]);
-
-  const orgTable = useReactTable({
-    data: user?.organizations ?? [],
-    columns: orgColumns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  if (isPending) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-48 w-full" />
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
-  const displayName =
-    `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.email;
-
   return (
     <div className="space-y-6">
-      <div>
-        {user.isActive ? (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => setDeactivateOpen(true)}
-          >
-            {t('deactivate')}
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            onClick={handleReactivate}
-            disabled={reactivateUser.isPending}
-          >
-            {reactivateUser.isPending && (
-              <LoaderIcon className="animate-spin" />
-            )}
-            {t('reactivate')}
-          </Button>
-        )}
-      </div>
-
-      {/* User Info Form */}
-      <UserInfoForm user={user} />
-
-      {/* Organization Memberships */}
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-medium">{t('sectionOrganizations')}</h2>
-        </CardHeader>
-        <CardContent>
-          {user.organizations.length === 0 ? (
-            <p className="text-muted-foreground py-4 text-center text-sm">
-              {t('noOrganizations')}
-            </p>
-          ) : (
-            <DataTable table={orgTable} />
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Danger Zone */}
-      <DangerZone>
-        <DangerZoneItem
-          title={t('dangerZoneTitle')}
-          description={t('dangerZoneDescription')}
-          action={
-            <HardDeleteConfirmation
-              entityName={displayName}
-              warningTitle={t('deleteWarningTitle')}
-              warningDescription={t('deleteWarningDescription')}
-              confirmTitle={t('deleteConfirmTitle')}
-              confirmDescription={t('deleteConfirmDescription', {
-                name: displayName,
-              })}
-              confirmButtonLabel={t('deleteButton')}
-              onConfirm={() => {
-                deleteUser.mutate(
-                  { publicId: user.userId },
-                  {
-                    onSuccess: () => {
-                      toast.success(t('deleteSuccess'));
-                    },
-                    onError: (error) =>
-                      toast.error(getErrorMessage(error, t('deleteError'))),
-                  }
-                );
-              }}
-              isPending={deleteUser.isPending}
-              loadingLabel={tCommon('hardDelete.deleting')}
-              trigger={
-                <Button variant="destructive" size="sm">
-                  {t('deleteUser')}
-                </Button>
+      <EntityHeader
+        name={displayName}
+        isActive={user.isActive}
+        activeLabel={t('statusActive')}
+        inactiveLabel={t('statusInactive')}
+        identifiers={[user.userId, user.email]}
+        backHref={paths.admin.users}
+        backLabel={t('backToUsers')}
+        quickAction={
+          user.isActive
+            ? {
+                label: t('deactivate'),
+                onClick: () => setDeactivateOpen(true),
+                isPending: false,
+                variant: 'destructive',
               }
-            />
-          }
-        />
-      </DangerZone>
+            : {
+                label: t('reactivate'),
+                onClick: handleReactivate,
+                isPending: reactivateUser.isPending,
+                variant: 'default',
+              }
+        }
+      />
+
+      <Tabs value={tab} onValueChange={(val) => void setTab(val)}>
+        <TabsList>
+          <TabsTrigger value="details">{t('tabDetails')}</TabsTrigger>
+          <TabsTrigger value="organizations">
+            {t('tabOrganizations')}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="details" className="mt-4">
+          <UserDetailsTab user={user} />
+        </TabsContent>
+
+        <TabsContent value="organizations" className="mt-4">
+          <UserOrganizationsTable organizations={user.organizations} />
+        </TabsContent>
+      </Tabs>
 
       {/* Deactivate confirmation dialog */}
       <Dialog
@@ -225,7 +139,7 @@ export function UserDetail({ id }: UserDetailProps) {
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeactivateOpen(false)}>
-              {t('cancel')}
+              {tCommon('cancel')}
             </Button>
             <Button
               variant="destructive"

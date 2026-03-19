@@ -63,7 +63,7 @@ export function InvitesList() {
     setPageSize,
     setSort,
     clearFilters,
-  } = useListParams({ defaultPageSize: 10 });
+  } = useListParams({ defaultPageSize: 25 });
   const debouncedSearch = useDebounce(search, 300);
   const [cancellingInvite, setCancellingInvite] = useState<AdminInvite | null>(
     null
@@ -231,13 +231,16 @@ export function InvitesList() {
                     ? t('statusPending')
                     : status === 'accepted'
                       ? t('statusAccepted')
-                      : t('statusCanceled')}
+                      : status === 'expired'
+                        ? t('statusExpired')
+                        : t('statusCanceled')}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('allStatuses')}</SelectItem>
               <SelectItem value="pending">{t('statusPending')}</SelectItem>
               <SelectItem value="accepted">{t('statusAccepted')}</SelectItem>
+              <SelectItem value="expired">{t('statusExpired')}</SelectItem>
               <SelectItem value="canceled">{t('statusCanceled')}</SelectItem>
             </SelectContent>
           </Select>

@@ -1,42 +1,36 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-/** Skeleton for admin user detail — header + info card + organisations card. */
 export function UserDetailSkeleton() {
   return (
     <div className="space-y-6">
-      {/* Header skeleton */}
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-8 w-40" />
-        <Skeleton className="h-8 w-24" />
+      {/* Back link */}
+      <Skeleton className="h-4 w-32" />
+
+      {/* Entity header */}
+      <div className="flex items-start justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-5 w-16 rounded-full" />
+          </div>
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <Skeleton className="h-9 w-28" />
       </div>
 
-      {/* User info card skeleton */}
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-28" />
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="space-y-1">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-5 w-40" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tabs */}
+      <Skeleton className="h-10 w-64" />
 
-      {/* Organisations card skeleton */}
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-36" />
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-32 w-full" />
-        </CardContent>
-      </Card>
+      {/* Content area */}
+      <div className="max-w-4xl space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[250px_1fr]">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-48" />
+          </div>
+          <Skeleton className="h-40 w-full rounded-lg" />
+        </div>
+      </div>
     </div>
   );
 }
