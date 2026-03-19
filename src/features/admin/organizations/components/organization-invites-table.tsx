@@ -93,8 +93,7 @@ export function OrganizationInvitesTable({
       }),
     ];
     return cols;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, tInvites]);
+  }, [t, cancelInvite.isPending, handleCancel]);
 
   const table = useReactTable({
     data: invites?.items ?? [],
