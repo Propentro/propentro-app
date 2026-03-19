@@ -326,6 +326,167 @@ That's it — breadcrumbs appear automatically based on the URL.
 - All breadcrumb labels must use `pages.*` translation keys
 - Breadcrumbs are hidden on mobile (`hidden md:flex`)
 
+### Detail/Settings Form Layout — Two-Column Section Pattern
+
+All settings pages and detail edit pages (admin and org-scoped) use the **two-column section layout** (Stripe/Clerk style). This is the standard form layout for the entire app.
+
+#### Structure
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ max-w-4xl                                                │
+│                                                          │
+│ ┌────────────────┐  ┌─────────────────────────────────┐  │
+│ │ Section Title   │  │ Card with form fields           │  │
+│ │ Description     │  │ (2-col responsive grid)         │  │
+│ └────────────────┘  └─────────────────────────────────┘  │
+│ ─────────────────────────────────────────────────────    │
+│ ┌────────────────┐  ┌─────────────────────────────────┐  │
+│ │ Section Title   │  │ Card with form fields           │  │
+│ │ Description     │  │ (2-col responsive grid)         │  │
+│ └────────────────┘  └─────────────────────────────────┘  │
+│ ─────────────────────────────────────────────────────    │
+│ ┌────────────────┐  ┌─────────────────────────────────┐  │
+│ │ 🔴 Danger Zone │  │ Destructive action buttons      │  │
+│ └────────────────┘  └─────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
+```
+
+#### Layout Rules
+
+- **Container:** `max-w-4xl` width constraint — never full bleed
+- **Section grid:** Two columns — left description (`~250px` or `1fr`), right form card (`2fr`)
+- **Left column:** Section title (semibold) + short description (muted text) — provides context without cluttering the form
+- **Right column:** `Card` containing form fields in a responsive grid (`grid-cols-1 sm:grid-cols-2`)
+- **Section separator:** `Separator` component between sections
+- **Responsive collapse:** On mobile (`< md`), sections stack vertically — description on top, form card below
+- **Danger Zone:** Same two-column layout as other sections, last section, card with `border-destructive` styling
+- **Save button:** Inside each section's card (per-section save) OR at the bottom of the form (single save for all sections) — choose per page based on whether sections are independently saveable
+- **Cancel button:** Only when editing existing data, resets form to last saved state
+
+#### When to Use
+
+- Organization settings/edit (admin and org-scoped)
+- Property detail/edit pages
+- Tenant detail/edit pages
+- Lease detail/edit pages
+- Any form with 2+ logical sections
+
+#### When NOT to Use
+
+- Create dialogs/sheets (few fields, single section)
+- Simple single-section forms
+- Table filters or inline editing
+
+### Detail Page Layout — Entity Header + Tabs
+
+All detail pages (admin and org-scoped) for entities with multiple content sections use the **entity header + tabs** pattern (Stripe/Clerk style).
+
+#### Structure
+
+```
+┌──────────────────────────────────────────────────────┐
+│ ← Back to [List Page]                                │
+│                                                      │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ Icon + Entity Name              [Status] badge   │ │
+│ │ public_id · key_field · key_field                │ │
+│ │                              [Quick Action] btn  │ │
+│ └──────────────────────────────────────────────────┘ │
+│                                                      │
+│ ┌──────────┐ ┌──────────┐ ┌──────────┐              │
+│ │ Details  │ │ Tab 2    │ │ Tab 3    │              │
+│ └──────────┘ └──────────┘ └──────────┘              │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │  Tab content (form, table, or mixed)             │ │
+│ └──────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────┘
+```
+
+#### Entity Header Rules
+
+- **Always visible** — name, status badge, and key identifiers persist across all tabs
+- **Key identifiers** — show 2-4 most useful fields as muted text below the name (e.g., public ID, slug, currency, timezone for orgs; email for users)
+- **Status badge** — semantic colour (green=active, red=inactive, etc.)
+- **Quick actions** — deactivate/reactivate button in header for daily operations. Hard delete stays in Danger Zone only.
+- **Back link** — navigates to the parent list page
+
+#### Tab Rules
+
+- Each tab represents a distinct content type (form, table, or section)
+- "Details" tab uses the two-column section layout for forms
+- Table tabs (Members, Invites, etc.) render the table directly
+- Danger Zone is NOT a tab — it renders below the tab content on the Details tab, or as a fixed bottom section
+- Tabs are URL-synced for bookmarkability (query param or hash)
+
+#### When to Use
+
+- Organization detail (admin): header + Details / Members / Invites tabs
+- User detail (admin): header + Details / Organizations tabs
+- Property detail (future): header + Details / Units / Leases / Tenants tabs
+- Any entity with mixed content (forms + tables + related entities)
+
+#### When NOT to Use
+
+- Simple detail views with only a form (use two-column section layout directly)
+- List pages
+- Create/edit dialogs
+
+### List Page Pattern
+
+All list pages (admin and org-scoped) follow a consistent structure and use URL-synced state for all filters, pagination, and sorting.
+
+#### Structure
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ PageHeader: "Organizations"            [Create] button   │
+│                                                          │
+│ ┌────────────────────────┐ ┌──────────────────────────┐  │
+│ │ 🔍 Search...           │ │ Status: All ▾           │  │
+│ └────────────────────────┘ └──────────────────────────┘  │
+│                                                          │
+│ ┌──────────────────────────────────────────────────────┐ │
+│ │ Name ▲    │ Status   │ Key Col  │ Created   │       │ │
+│ │───────────┼──────────┼──────────┼───────────┼───────│ │
+│ │ Row       │ Badge    │ Value    │ Relative  │  ...  │ │
+│ │ Row       │ Badge    │ Value    │ Relative  │  ...  │ │
+│ └──────────────────────────────────────────────────────┘ │
+│                                                          │
+│ ┌──────────────────────────────────────────────────────┐ │
+│ │ Rows per page: 25 ▾    Page 1 of 4   ← 1 2 3 4 →   │ │
+│ └──────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────┘
+```
+
+#### URL-Synced State (nuqs)
+
+All list state is persisted in URL query parameters via `nuqs`. Use the shared `useListParams` hook (`src/hooks/use-list-params.ts`):
+
+**Base params** (always available):
+- `?search=` — search query (debounced)
+- `?status=` — status filter (default: `all`)
+- `?page=` — current page (default: `1`)
+- `?pageSize=` — rows per page (default: `25`)
+- `?sortBy=` / `?sortDir=` — column sorting
+
+**Custom params** — when a list needs extra filters (e.g., `type`, `city`, `dateRange`), pass them via `extraParams` option so they stay in the same `useQueryStates` call. This ensures page resets, `clearFilters()`, and `hasFilters` all account for custom filters automatically. Never use a separate `useState` or `useQueryState` alongside `useListParams` for filter state.
+
+**Rules:**
+- Changing any filter (base or custom) resets page to 1
+- `clearFilters()` resets all filters (base and custom), keeps pageSize
+- URL state is shareable, bookmarkable, and refresh-safe
+- Detail page tabs also use `nuqs` (`?tab=info`) for the same reasons
+- Never use `useState` for filter/pagination/sort state on list pages — always `useListParams`
+
+#### Table Standards
+
+- Row click navigates to detail page
+- Status column uses semantic Badge colours (green=active, red=inactive, etc.)
+- Dates use relative time via `next-intl` `useFormatter().relativeTime()`
+- Empty state: icon + translated title + description + CTA (if user has create permission)
+- Loading state: skeleton table matching column structure
+
 ### CRUD UX — Dialog vs Page
 
 | Action                                            | UI Pattern                          |
