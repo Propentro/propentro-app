@@ -8,18 +8,33 @@ import {
 import { useSession } from '@/hooks/use-session';
 import { apiClient } from '@/lib/api-client';
 import { orgKeys } from '@/lib/query-keys';
-import type { ApiError } from '@/types/api.types';
+import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
 import type { OrgInvite } from '../types';
+
+// ---------------------------------------------------------------------------
+// Params
+// ---------------------------------------------------------------------------
+
+export type InvitesParams = ListParams & {
+  status?: string;
+};
 
 // ---------------------------------------------------------------------------
 // Query options factory
 // ---------------------------------------------------------------------------
 
-export const invitesQueryOptions = (orgId: string | null | undefined) =>
+export const invitesQueryOptions = (
+  orgId: string | null | undefined,
+  params: InvitesParams = {}
+) =>
   queryOptions({
-    queryKey: orgKeys.scope(orgId, 'invites'),
-    queryFn: () => apiClient.get<OrgInvite[]>('/organizations/invites'),
+    queryKey: [...orgKeys.scope(orgId, 'invites'), params] as const,
+    queryFn: () =>
+      apiClient.get<PagedResult<OrgInvite>>(
+        '/organizations/invites',
+        params
+      ),
     enabled: !!orgId,
   });
 
@@ -27,9 +42,9 @@ export const invitesQueryOptions = (orgId: string | null | undefined) =>
 // Hooks
 // ---------------------------------------------------------------------------
 
-export function useOrgInvites() {
+export function useOrgInvites(params: InvitesParams = {}) {
   const { clerkOrgId } = useSession();
-  return useQuery(invitesQueryOptions(clerkOrgId));
+  return useQuery(invitesQueryOptions(clerkOrgId, params));
 }
 
 export function useCancelInvite() {

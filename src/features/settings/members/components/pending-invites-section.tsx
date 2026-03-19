@@ -40,7 +40,7 @@ export function PendingInvitesSection({
 }: PendingInvitesSectionProps) {
   const t = useTranslations('members');
   const format = useFormatter();
-  const { data: invites, isPending } = useOrgInvites();
+  const { data, isPending } = useOrgInvites();
   const cancelInvite = useCancelInvite();
   const [cancellingInvite, setCancellingInvite] = useState<OrgInvite | null>(
     null
@@ -124,8 +124,8 @@ export function PendingInvitesSection({
   // ---------------------------------------------------------------------------
 
   const pendingInvites = useMemo(
-    () => (invites ?? []).filter((inv) => inv.status === 'pending'),
-    [invites]
+    () => (data?.items ?? []).filter((inv) => inv.status === 'pending'),
+    [data]
   );
 
   const table = useReactTable({

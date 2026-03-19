@@ -6,8 +6,3 @@ export const GET = async (req: Request, ctx: Ctx) => {
   const { id } = await ctx.params;
   return proxyRequest(req, `/v1/organizations/members/${id}`);
 };
-
-export const PATCH = async (req: Request, ctx: Ctx) => {
-  const { id } = await ctx.params;
-  return proxyRequest(req, `/v1/organizations/members/${id}`);
-};

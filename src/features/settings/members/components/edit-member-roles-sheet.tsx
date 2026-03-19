@@ -40,7 +40,8 @@ export function EditMemberRolesSheet({
   onOpenChange,
 }: EditMemberRolesSheetProps) {
   const t = useTranslations('members');
-  const { data: roles } = useRoles();
+  const { data: rolesData } = useRoles();
+  const roles = rolesData?.items;
   const updateRoles = useUpdateMemberRoles();
 
   const resetValues = useMemo<UpdateMemberRolesInput>(

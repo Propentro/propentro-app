@@ -95,7 +95,8 @@ export function MembersContent({ canManage }: MembersContentProps) {
     page,
     pageSize,
   });
-  const { data: roles } = useRoles();
+  const { data: rolesData } = useRoles();
+  const roles = rolesData?.items;
 
   const deactivateMember = useDeactivateMember();
   const reactivateMember = useReactivateMember();
