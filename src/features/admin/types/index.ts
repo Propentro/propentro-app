@@ -133,17 +133,16 @@ export type AdminMe = {
 
 export function inviteStatusVariant(
   status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' {
+): 'default' | 'warning' | 'outline' {
   switch (status.toLowerCase()) {
-    case 'pending':
-      return 'outline';
     case 'accepted':
       return 'default';
+    case 'pending':
+      return 'warning';
     case 'canceled':
-      return 'destructive';
     case 'expired':
-      return 'secondary';
+      return 'outline';
     default:
-      return 'secondary';
+      return 'outline';
   }
 }
