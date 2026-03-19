@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from 'sonner';
 
 import NextProgress from '@/components/next-progress';
@@ -26,20 +27,22 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <QueryProvider>
-        <ThemeProvider>
-          <AuthProvider>
-            <NextProgress />
-            <TooltipProvider>
-              <JotaiProvider>
-                {children}
-                <Toaster position="top-right" richColors />
-              </JotaiProvider>
-            </TooltipProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </QueryProvider>
+    <NextIntlClientProvider locale={locale} messages={messages} now={new Date()}>
+      <NuqsAdapter>
+        <QueryProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <NextProgress />
+              <TooltipProvider>
+                <JotaiProvider>
+                  {children}
+                  <Toaster position="top-right" richColors />
+                </JotaiProvider>
+              </TooltipProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryProvider>
+      </NuqsAdapter>
     </NextIntlClientProvider>
   );
 }

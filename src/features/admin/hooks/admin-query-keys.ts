@@ -17,6 +17,8 @@ export const adminKeys = {
       ['admin', 'organizations', publicId, 'members'] as const,
     invites: (publicId: string) =>
       ['admin', 'organizations', publicId, 'invites'] as const,
+    roles: (publicId: string) =>
+      ['admin', 'organizations', publicId, 'roles'] as const,
   },
 
   users: {

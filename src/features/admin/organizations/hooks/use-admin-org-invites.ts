@@ -5,11 +5,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import type { InviteMemberInput } from '@/features/settings/members/validators/create-user.schema';
 import { apiClient } from '@/lib/api-client';
 import type { ApiError, PagedResult } from '@/types/api.types';
 
 import { adminKeys } from '../../hooks/admin-query-keys';
-import type { AdminInvite } from '../../types';
+import type { AdminInvite, InviteResult } from '../../types';
 
 // ---------------------------------------------------------------------------
 // Query options factories
@@ -36,15 +37,21 @@ export function useAdminOrgInvites(orgPublicId: string) {
 export function useInviteUser(orgPublicId: string) {
   const queryClient = useQueryClient();
 
-  return useMutation<void, ApiError, { email: string; roleId: string }>({
+  return useMutation<InviteResult, ApiError, InviteMemberInput>({
     mutationFn: (payload) =>
-      apiClient.post<void>(
+      apiClient.post<InviteResult>(
         `/admin/organizations/${orgPublicId}/invites`,
         payload
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: adminKeys.organizations.invites(orgPublicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.members(orgPublicId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: adminKeys.organizations.detail(orgPublicId),
       });
       queryClient.invalidateQueries({
         queryKey: adminKeys.invites.all(),

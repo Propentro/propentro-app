@@ -43,7 +43,8 @@ export function RolesContent({ canManage }: RolesContentProps) {
   // ---------------------------------------------------------------------------
   // Queries & mutations
   // ---------------------------------------------------------------------------
-  const { data: roles, isPending } = useRoles();
+  const { data, isPending } = useRoles();
+  const roles = data?.items;
   const deleteRole = useDeleteRole();
 
   // ---------------------------------------------------------------------------

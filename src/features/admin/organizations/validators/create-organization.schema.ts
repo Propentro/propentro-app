@@ -21,6 +21,6 @@ export type CreateOrganizationFormValues = z.input<
 export const createOrganizationDefaults: CreateOrganizationFormValues = {
   name: '',
   slug: '',
-  currencyCode: '',
-  timezone: '',
+  currencyCode: 'EUR',
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
 };

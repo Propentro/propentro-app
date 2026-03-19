@@ -8,7 +8,7 @@ import {
 import { useSession } from '@/hooks/use-session';
 import { apiClient } from '@/lib/api-client';
 import { orgKeys } from '@/lib/query-keys';
-import type { ApiError } from '@/types/api.types';
+import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
 import type { OrgRoleItem, PermissionGroup } from '../types';
 import type {
@@ -20,10 +20,17 @@ import type {
 // Query options factories (reusable for prefetching)
 // ---------------------------------------------------------------------------
 
-export const rolesQueryOptions = (orgId: string | null | undefined) =>
+export const rolesQueryOptions = (
+  orgId: string | null | undefined,
+  params: ListParams = {}
+) =>
   queryOptions({
-    queryKey: orgKeys.scope(orgId, 'roles'),
-    queryFn: () => apiClient.get<OrgRoleItem[]>('/organizations/roles'),
+    queryKey: [...orgKeys.scope(orgId, 'roles'), params] as const,
+    queryFn: () =>
+      apiClient.get<PagedResult<OrgRoleItem>>(
+        '/organizations/roles',
+        params
+      ),
     enabled: !!orgId,
   });
 

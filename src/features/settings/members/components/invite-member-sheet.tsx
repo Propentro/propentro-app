@@ -44,7 +44,8 @@ export function InviteMemberSheet({
   onOpenChange,
 }: InviteMemberSheetProps) {
   const t = useTranslations('members');
-  const { data: roles } = useRoles();
+  const { data: rolesData } = useRoles();
+  const roles = rolesData?.items;
   const inviteMember = useInviteMember();
 
   function handleSubmit(values: InviteMemberInput) {

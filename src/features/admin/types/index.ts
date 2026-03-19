@@ -13,7 +13,6 @@ export type AdminOrganization = {
   contactPhone?: string;
   currencyCode: string;
   timezone: string;
-  subscriptionPlan: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;
@@ -23,7 +22,6 @@ export type AdminOrganizationListItem = {
   organizationId: string;
   name: string;
   slug: string;
-  subscriptionPlan: string;
   isActive: boolean;
   memberCount: number;
   createdAt: ISODateTimeString;
@@ -96,6 +94,12 @@ export type AdminInvite = {
   createdAt: ISODateTimeString;
 };
 
+export type InviteResult = {
+  isDirectAdd: boolean;
+  memberId?: string;
+  inviteId?: string;
+};
+
 // ---------------------------------------------------------------------------
 // Members (org-scoped in admin context)
 // ---------------------------------------------------------------------------
@@ -105,6 +109,7 @@ export type AdminMember = {
   email: string;
   firstName?: string;
   lastName?: string;
+  status: string; // 'active' | 'deactivated'
   roles: MemberRoleInfo[];
   joinedAt: ISODateTimeString;
 };
