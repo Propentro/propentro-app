@@ -103,6 +103,7 @@ export type AdminMember = {
   email: string;
   firstName?: string;
   lastName?: string;
+  status: string; // 'active' | 'deactivated'
   roles: MemberRoleInfo[];
   joinedAt: ISODateTimeString;
 };

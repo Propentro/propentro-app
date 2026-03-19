@@ -141,6 +141,14 @@ export function OrganizationMembersTable({
           </div>
         ),
       }),
+      memberColumnHelper.accessor('status', {
+        header: t('memberColumnStatus'),
+        cell: ({ getValue }) => (
+          <Badge variant={getValue() === 'active' ? 'default' : 'secondary'}>
+            {getValue() === 'active' ? t('statusActive') : t('statusDeactivated')}
+          </Badge>
+        ),
+      }),
       memberColumnHelper.accessor('joinedAt', {
         header: t('memberColumnJoined'),
         cell: ({ getValue }) => <RelativeTime date={getValue()} />,
@@ -164,16 +172,19 @@ export function OrganizationMembersTable({
                 {t('viewUser')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setDeactivatingMember(row.original)}
-              >
-                {t('deactivateMember')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setReactivatingMember(row.original)}
-              >
-                {t('reactivateMember')}
-              </DropdownMenuItem>
+              {row.original.status === 'active' ? (
+                <DropdownMenuItem
+                  onClick={() => setDeactivatingMember(row.original)}
+                >
+                  {t('deactivateMember')}
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => setReactivatingMember(row.original)}
+                >
+                  {t('reactivateMember')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
