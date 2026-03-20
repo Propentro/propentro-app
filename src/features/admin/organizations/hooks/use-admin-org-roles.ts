@@ -1,20 +1,20 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
-import type { PagedResult } from '@/types/api.types';
 
 import { adminKeys } from '../../hooks/admin-query-keys';
 
 export type AdminOrgRole = {
   roleId: string;
   name: string;
+  isSystem: boolean;
 };
 
 export const adminOrgRolesQueryOptions = (orgPublicId: string) =>
   queryOptions({
     queryKey: adminKeys.organizations.roles(orgPublicId),
     queryFn: () =>
-      apiClient.get<PagedResult<AdminOrgRole>>(
+      apiClient.get<AdminOrgRole[]>(
         `/admin/organizations/${orgPublicId}/roles`
       ),
     enabled: !!orgPublicId,

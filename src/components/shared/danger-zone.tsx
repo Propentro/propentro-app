@@ -14,7 +14,7 @@ type DangerZoneItemProps = {
 
 function DangerZoneItem({ title, description, action }: DangerZoneItemProps) {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center justify-between gap-4 py-4 first:pt-2">
       <div className="space-y-1">
         <p className="text-sm font-medium">{title}</p>
         <p className="text-muted-foreground text-sm">{description}</p>
@@ -37,7 +37,7 @@ function DangerZone({ children }: DangerZoneProps) {
         <CardTitle className="text-destructive">{t('title')}</CardTitle>
       </CardHeader>
       <Separator />
-      <CardContent className="space-y-4 pt-4">{children}</CardContent>
+      <CardContent className="divide-y pt-2">{children}</CardContent>
     </Card>
   );
 }

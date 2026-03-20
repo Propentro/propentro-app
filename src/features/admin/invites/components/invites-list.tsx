@@ -290,7 +290,8 @@ export function InvitesList() {
           <DialogHeader>
             <DialogTitle>{t('cancelTitle')}</DialogTitle>
             <DialogDescription>
-              {t('cancelDescription', { email: cancellingInvite!.email })}
+              {cancellingInvite &&
+                t('cancelDescription', { email: cancellingInvite.email })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

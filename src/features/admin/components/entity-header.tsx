@@ -15,7 +15,7 @@ interface EntityHeaderProps {
   identifiers: string[];
   backHref: string;
   backLabel: string;
-  quickAction: {
+  quickAction?: {
     label: string;
     onClick: () => void;
     isPending: boolean;
@@ -60,20 +60,24 @@ export function EntityHeader({
           )}
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          {children}
-          <Button
-            variant={quickAction.variant}
-            size="sm"
-            onClick={quickAction.onClick}
-            disabled={quickAction.isPending}
-          >
-            {quickAction.isPending && (
-              <LoaderIcon className="animate-spin" />
+        {(children || quickAction) && (
+          <div className="flex shrink-0 items-center gap-2">
+            {children}
+            {quickAction && (
+              <Button
+                variant={quickAction.variant}
+                size="sm"
+                onClick={quickAction.onClick}
+                disabled={quickAction.isPending}
+              >
+                {quickAction.isPending && (
+                  <LoaderIcon className="animate-spin" />
+                )}
+                {quickAction.label}
+              </Button>
             )}
-            {quickAction.label}
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -239,11 +239,12 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('removeMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('removeMemberDescription', {
-                name:
-                  `${removingMember?.firstName ?? ''} ${removingMember?.lastName ?? ''}`.trim() ||
-                  removingMember!.email,
-              })}
+              {removingMember &&
+                t('removeMemberDescription', {
+                  name:
+                    `${removingMember.firstName ?? ''} ${removingMember.lastName ?? ''}`.trim() ||
+                    removingMember.email,
+                })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -276,11 +277,12 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('deactivateMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('deactivateMemberDescription', {
-                name:
-                  `${deactivatingMember?.firstName ?? ''} ${deactivatingMember?.lastName ?? ''}`.trim() ||
-                  deactivatingMember!.email,
-              })}
+              {deactivatingMember &&
+                t('deactivateMemberDescription', {
+                  name:
+                    `${deactivatingMember.firstName ?? ''} ${deactivatingMember.lastName ?? ''}`.trim() ||
+                    deactivatingMember.email,
+                })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -316,11 +318,12 @@ export function OrganizationMembersTable({
           <DialogHeader>
             <DialogTitle>{t('reactivateMemberTitle')}</DialogTitle>
             <DialogDescription>
-              {t('reactivateMemberDescription', {
-                name:
-                  `${reactivatingMember?.firstName ?? ''} ${reactivatingMember?.lastName ?? ''}`.trim() ||
-                  reactivatingMember!.email,
-              })}
+              {reactivatingMember &&
+                t('reactivateMemberDescription', {
+                  name:
+                    `${reactivatingMember.firstName ?? ''} ${reactivatingMember.lastName ?? ''}`.trim() ||
+                    reactivatingMember.email,
+                })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
