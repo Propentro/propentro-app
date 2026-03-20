@@ -48,7 +48,7 @@ export function CreateInviteDialog({
   const t = useTranslations('admin.organizations');
   const tCommon = useTranslations('common');
   const { data: rolesData } = useAdminOrgRoles(organizationId);
-  const roles = rolesData?.items;
+  const roles = rolesData?.filter((r) => !r.isSystem);
   const inviteMutation = useInviteUser(organizationId);
 
   function handleSubmit(values: InviteMemberInput) {
