@@ -3,7 +3,7 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { ChevronsUpDownIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +45,7 @@ export function PhoneInput({
   const handleOpenChange = usePreserveScroll(setOpen);
   const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY);
   const [nationalNumber, setNationalNumber] = useState('');
+  const lastEmittedRef = useRef<string>('');
   const t = useTranslations('common');
 
   const selectedCountry = useMemo(
@@ -52,9 +53,16 @@ export function PhoneInput({
     [countryCode]
   );
 
-  // Parse existing value on mount
+  // Sync internal state from value prop (mount + external changes like form reset)
   useEffect(() => {
-    if (!value) return;
+    // Skip if value was just emitted by this component
+    if (value === lastEmittedRef.current) return;
+
+    if (!value) {
+      setNationalNumber('');
+      setCountryCode(DEFAULT_COUNTRY);
+      return;
+    }
 
     const parsed = parsePhoneNumberFromString(value);
     if (parsed) {
@@ -66,18 +74,19 @@ export function PhoneInput({
       }
       setNationalNumber(parsed.nationalNumber);
     }
-    // Only run on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [value]);
 
   const buildE164 = useCallback(
     (dialCode: string, number: string) => {
       const cleaned = number.replace(/\D/g, '').replace(/^0+/, '');
       if (!cleaned) {
+        lastEmittedRef.current = '';
         onChange('');
         return;
       }
-      onChange(`${dialCode}${cleaned}`);
+      const e164 = `${dialCode}${cleaned}`;
+      lastEmittedRef.current = e164;
+      onChange(e164);
     },
     [onChange]
   );

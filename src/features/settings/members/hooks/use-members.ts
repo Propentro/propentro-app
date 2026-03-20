@@ -10,7 +10,7 @@ import { apiClient } from '@/lib/api-client';
 import { orgKeys } from '@/lib/query-keys';
 import type { ApiError, ListParams, PagedResult } from '@/types/api.types';
 
-import type { OrgMember } from '../types';
+import type { InviteResult, OrgMember } from '../types';
 import type {
   InviteMemberInput,
   UpdateMemberRolesInput,
@@ -68,9 +68,9 @@ export function useInviteMember() {
   const { clerkOrgId } = useSession();
   const queryClient = useQueryClient();
 
-  return useMutation<void, ApiError, InviteMemberInput>({
+  return useMutation<InviteResult, ApiError, InviteMemberInput>({
     mutationFn: (payload) =>
-      apiClient.post<void>('/organizations/invites', payload),
+      apiClient.post<InviteResult>('/organizations/invites', payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: orgKeys.scope(clerkOrgId, 'members'),

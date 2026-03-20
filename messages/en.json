@@ -213,6 +213,7 @@
     "confirm": "Confirm",
     "editRolesTitle": "Edit Member Roles",
     "saveRoles": "Save Roles",
+    "addMemberSuccess": "Member added successfully.",
     "inviteSuccess": "Invitation sent. The member will appear in the list once they accept.",
     "inviteError": "Failed to send invitation. Please try again.",
     "deactivateSuccess": "Member deactivated.",

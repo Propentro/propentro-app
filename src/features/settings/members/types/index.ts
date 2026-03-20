@@ -30,7 +30,7 @@ export type OrgMember = {
 // Invites
 // ---------------------------------------------------------------------------
 
-export type InviteStatus = 'pending' | 'accepted' | 'cancelled' | 'expired';
+export type InviteStatus = 'pending' | 'accepted' | 'canceled' | 'expired';
 
 export type OrgInvite = {
   inviteId: Id<'inv'>;
@@ -39,4 +39,10 @@ export type OrgInvite = {
   status: InviteStatus;
   expiresAt?: ISODateTimeString;
   createdAt: ISODateTimeString;
+};
+
+export type InviteResult = {
+  isDirectAdd: boolean;
+  memberId?: string;
+  inviteId?: string;
 };

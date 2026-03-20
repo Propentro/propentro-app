@@ -44,11 +44,18 @@ function SectionHeader({
 interface FormInnerProps {
   methods: UseFormReturn<UpdateOrganizationInput>;
   isPending: boolean;
+  onReset: () => void;
 }
 
-function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
+function OrganizationDetailsFormInner({
+  methods,
+  isPending,
+  onReset,
+}: FormInnerProps) {
   const t = useTranslations('admin.organizations');
+  const tCommon = useTranslations('common');
   useUnsavedChanges(methods.formState.isDirty);
+  const { isDirty } = methods.formState;
 
   return (
     <div className="space-y-6">
@@ -276,9 +283,14 @@ function OrganizationDetailsFormInner({ methods, isPending }: FormInnerProps) {
         </Card>
       </div>
 
-      {/* Save button */}
-      <div className="flex justify-end">
-        <Button type="submit" disabled={isPending}>
+      {/* Form actions */}
+      <div className="flex justify-end gap-3">
+        {isDirty && (
+          <Button type="button" variant="outline" onClick={onReset}>
+            {tCommon('cancel')}
+          </Button>
+        )}
+        <Button type="submit" disabled={!isDirty || isPending}>
           {isPending && <LoaderIcon className="animate-spin" />}
           {t('saveChanges')}
         </Button>
@@ -332,6 +344,7 @@ export function OrganizationDetailsForm({
           <OrganizationDetailsFormInner
             methods={methods}
             isPending={updateOrg.isPending}
+            onReset={() => methods.reset()}
           />
         )}
       </Form>

@@ -50,8 +50,10 @@ export function InviteMemberSheet({
 
   function handleSubmit(values: InviteMemberInput) {
     inviteMember.mutate(values, {
-      onSuccess: () => {
-        toast.success(t('inviteSuccess'));
+      onSuccess: (result) => {
+        toast.success(
+          result.isDirectAdd ? t('addMemberSuccess') : t('inviteSuccess')
+        );
         onOpenChange(false);
       },
       onError: (error: ApiError) => {
