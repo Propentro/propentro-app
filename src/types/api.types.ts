@@ -32,6 +32,8 @@ export type ApiError = {
   status: number;
   title: string;
   detail?: string;
+  /** Dot-notation error code from the API (e.g., "Invite.AlreadyMember") */
+  code?: string;
   /** Field-level validation errors: { "email": ["Email is required"] } */
   errors?: Record<string, string[]>;
 };
