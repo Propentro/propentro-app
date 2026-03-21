@@ -24,6 +24,14 @@ export const env = createEnv({
       .string()
       .optional()
       .default('/select-workspace'),
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z
+      .string()
+      .optional()
+      .default('/select-workspace'),
+    NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL: z
+      .string()
+      .optional()
+      .default('/select-workspace'),
     NEXT_PUBLIC_BASE_API_URL: z.string().url(),
   },
   runtimeEnv: process.env,
