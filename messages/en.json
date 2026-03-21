@@ -585,6 +585,11 @@
       "title": "User Not Found",
       "description": "The user you are looking for might have been removed or does not exist.",
       "backToList": "Back to users"
+    },
+    "accountSuspended": {
+      "title": "Account Suspended",
+      "description": "Your account has been deactivated and you no longer have access to any organization. Please contact your administrator to restore access.",
+      "signOut": "Sign out"
     }
   }
 }

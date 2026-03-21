@@ -47,8 +47,9 @@ export async function getMe(): Promise<CurrentUser | null> {
       next: { revalidate: 300, tags: ['user-me'] },
     });
 
-    if (res.status === 404) {
-      // User doesn't exist in our DB yet (webhook race)
+    if (res.status === 404 || res.status === 403) {
+      // 404: User doesn't exist in our DB yet (webhook race)
+      // 403: User is deactivated / no active membership
       return null;
     }
 
@@ -69,9 +70,14 @@ export async function getMe(): Promise<CurrentUser | null> {
  * Use in protected layouts where null user is unacceptable.
  */
 export async function getMeOrRedirect(locale: string): Promise<CurrentUser> {
+  const { userId } = await auth();
   const user = await getMe();
 
   if (!user) {
+    // Authenticated in Clerk but no DB record → account suspended/deactivated
+    if (userId) {
+      redirect(routes.accountSuspended(locale));
+    }
     redirect(routes.signIn(locale));
   }
 

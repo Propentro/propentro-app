@@ -8,6 +8,7 @@ export const paths = {
   signIn: '/sign-in',
   selectWorkspace: '/select-workspace',
   accessDenied: '/access-denied',
+  accountSuspended: '/account-suspended',
   settings: {
     root: '/settings',
     organization: '/settings/organization',
@@ -35,6 +36,7 @@ export const routes = {
   signIn: (locale: string) => `/${locale}/${paths.signIn}`,
   selectWorkspace: (locale: string) => `/${locale}/${paths.selectWorkspace}`,
   accessDenied: (locale: string) => `/${locale}/${paths.accessDenied}`,
+  accountSuspended: (locale: string) => `/${locale}/${paths.accountSuspended}`,
   settings: {
     organization: (locale: string, orgSlug: string) =>
       `/${locale}/${orgSlug}${paths.settings.organization}`,
